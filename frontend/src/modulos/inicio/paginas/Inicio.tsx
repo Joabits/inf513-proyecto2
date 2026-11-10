@@ -4,6 +4,7 @@ import { MensajeError } from '@/compartido/ui/EstadoCarga'
 import { IconoFlecha } from '@/compartido/ui/Iconos'
 import { EnlaceInicio } from '../componentes/EnlaceInicio'
 import { EsqueletoInicio } from '../componentes/EsqueletoInicio'
+import { MensajeDirector } from '../componentes/MensajeDirector'
 import { useInicio } from '../useInicio'
 
 export function Inicio() {
@@ -67,6 +68,8 @@ export function Inicio() {
           )}
         </section>
       )}
+
+      {portada && <MensajeDirector portada={portada} />}
 
       {accesos.length > 0 && (
         <section aria-labelledby="explora" className="mt-14 md:mt-20">
