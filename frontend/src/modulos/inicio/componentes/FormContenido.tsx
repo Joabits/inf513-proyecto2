@@ -7,6 +7,7 @@ import { esquemaContenido, type DatosContenido } from '../inicio.esquema'
 import type { Portada } from '../tipos'
 import { useGuardarInicio } from '../useInicio'
 import { BarraGuardar } from './BarraGuardar'
+import { FotoDirector } from './FotoDirector'
 
 const SECCION = 'space-y-5 rounded-tema border border-borde bg-fondo p-5 sm:p-6'
 const LEYENDA = 'mb-1 text-lg font-bold text-titulo'
@@ -60,6 +61,7 @@ export function FormContenido({ portada }: { portada: Portada | null }) {
 
       <fieldset className={SECCION}>
         <legend className={LEYENDA}>Mensaje del Director</legend>
+        {portada && <FotoDirector foto={portada.director_foto} nombre={portada.director_nombre} />}
         <div className="grid gap-5 sm:grid-cols-2">
           <Campo id="director_nombre" etiqueta="Nombre" error={errors.director_nombre?.message}>
             <input {...entrada('director_nombre')} />
