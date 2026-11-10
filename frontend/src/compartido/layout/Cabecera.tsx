@@ -5,7 +5,7 @@ import { useMenu } from '@/compartido/menu/useMenu'
 import { useSesion } from '@/compartido/sesion/useSesion'
 import { useTema } from '@/compartido/tema/contexto'
 import { PanelAccesibilidad } from '@/compartido/tema/PanelAccesibilidad'
-import { IconoBuscar, IconoCerrar, IconoMenu, IconoUsuario } from '@/compartido/ui/Iconos'
+import { IconoBuscar, IconoCerrar, IconoMenu } from '@/compartido/ui/Iconos'
 import { Buscador } from './Buscador'
 import { MenuEscritorio } from './MenuEscritorio'
 import { MenuMovil } from './MenuMovil'
@@ -18,7 +18,7 @@ const ANCHO_ESCRITORIO = 1024
 
 /**
  * Cabecera de UNA sola fila (64 px en celular, 72 px en PC), sin líneas divisorias:
- *   logo · menú (si cabe) · buscador · visualización · ingresar/gestión · ☰ (si el menú no cabe)
+ *   logo · menú (si cabe) · buscador · visualización · gestión (con sesión) · ☰ (si el menú no cabe)
  *
  * La cabecera MIDE si el menú cabe en la fila. Si no cabe (pantalla chica, tema Niños
  * o letra agrandada), lo oculta y muestra el botón ☰ con el menú lateral.
@@ -112,20 +112,11 @@ export function Cabecera() {
 
           <PanelAccesibilidad />
 
-          <div className="hidden lg:block">
-            {usuario ? (
+          {usuario && (
+            <div className="hidden lg:block">
               <MenuUsuario usuario={usuario} gestion={gestion} />
-            ) : (
-              <Link
-                to="/gestion/ingresar"
-                aria-label="Ingresar"
-                title="Ingresar"
-                className="grid h-10 w-10 place-items-center rounded-full border border-borde text-titulo transition-colors hover:border-titulo"
-              >
-                <IconoUsuario width={18} height={18} />
-              </Link>
-            )}
-          </div>
+            </div>
+          )}
 
           {!menuCabe && (
             <button ref={hamburguesa} type="button" className={botonIcono} aria-label="Abrir menú" onClick={() => setMenuAbierto(true)}>
