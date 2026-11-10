@@ -13,8 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class RegistrarAcceso
 {
-    /** Llamadas que hace cada página automáticamente y no son un recurso del negocio. */
-    private const IGNORADAS = ['api/visitas', 'api/sesion', 'api/menu', 'api/ping'];
+    /** Llamadas automáticas o de sesión (estas tienen su propio registro) que no son un recurso del negocio. */
+    private const IGNORADAS = ['api/visitas', 'api/sesion', 'api/menu', 'api/ping', 'api/login', 'api/logout'];
 
     public function __construct(private Bitacora $bitacora) {}
 

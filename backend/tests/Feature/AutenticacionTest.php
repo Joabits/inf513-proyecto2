@@ -157,6 +157,15 @@ class AutenticacionTest extends TestCase
         $this->assertSame(1, $this->registros('salida'));
     }
 
+    public function test_login_y_logout_no_cuentan_como_recursos_accedidos(): void
+    {
+        $this->usuario();
+        $this->ingresar()->assertNoContent();
+        $this->postJson('/api/logout')->assertNoContent();
+
+        $this->assertSame(0, $this->registros('acceso'));
+    }
+
     public function test_cerrar_sesion_exige_haber_iniciado(): void
     {
         $this->postJson('/api/logout')->assertUnauthorized();
