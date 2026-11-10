@@ -19,4 +19,25 @@ class InicioController extends Controller
             'accesos' => AccesoResource::collection($contenido['accesos']),
         ];
     }
+
+    public function actualizarPortada(ActualizarPortadaRequest $request)
+    {
+        $this->servicio->actualizarPortada($request->validated(), $request->user());
+
+        return $this->mostrar();
+    }
+
+    public function guardarCifras(GuardarCifrasRequest $request)
+    {
+        $this->servicio->guardarCifras($request->validated('cifras'), $request->user());
+
+        return $this->mostrar();
+    }
+
+    public function guardarAccesos(GuardarAccesosRequest $request)
+    {
+        $this->servicio->guardarAccesos($request->validated('accesos'), $request->user());
+
+        return $this->mostrar();
+    }
 }
