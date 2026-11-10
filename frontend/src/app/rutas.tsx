@@ -3,6 +3,7 @@ import { RUTA_BASE } from '@/compartido/api/cliente'
 import { Plantilla } from '@/compartido/layout/Plantilla'
 import { EnConstruccion } from '@/compartido/paginas/EnConstruccion'
 import { PaginaError } from '@/compartido/paginas/PaginaError'
+import { rutasAutenticacion } from '@/modulos/autenticacion'
 import { rutasInicio } from '@/modulos/inicio'
 
 /*
@@ -18,6 +19,7 @@ export const router = createBrowserRouter(
       errorElement: <PaginaError />,
       children: [
         ...rutasInicio,
+        ...rutasAutenticacion,
         // Cualquier ruta del menú cuyo módulo aún no existe
         { path: '*', element: <EnConstruccion /> },
       ],
