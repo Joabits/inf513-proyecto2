@@ -115,7 +115,7 @@ export function MenuMovil(props: {
             </>
           ) : (
             <Link
-              to="/ingresar"
+              to="/gestion/ingresar"
               onClick={alCerrar}
               className="flex items-center justify-center gap-2 rounded-tema bg-primario px-4 py-2.5 font-semibold text-sobre-primario"
             >

@@ -13,7 +13,7 @@ export function RutaProtegida({ permiso, children }: { permiso: string; children
   const ubicacion = useLocation()
 
   if (isLoading) return <EstadoCarga />
-  if (!usuario) return <Navigate to="/ingresar" replace state={{ desde: ubicacion.pathname }} />
+  if (!usuario) return <Navigate to="/gestion/ingresar" replace state={{ desde: ubicacion.pathname }} />
   if (!usuario.permisos.includes(permiso)) {
     return (
       <div className="mx-auto max-w-xl py-16 text-center">

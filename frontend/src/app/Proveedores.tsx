@@ -3,7 +3,7 @@ import { isAxiosError } from 'axios'
 import type { ReactNode } from 'react'
 import { TemaProveedor } from '@/compartido/tema/TemaProveedor'
 
-/** Sesión vencida (401 o 419): el usuario pasa a visitante y RutaProtegida lo lleva a /ingresar. */
+/** Sesión vencida (401 o 419): el usuario pasa a visitante y RutaProtegida lo lleva a /gestion/ingresar. */
 function revisarSesionVencida(error: unknown) {
   if (isAxiosError(error) && [401, 419].includes(error.response?.status ?? 0)) {
     clienteConsultas.setQueryData(['sesion'], null)

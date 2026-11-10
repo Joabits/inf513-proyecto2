@@ -117,7 +117,7 @@ export function Cabecera() {
               <MenuUsuario usuario={usuario} gestion={gestion} />
             ) : (
               <Link
-                to="/ingresar"
+                to="/gestion/ingresar"
                 aria-label="Ingresar"
                 title="Ingresar"
                 className="grid h-10 w-10 place-items-center rounded-full border border-borde text-titulo transition-colors hover:border-titulo"
