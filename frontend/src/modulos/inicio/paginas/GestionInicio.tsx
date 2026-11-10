@@ -4,10 +4,16 @@ import { EstadoCarga, MensajeError } from '@/compartido/ui/EstadoCarga'
 import { IconoExterno } from '@/compartido/ui/Iconos'
 import { Pestanas } from '@/compartido/ui/Pestanas'
 import { TituloPagina } from '@/compartido/ui/TituloPagina'
+import { FormAccesos } from '../componentes/FormAccesos'
+import { FormCifras } from '../componentes/FormCifras'
 import { FormContenido } from '../componentes/FormContenido'
 import { useInicio } from '../useInicio'
 
-const SECCIONES = [{ id: 'contenido', titulo: 'Presentación y mensaje' }]
+const SECCIONES = [
+  { id: 'contenido', titulo: 'Presentación y mensaje' },
+  { id: 'cifras', titulo: 'Cifras' },
+  { id: 'accesos', titulo: 'Accesos rápidos' },
+]
 
 export function GestionInicio() {
   const { data, isPending, isError, refetch } = useInicio()
@@ -51,6 +57,12 @@ export function GestionInicio() {
           {/* Los paneles ocultos siguen montados: cambiar de pestaña no pierde lo escrito */}
           <div role="tabpanel" id="panel-contenido" aria-labelledby="pestana-contenido" hidden={activa !== 'contenido'} className="pt-6">
             <FormContenido portada={data.portada} />
+          </div>
+          <div role="tabpanel" id="panel-cifras" aria-labelledby="pestana-cifras" hidden={activa !== 'cifras'} className="pt-6">
+            <FormCifras cifras={data.cifras} />
+          </div>
+          <div role="tabpanel" id="panel-accesos" aria-labelledby="pestana-accesos" hidden={activa !== 'accesos'} className="pt-6">
+            <FormAccesos accesos={data.accesos} />
           </div>
         </>
       )}

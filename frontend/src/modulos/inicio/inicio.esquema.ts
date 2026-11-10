@@ -13,3 +13,30 @@ export const esquemaContenido = z.object({
 })
 
 export type DatosContenido = z.infer<typeof esquemaContenido>
+
+export const MAXIMO_FILAS = 8
+
+/** Ruta interna del portal (/malla-curricular) o enlace externo seguro. */
+export const ENLACE_VALIDO = /^(\/(?!\/)|https:\/\/)/
+const MENSAJE_ENLACE = 'El enlace debe empezar con / o con https://.'
+
+export const esquemaCifras = z.object({
+  cifras: z
+    .array(z.object({ valor: texto('el valor', 20), etiqueta: texto('la descripción', 60) }))
+    .max(MAXIMO_FILAS),
+})
+
+export const esquemaAccesos = z.object({
+  accesos: z
+    .array(
+      z.object({
+        titulo: texto('el título', 60),
+        descripcion: texto('la descripción', 160),
+        ruta: texto('el enlace', 200).regex(ENLACE_VALIDO, MENSAJE_ENLACE),
+      }),
+    )
+    .max(MAXIMO_FILAS),
+})
+
+export type DatosCifras = z.infer<typeof esquemaCifras>
+export type DatosAccesos = z.infer<typeof esquemaAccesos>
