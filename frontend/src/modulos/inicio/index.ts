@@ -1,0 +1,1 @@
+export { rutasInicio } from './rutas'

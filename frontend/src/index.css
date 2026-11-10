@@ -1,0 +1,141 @@
+@import "tailwindcss";
+
+/*
+ * Identidad de la Carrera: rojo #DE1D2A y azul marino #1C2549 sobre blanco.
+ * Texto de títulos: text-titulo. Fondos azules (barra, banner): bg-marino.
+ * Todo color se usa con las clases de abajo (bg-fondo, text-texto, bg-primario...).
+ * Nunca escribir colores sueltos en los componentes: así funcionan los temas,
+ * el modo noche y el alto contraste sin tocar cada pantalla.
+ */
+@theme inline {
+  --color-fondo: var(--c-fondo);
+  --color-superficie: var(--c-superficie);
+  --color-texto: var(--c-texto);
+  --color-texto-suave: var(--c-texto-suave);
+  --color-primario: var(--c-primario);
+  --color-primario-oscuro: var(--c-primario-oscuro);
+  --color-sobre-primario: var(--c-sobre-primario);
+  --color-acento: var(--c-acento);
+  --color-marino: var(--c-marino);
+  --color-titulo: var(--c-titulo);
+  --color-cabecera: var(--c-cabecera);
+  --color-sobre-cabecera: var(--c-sobre-cabecera);
+  --color-borde: var(--c-borde);
+  --radius-tema: var(--radio);
+  --font-titulos: var(--fuente-titulos);
+  --font-cuerpo: var(--fuente-cuerpo);
+}
+
+/* ---------- Modo día (por defecto): blanco institucional ---------- */
+:root {
+  --c-fondo: #ffffff;
+  --c-superficie: #f5f6fa;
+  --c-texto: #1c2549;
+  --c-texto-suave: #4b5370;
+  --c-primario: #de1d2a;
+  --c-primario-oscuro: #b5141f;
+  --c-sobre-primario: #ffffff;
+  --c-acento: #c41824;
+  --c-marino: #1c2549;
+  --c-titulo: #1c2549;
+  --c-cabecera: #1c2549;
+  --c-sobre-cabecera: #ffffff;
+  --c-borde: #dfe2ec;
+  color-scheme: light;
+}
+
+/* ---------- Modo noche: la misma paleta, invertida sobre el azul marino ---------- */
+:root[data-modo="oscuro"] {
+  --c-fondo: #1c2549;
+  --c-superficie: #252f5c;
+  --c-texto: #ffffff;
+  --c-texto-suave: #c8cce0;
+  --c-acento: #ff6b74;
+  --c-marino: #121838;
+  --c-titulo: #ffffff;
+  --c-cabecera: #121838;
+  --c-borde: #35407a;
+  color-scheme: dark;
+}
+
+/* ---------- Alto contraste (accesibilidad) ---------- */
+:root[data-contraste="alto"] {
+  --c-fondo: #ffffff;
+  --c-superficie: #ffffff;
+  --c-texto: #000000;
+  --c-texto-suave: #000000;
+  --c-primario: #a3000c;
+  --c-primario-oscuro: #6e0008;
+  --c-acento: #a3000c;
+  --c-marino: #000000;
+  --c-titulo: #000000;
+  --c-cabecera: #000000;
+  --c-borde: #000000;
+}
+:root[data-contraste="alto"][data-modo="oscuro"] {
+  --c-fondo: #000000;
+  --c-superficie: #000000;
+  --c-texto: #ffffff;
+  --c-texto-suave: #ffffff;
+  --c-primario: #ffd400;
+  --c-primario-oscuro: #ffe866;
+  --c-sobre-primario: #000000;
+  --c-acento: #ffd400;
+  --c-marino: #000000;
+  --c-titulo: #ffffff;
+  --c-cabecera: #000000;
+  --c-borde: #ffffff;
+}
+
+/* ---------- Temas por público: misma paleta, cambia forma y tamaño ---------- */
+:root,
+:root[data-tema="adultos"] {
+  --radio: 0.375rem;
+  --tam-tema: 1;
+  --fuente-titulos: Georgia, "Times New Roman", serif;
+  --fuente-cuerpo: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+}
+:root[data-tema="jovenes"] {
+  --radio: 1rem;
+  --tam-tema: 1;
+  --fuente-titulos: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  --fuente-cuerpo: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+}
+:root[data-tema="ninos"] {
+  --radio: 1.5rem;
+  --tam-tema: 1.125;
+  --fuente-titulos: "Trebuchet MS", Verdana, sans-serif;
+  --fuente-cuerpo: Verdana, "Trebuchet MS", sans-serif;
+}
+
+/* Tamaño de letra = tema x preferencia del usuario (--tam-usuario lo pone TemaContext) */
+html {
+  font-size: calc(16px * var(--tam-tema) * var(--tam-usuario, 1));
+}
+
+body {
+  margin: 0;
+  background: var(--c-fondo);
+  color: var(--c-texto);
+  font-family: var(--fuente-cuerpo);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+h1, h2, h3 {
+  font-family: var(--fuente-titulos);
+}
+
+:root[data-tema="jovenes"] h1,
+:root[data-tema="jovenes"] h2 {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+:root[data-contraste="alto"] a {
+  text-decoration: underline;
+}
+
+:focus-visible {
+  outline: 3px solid var(--c-acento);
+  outline-offset: 2px;
+}
