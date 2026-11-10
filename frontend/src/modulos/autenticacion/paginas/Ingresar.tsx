@@ -5,12 +5,14 @@ import { Navigate, useLocation } from 'react-router'
 import type { ErroresValidacion } from '@/compartido/api/cliente'
 import { useSesion } from '@/compartido/sesion/useSesion'
 import { Boton } from '@/compartido/ui/Boton'
+import { IconoClave, IconoCorreo, IconoIngresar } from '@/compartido/ui/Iconos'
 import { Tarjeta } from '@/compartido/ui/Tarjeta'
 import { TituloPagina } from '@/compartido/ui/TituloPagina'
 import { esquemaCredenciales, type Credenciales } from '../autenticacion.esquema'
 import { useIniciarSesion } from '../useAutenticacion'
 
-const CAMPO = 'mt-1 w-full rounded-tema border border-borde bg-fondo px-3 py-2 text-texto focus:border-titulo focus:outline-none'
+const CAMPO = 'w-full rounded-tema border border-borde bg-fondo py-2 pl-10 pr-3 text-texto focus:border-titulo focus:outline-none'
+const ICONO_CAMPO = 'pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-texto-suave'
 
 function mensajeDeError(error: unknown) {
   const errores = isAxiosError<ErroresValidacion>(error) ? error.response?.data.errors : undefined
@@ -57,14 +59,17 @@ export function Ingresar() {
             <label htmlFor="email" className="text-sm font-semibold text-titulo">
               Correo electrónico
             </label>
-            <input
-              id="email"
-              type="email"
-              autoComplete="username"
-              aria-invalid={!!errors.email}
-              className={CAMPO}
-              {...register('email')}
-            />
+            <div className="relative mt-1">
+              <IconoCorreo width={18} height={18} className={ICONO_CAMPO} />
+              <input
+                id="email"
+                type="email"
+                autoComplete="username"
+                aria-invalid={!!errors.email}
+                className={CAMPO}
+                {...register('email')}
+              />
+            </div>
             {errors.email && <p className="mt-1 text-sm text-acento">{errors.email.message}</p>}
           </div>
 
@@ -72,18 +77,22 @@ export function Ingresar() {
             <label htmlFor="password" className="text-sm font-semibold text-titulo">
               Contraseña
             </label>
-            <input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              aria-invalid={!!errors.password}
-              className={CAMPO}
-              {...register('password')}
-            />
+            <div className="relative mt-1">
+              <IconoClave width={18} height={18} className={ICONO_CAMPO} />
+              <input
+                id="password"
+                type="password"
+                autoComplete="current-password"
+                aria-invalid={!!errors.password}
+                className={CAMPO}
+                {...register('password')}
+              />
+            </div>
             {errors.password && <p className="mt-1 text-sm text-acento">{errors.password.message}</p>}
           </div>
 
-          <Boton type="submit" disabled={ingreso.isPending} className="w-full">
+          <Boton type="submit" disabled={ingreso.isPending} className="flex w-full items-center justify-center gap-2">
+            <IconoIngresar width={18} height={18} />
             {ingreso.isPending ? 'Ingresando...' : 'Ingresar'}
           </Boton>
         </form>

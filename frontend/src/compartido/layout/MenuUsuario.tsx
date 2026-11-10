@@ -4,7 +4,7 @@ import type { OpcionMenu } from '@/compartido/menu/tipos'
 import type { UsuarioSesion } from '@/compartido/sesion/tipos'
 import { useCerrarSesion } from '@/compartido/sesion/useCerrarSesion'
 import { Boton } from '@/compartido/ui/Boton'
-import { IconoAbajo, IconoUsuario } from '@/compartido/ui/Iconos'
+import { IconoAbajo, IconoSalir, IconoUsuario } from '@/compartido/ui/Iconos'
 import { useClicFuera } from '@/compartido/ui/useClicFuera'
 
 /**
@@ -68,7 +68,8 @@ export function MenuUsuario({ usuario, gestion }: { usuario: UsuarioSesion; gest
           )}
 
           <div className="mt-4 border-t border-borde pt-4">
-            <Boton variante="borde" disabled={cerrarSesion.isPending} onClick={() => cerrarSesion.mutate()} className="w-full text-sm">
+            <Boton variante="borde" disabled={cerrarSesion.isPending} onClick={() => cerrarSesion.mutate()} className="flex w-full items-center justify-center gap-2 text-sm">
+              <IconoSalir width={16} height={16} />
               Cerrar sesión
             </Boton>
           </div>

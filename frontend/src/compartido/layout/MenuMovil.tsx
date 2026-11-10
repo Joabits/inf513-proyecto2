@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { NavLink } from 'react-router'
 import type { OpcionMenu } from '@/compartido/menu/tipos'
-import { IconoAbajo, IconoCerrar } from '@/compartido/ui/Iconos'
+import { IconoAbajo, IconoCerrar, IconoSalir } from '@/compartido/ui/Iconos'
 import type { UsuarioSesion } from '@/compartido/sesion/tipos'
 import { useCerrarSesion } from '@/compartido/sesion/useCerrarSesion'
 import { Boton } from '@/compartido/ui/Boton'
@@ -107,8 +107,9 @@ export function MenuMovil(props: {
                 cerrarSesion.mutate()
                 alCerrar()
               }}
-              className="mt-3 w-full text-sm"
+              className="mt-3 flex w-full items-center justify-center gap-2 text-sm"
             >
+              <IconoSalir width={16} height={16} />
               Cerrar sesión
             </Boton>
           </div>
