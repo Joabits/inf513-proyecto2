@@ -4,13 +4,16 @@ namespace Tests\Feature;
 
 use App\Models\Rol;
 use App\Models\User;
+use App\Modulos\Inicio\Banner;
 use App\Modulos\Inicio\Cifra;
 use App\Modulos\Inicio\Portada;
 use Database\Seeders\InicioSeeder;
 use Database\Seeders\PermisoSeeder;
 use Database\Seeders\RolSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class InicioTest extends TestCase
@@ -136,6 +139,102 @@ class InicioTest extends TestCase
         ];
 
         $this->actingAs($this->editor())->putJson('/api/inicio/accesos', ['accesos' => $accesos])->assertOk()->assertJsonCount(2, 'accesos');
+    }
+
+    private function subirBanner(User $usuario, string $alt = 'Aula de clases')
+    {
+        return $this->actingAs($usuario)->post('/api/inicio/banners', [
+            'imagen' => UploadedFile::fake()->image('aula.jpg', 1600, 600),
+            'texto_alternativo' => $alt,
+        ], ['Accept' => 'application/json']);
+    }
+
+    public function test_sube_un_banner_y_lo_muestra_en_la_portada(): void
+    {
+        Storage::fake('public');
+
+        $this->subirBanner($this->editor())
+            ->assertOk()
+            ->assertJsonCount(1, 'banners')
+            ->assertJsonPath('banners.0.texto_alternativo', 'Aula de clases');
+
+        Storage::disk('public')->assertExists(Banner::first()->imagen);
+    }
+
+    public function test_el_banner_exige_descripcion_y_tamano_minimo(): void
+    {
+        Storage::fake('public');
+
+        $this->actingAs($this->editor())->post('/api/inicio/banners', [
+            'imagen' => UploadedFile::fake()->image('chica.jpg', 300, 200),
+        ], ['Accept' => 'application/json'])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors([
+                'imagen' => 'La imagen debe medir al menos 1200 × 400 píxeles.',
+                'texto_alternativo' => 'El campo descripción de la imagen es obligatorio.',
+            ]);
+    }
+
+    public function test_no_acepta_mas_de_cinco_banners(): void
+    {
+        Storage::fake('public');
+        $usuario = $this->editor();
+
+        foreach (range(1, 5) as $numero) {
+            $this->subirBanner($usuario)->assertOk();
+        }
+
+        $this->subirBanner($usuario)->assertUnprocessable()->assertJsonValidationErrors('imagen');
+        $this->assertSame(5, Banner::count());
+    }
+
+    public function test_eliminar_un_banner_borra_el_archivo(): void
+    {
+        Storage::fake('public');
+        $usuario = $this->editor();
+        $this->subirBanner($usuario)->assertOk();
+        $banner = Banner::first();
+
+        $this->actingAs($usuario)->deleteJson("/api/inicio/banners/{$banner->id}")->assertOk()->assertJsonCount(0, 'banners');
+
+        Storage::disk('public')->assertMissing($banner->imagen);
+    }
+
+    public function test_cambia_el_orden_de_los_banners(): void
+    {
+        Storage::fake('public');
+        $usuario = $this->editor();
+        $this->subirBanner($usuario, 'Primero')->assertOk();
+        $this->subirBanner($usuario, 'Segundo')->assertOk();
+        $ids = Banner::orderBy('orden')->pluck('id')->reverse()->values()->all();
+
+        $this->actingAs($usuario)->putJson('/api/inicio/banners/orden', ['ids' => $ids])
+            ->assertOk()
+            ->assertJsonPath('banners.0.texto_alternativo', 'Segundo');
+    }
+
+    public function test_cambiar_la_foto_del_director_reemplaza_la_anterior(): void
+    {
+        Storage::fake('public');
+        $usuario = $this->editor();
+
+        $this->actingAs($usuario)->post('/api/inicio/portada/foto', ['foto' => UploadedFile::fake()->image('a.jpg')], ['Accept' => 'application/json'])->assertOk();
+        $anterior = Portada::first()->director_foto;
+
+        $this->actingAs($usuario)->post('/api/inicio/portada/foto', ['foto' => UploadedFile::fake()->image('b.jpg')], ['Accept' => 'application/json'])->assertOk();
+
+        Storage::disk('public')->assertMissing($anterior);
+        Storage::disk('public')->assertExists(Portada::first()->director_foto);
+
+        $this->actingAs($usuario)->deleteJson('/api/inicio/portada/foto')->assertOk()->assertJsonPath('portada.director_foto', null);
+    }
+
+    public function test_las_imagenes_exigen_permiso(): void
+    {
+        Storage::fake('public');
+
+        $this->subirBanner($this->editor(Rol::EDITOR_COMUNICACION))->assertForbidden();
+        $this->assertSame(0, Banner::count());
     }
 
     public function test_rechaza_enlaces_inseguros(): void
