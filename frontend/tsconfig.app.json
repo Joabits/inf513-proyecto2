@@ -8,7 +8,7 @@
     "allowArbitraryExtensions": true,
     "skipLibCheck": true,
 
-    /* Bundler mode */
+    /* Resolución de módulos */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
@@ -17,7 +17,7 @@
     "jsx": "react-jsx",
     "paths": { "@/*": ["./src/*"] },
 
-    /* Linting */
+    /* Controles estrictos */
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,

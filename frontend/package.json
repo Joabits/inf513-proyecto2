@@ -1,13 +1,12 @@
 {
-  "name": "frontend",
+  "name": "portal-administracion-empresas",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "typecheck": "tsc -b"
   },
   "dependencies": {
     "@hookform/resolvers": "^7.0.5",
