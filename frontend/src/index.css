@@ -102,46 +102,50 @@
   --peso-titulos: 900;
 }
 
-/* Tamaño de letra = tema x preferencia del usuario (--tam-usuario lo pone TemaProveedor) */
-html {
-  font-size: calc(16px * var(--tam-tema) * var(--tam-usuario, 1));
-}
+/*
+ * Estilos base dentro de @layer base: así las clases de Tailwind de cada componente
+ * (por ejemplo focus:outline-none o font-bold) siempre pueden reemplazarlos.
+ */
+@layer base {
+  /* Tamaño de letra = tema x preferencia del usuario (--tam-usuario lo pone TemaProveedor) */
+  html {
+    font-size: calc(16px * var(--tam-tema) * var(--tam-usuario, 1));
+  }
 
-body {
-  margin: 0;
-  background: var(--c-fondo);
-  color: var(--c-texto);
-  font-family: var(--font-cuerpo);
-  transition: background-color 0.2s, color 0.2s;
-}
+  body {
+    margin: 0;
+    background: var(--c-fondo);
+    color: var(--c-texto);
+    font-family: var(--font-cuerpo);
+    transition: background-color 0.2s, color 0.2s;
+  }
 
-h1, h2, h3 {
-  font-family: var(--font-titulos);
-  font-weight: var(--peso-titulos);
-}
+  h1, h2, h3 {
+    font-family: var(--font-titulos);
+    font-weight: var(--peso-titulos);
+  }
 
-:root[data-tema="jovenes"] h1,
-:root[data-tema="jovenes"] h2 {
-  letter-spacing: -0.02em;
-}
+  :root[data-tema="jovenes"] h1,
+  :root[data-tema="jovenes"] h2 {
+    letter-spacing: -0.02em;
+  }
 
-:root[data-modo="oscuro"] a,
-:root[data-contraste="alto"] a {
-  text-underline-offset: 3px;
-}
-:root[data-contraste="alto"] a {
-  text-decoration: underline;
-}
+  :root[data-contraste="alto"] a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
 
-:focus-visible {
-  outline: 3px solid var(--c-primario);
-  outline-offset: 2px;
+  /* Foco visible al navegar con teclado (accesibilidad). Los campos de texto usan su propio borde. */
+  :focus-visible {
+    outline: 2px solid var(--c-titulo);
+    outline-offset: 2px;
+  }
 }
 
 /* Contenedor centrado de todas las secciones: márgenes que crecen con la pantalla */
 @utility contenedor {
   width: 100%;
-  max-width: 72rem;
+  max-width: 80rem;
   margin-inline: auto;
   padding-inline: 1rem;
 

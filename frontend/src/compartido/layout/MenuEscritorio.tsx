@@ -1,3 +1,4 @@
+import type { Ref } from 'react'
 import { NavLink } from 'react-router'
 import type { OpcionMenu } from '@/compartido/menu/tipos'
 import { IconoAbajo } from '@/compartido/ui/Iconos'
@@ -6,17 +7,17 @@ import { IconoAbajo } from '@/compartido/ui/Iconos'
 const soltarFoco = () => (document.activeElement as HTMLElement | null)?.blur()
 
 const claseEnlace = ({ isActive }: { isActive: boolean }) =>
-  `relative flex h-12 items-center px-3 text-sm font-semibold transition-colors hover:text-acento ${
-    isActive ? 'text-acento after:absolute after:inset-x-3 after:bottom-0 after:h-0.5 after:bg-primario' : 'text-titulo'
+  `relative flex h-16 items-center px-2 text-[0.8125rem] font-semibold whitespace-nowrap transition-colors hover:text-acento ${
+    isActive ? 'text-acento after:absolute after:inset-x-2 after:bottom-3.5 after:h-0.5 after:rounded-full after:bg-primario' : 'text-titulo'
   }`
 
 /**
- * Menú dinámico (de la BD) para pantallas grandes.
+ * Menú dinámico (de la BD) para pantallas grandes, en la misma fila que el logo.
  * Los submenús se abren al pasar el mouse o con el teclado (focus-within), sin JavaScript extra.
  */
-export function MenuEscritorio({ opciones, alineacion = 'izquierda' }: { opciones: OpcionMenu[]; alineacion?: 'izquierda' | 'derecha' }) {
+export const MenuEscritorio = ({ opciones, ref }: { opciones: OpcionMenu[]; ref?: Ref<HTMLUListElement> }) => {
   return (
-    <ul className="flex items-center">
+    <ul ref={ref} className="flex w-max items-center">
       {opciones.map((op) =>
         op.hijos.length === 0 ? (
           <li key={op.id}>
@@ -29,16 +30,12 @@ export function MenuEscritorio({ opciones, alineacion = 'izquierda' }: { opcione
             <button
               type="button"
               aria-haspopup="true"
-              className="flex h-12 items-center gap-1 px-3 text-sm font-semibold text-titulo transition-colors hover:text-acento group-focus-within:text-acento"
+              className="flex h-16 items-center gap-0.5 px-2 text-[0.8125rem] font-semibold whitespace-nowrap text-titulo transition-colors hover:text-acento group-focus-within:text-acento"
             >
               {op.titulo}
-              <IconoAbajo width={14} height={14} className="transition-transform group-hover:rotate-180 group-focus-within:rotate-180" />
+              <IconoAbajo width={13} height={13} className="transition-transform group-hover:rotate-180 group-focus-within:rotate-180" />
             </button>
-            <ul
-              className={`invisible absolute top-full z-40 min-w-60 translate-y-1 rounded-tema border border-borde bg-fondo p-1.5 opacity-0 shadow-lg transition group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 ${
-                alineacion === 'derecha' ? 'right-0' : 'left-0'
-              }`}
-            >
+            <ul className="invisible absolute left-0 top-full z-40 min-w-60 -translate-y-1 rounded-tema border border-borde bg-fondo p-1.5 opacity-0 shadow-lg transition group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
               {op.hijos.map((h) => (
                 <li key={h.id}>
                   <NavLink

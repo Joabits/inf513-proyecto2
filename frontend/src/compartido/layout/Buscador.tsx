@@ -6,7 +6,17 @@ import { IconoBuscar } from '@/compartido/ui/Iconos'
  * Búsqueda del encabezado (req. 9). Lleva a /buscar?q=...
  * La página de resultados la implementa el módulo de búsqueda (CU-07).
  */
-export function Buscador({ id, alBuscar, autoFocus = false }: { id: string; alBuscar?: () => void; autoFocus?: boolean }) {
+export function Buscador({
+  id,
+  alBuscar,
+  autoFocus = false,
+  placeholder = 'Buscar en el portal...',
+}: {
+  id: string
+  alBuscar?: () => void
+  autoFocus?: boolean
+  placeholder?: string
+}) {
   const [texto, setTexto] = useState('')
   const navegar = useNavigate()
 
@@ -28,9 +38,9 @@ export function Buscador({ id, alBuscar, autoFocus = false }: { id: string; alBu
         type="search"
         value={texto}
         onChange={(e) => setTexto(e.target.value)}
-        placeholder="Buscar en el portal..."
+        placeholder={placeholder}
         autoFocus={autoFocus}
-        className="h-10 w-full rounded-full border border-borde bg-superficie pl-4 pr-11 text-sm text-texto placeholder:text-texto-suave/70 focus:border-primario focus:bg-fondo focus:outline-none"
+        className="h-10 w-full rounded-full border border-borde bg-superficie pl-4 pr-11 text-sm text-texto placeholder:text-texto-suave/70 focus:border-titulo focus:bg-fondo focus:outline-none"
       />
       <button
         type="submit"

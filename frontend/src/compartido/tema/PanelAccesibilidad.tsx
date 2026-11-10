@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { IconoVisualizacion } from '@/compartido/ui/Iconos'
+import { useClicFuera } from '@/compartido/ui/useClicFuera'
 import { useTema } from './contexto'
 import { TAMANOS, type Contraste, type PreferenciaModo, type Tema } from './tipos'
 
@@ -54,18 +55,8 @@ export function PanelAccesibilidad() {
   const [abierto, setAbierto] = useState(false)
   const caja = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    if (!abierto) return
-    const cerrar = (e: MouseEvent | KeyboardEvent) => {
-      if (e instanceof KeyboardEvent ? e.key === 'Escape' : !caja.current?.contains(e.target as Node)) setAbierto(false)
-    }
-    document.addEventListener('mousedown', cerrar)
-    document.addEventListener('keydown', cerrar)
-    return () => {
-      document.removeEventListener('mousedown', cerrar)
-      document.removeEventListener('keydown', cerrar)
-    }
-  }, [abierto])
+  const cerrar = useCallback(() => setAbierto(false), [])
+  useClicFuera(caja, abierto, cerrar)
 
   return (
     <div className="relative" ref={caja}>
