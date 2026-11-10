@@ -20,7 +20,7 @@ class AutenticacionTest extends TestCase
     {
         parent::setUp();
         $this->seed([RolSeeder::class, PermisoSeeder::class]);
-        $this->withHeader('Referer', 'http://localhost');
+        $this->withHeader('Referer', 'http://'.config('sanctum.stateful')[0]);
     }
 
     private function usuario(array $datos = []): User
