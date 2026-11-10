@@ -24,7 +24,7 @@ export function Inicio() {
 
   return (
     <>
-      <section className="mb-10 rounded-tema bg-marino px-6 py-16 text-white md:px-12">
+      <section className="mb-10 rounded-tema border-b-8 border-primario bg-marino px-6 py-16 text-white md:px-12">
         <div className="max-w-4xl">
           <p className="mb-3 inline-block rounded-tema bg-primario px-3 py-1 text-sm font-semibold">Carrera acreditada ante el CEUB</p>
           <h1 className="text-4xl font-bold md:text-5xl">Carrera de Administración de Empresas</h1>

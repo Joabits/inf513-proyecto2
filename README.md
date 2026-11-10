@@ -39,9 +39,16 @@ Cada módulo es una carpeta independiente en los dos lados. Ver `frontend/src/mo
 | Buscador en el header | `Cabecera.tsx` (la página de resultados es del CU-07) |
 | Esquema de PostgreSQL configurable | `DB_SCHEMA` en `.env` (en el servidor, el esquema del grupo) |
 
-Colores institucionales: rojo `#DE1D2A` y azul marino `#1C2549` sobre blanco. En los
-componentes se usan solo las clases del tema (`bg-fondo`, `text-texto`, `text-titulo`,
-`bg-primario`, `text-acento`, `bg-marino`, `border-borde`, `rounded-tema`), nunca colores sueltos.
+### Identidad visual (Manual de uso de marca FCEE, gestión 2026)
+
+- **Logo:** el de la FCEE (`frontend/src/compartido/marca/`). La carrera no tiene logo propio:
+  el manual prohíbe crear variantes del escudo para carreras. Versión positiva sobre blanco
+  y negativa (letras blancas) sobre azul.
+- **Colores:** rojo `#DA0A15`, azul `#21366E`, azul oscuro `#0F1E45`, gris claro `#F4F5F7`,
+  blanco y negro `#0A0A0A`. El manual no permite otras tonalidades ni degradados.
+- **Tipografía:** Montserrat (incluida en el proyecto, no depende de Internet).
+- En los componentes se usan solo las clases del tema (`bg-fondo`, `text-texto`, `text-titulo`,
+  `bg-primario`, `text-acento`, `bg-marino`, `bg-marino-oscuro`, `border-borde`, `rounded-tema`).
 
 ## Puesta en marcha (desarrollo)
 

@@ -3,8 +3,8 @@ import type { ButtonHTMLAttributes } from 'react'
 type Variante = 'primario' | 'secundario' | 'borde'
 
 const ESTILOS: Record<Variante, string> = {
-  primario: 'bg-primario text-sobre-primario hover:bg-primario-oscuro',
-  secundario: 'bg-marino text-white hover:opacity-90',
+  primario: 'bg-primario text-sobre-primario hover:bg-marino',
+  secundario: 'bg-marino text-sobre-primario hover:bg-primario',
   borde: 'border border-borde text-texto hover:border-acento hover:text-acento',
 }
 

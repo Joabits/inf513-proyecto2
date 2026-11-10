@@ -1,114 +1,108 @@
 @import "tailwindcss";
+@import "@fontsource-variable/montserrat";
 
 /*
- * Identidad de la Carrera: rojo #DE1D2A y azul marino #1C2549 sobre blanco.
- * Texto de títulos: text-titulo. Fondos azules (barra, banner): bg-marino.
- * Todo color se usa con las clases de abajo (bg-fondo, text-texto, bg-primario...).
- * Nunca escribir colores sueltos en los componentes: así funcionan los temas,
- * el modo noche y el alto contraste sin tocar cada pantalla.
+ * Identidad visual según el MANUAL DE USO DE MARCA FCEE (gestión 2026):
+ *   Rojo FCEE  #DA0A15   Azul FCEE  #21366E          (primarios)
+ *   Azul oscuro #0F1E45  Gris claro #F4F5F7  Blanco #FFFFFF  Negro #0A0A0A  (secundarios)
+ *   Tipografía institucional: Montserrat.
+ * El manual no permite otras tonalidades ni degradados: no agregar colores nuevos.
+ *
+ * En los componentes se usan SOLO estas clases (nunca colores sueltos):
+ *   bg-fondo, bg-superficie, text-texto, text-texto-suave, text-titulo,
+ *   bg-primario, text-sobre-primario, text-acento, bg-marino, bg-marino-oscuro,
+ *   border-borde, rounded-tema
+ * Así funcionan los temas, el modo noche y el alto contraste sin tocar cada pantalla.
  */
 @theme inline {
   --color-fondo: var(--c-fondo);
   --color-superficie: var(--c-superficie);
   --color-texto: var(--c-texto);
   --color-texto-suave: var(--c-texto-suave);
+  --color-titulo: var(--c-titulo);
   --color-primario: var(--c-primario);
-  --color-primario-oscuro: var(--c-primario-oscuro);
   --color-sobre-primario: var(--c-sobre-primario);
   --color-acento: var(--c-acento);
   --color-marino: var(--c-marino);
-  --color-titulo: var(--c-titulo);
-  --color-cabecera: var(--c-cabecera);
-  --color-sobre-cabecera: var(--c-sobre-cabecera);
+  --color-marino-oscuro: var(--c-marino-oscuro);
   --color-borde: var(--c-borde);
   --radius-tema: var(--radio);
-  --font-titulos: var(--fuente-titulos);
-  --font-cuerpo: var(--fuente-cuerpo);
+  --font-titulos: "Montserrat Variable", system-ui, sans-serif;
+  --font-cuerpo: "Montserrat Variable", system-ui, sans-serif;
 }
 
-/* ---------- Modo día (por defecto): blanco institucional ---------- */
+/* ---------- Modo día (por defecto): fondo blanco institucional ---------- */
 :root {
   --c-fondo: #ffffff;
-  --c-superficie: #f5f6fa;
-  --c-texto: #1c2549;
-  --c-texto-suave: #4b5370;
-  --c-primario: #de1d2a;
-  --c-primario-oscuro: #b5141f;
+  --c-superficie: #f4f5f7;
+  --c-texto: #0f1e45;
+  --c-texto-suave: #21366e;
+  --c-titulo: #21366e;
+  --c-primario: #da0a15;
   --c-sobre-primario: #ffffff;
-  --c-acento: #c41824;
-  --c-marino: #1c2549;
-  --c-titulo: #1c2549;
-  --c-cabecera: #1c2549;
-  --c-sobre-cabecera: #ffffff;
-  --c-borde: #dfe2ec;
+  --c-acento: #da0a15;
+  --c-marino: #21366e;
+  --c-marino-oscuro: #0f1e45;
+  --c-borde: #d9dce3; /* línea neutra de interfaz, no es un color de marca */
   color-scheme: light;
 }
 
-/* ---------- Modo noche: la misma paleta, invertida sobre el azul marino ---------- */
+/* ---------- Modo noche: la paleta oficial sobre el azul oscuro ---------- */
 :root[data-modo="oscuro"] {
-  --c-fondo: #1c2549;
-  --c-superficie: #252f5c;
+  --c-fondo: #0f1e45;
+  --c-superficie: #21366e;
   --c-texto: #ffffff;
-  --c-texto-suave: #c8cce0;
-  --c-acento: #ff6b74;
-  --c-marino: #121838;
+  --c-texto-suave: #f4f5f7;
   --c-titulo: #ffffff;
-  --c-cabecera: #121838;
-  --c-borde: #35407a;
+  /* el rojo sobre azul oscuro no alcanza el contraste para texto: los enlaces van en gris claro */
+  --c-acento: #f4f5f7;
+  --c-marino: #21366e;
+  --c-marino-oscuro: #0a0a0a;
+  --c-borde: #21366e;
   color-scheme: dark;
 }
 
-/* ---------- Alto contraste (accesibilidad) ---------- */
+/* ---------- Alto contraste (accesibilidad), solo con colores del manual ---------- */
 :root[data-contraste="alto"] {
   --c-fondo: #ffffff;
   --c-superficie: #ffffff;
-  --c-texto: #000000;
-  --c-texto-suave: #000000;
-  --c-primario: #a3000c;
-  --c-primario-oscuro: #6e0008;
-  --c-acento: #a3000c;
-  --c-marino: #000000;
-  --c-titulo: #000000;
-  --c-cabecera: #000000;
-  --c-borde: #000000;
+  --c-texto: #0a0a0a;
+  --c-texto-suave: #0a0a0a;
+  --c-titulo: #0a0a0a;
+  --c-acento: #0a0a0a;
+  --c-marino: #0a0a0a;
+  --c-marino-oscuro: #0a0a0a;
+  --c-borde: #0a0a0a;
 }
 :root[data-contraste="alto"][data-modo="oscuro"] {
-  --c-fondo: #000000;
-  --c-superficie: #000000;
+  --c-fondo: #0a0a0a;
+  --c-superficie: #0a0a0a;
   --c-texto: #ffffff;
   --c-texto-suave: #ffffff;
-  --c-primario: #ffd400;
-  --c-primario-oscuro: #ffe866;
-  --c-sobre-primario: #000000;
-  --c-acento: #ffd400;
-  --c-marino: #000000;
   --c-titulo: #ffffff;
-  --c-cabecera: #000000;
+  --c-acento: #ffffff;
   --c-borde: #ffffff;
 }
 
-/* ---------- Temas por público: misma paleta, cambia forma y tamaño ---------- */
+/* ---------- Temas por público: mismos colores y tipografía, cambia forma y tamaño ---------- */
 :root,
 :root[data-tema="adultos"] {
   --radio: 0.375rem;
   --tam-tema: 1;
-  --fuente-titulos: Georgia, "Times New Roman", serif;
-  --fuente-cuerpo: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  --peso-titulos: 700;
 }
 :root[data-tema="jovenes"] {
   --radio: 1rem;
   --tam-tema: 1;
-  --fuente-titulos: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
-  --fuente-cuerpo: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  --peso-titulos: 800;
 }
 :root[data-tema="ninos"] {
   --radio: 1.5rem;
   --tam-tema: 1.125;
-  --fuente-titulos: "Trebuchet MS", Verdana, sans-serif;
-  --fuente-cuerpo: Verdana, "Trebuchet MS", sans-serif;
+  --peso-titulos: 900;
 }
 
-/* Tamaño de letra = tema x preferencia del usuario (--tam-usuario lo pone TemaContext) */
+/* Tamaño de letra = tema x preferencia del usuario (--tam-usuario lo pone TemaProveedor) */
 html {
   font-size: calc(16px * var(--tam-tema) * var(--tam-usuario, 1));
 }
@@ -117,25 +111,29 @@ body {
   margin: 0;
   background: var(--c-fondo);
   color: var(--c-texto);
-  font-family: var(--fuente-cuerpo);
+  font-family: var(--font-cuerpo);
   transition: background-color 0.2s, color 0.2s;
 }
 
 h1, h2, h3 {
-  font-family: var(--fuente-titulos);
+  font-family: var(--font-titulos);
+  font-weight: var(--peso-titulos);
 }
 
 :root[data-tema="jovenes"] h1,
 :root[data-tema="jovenes"] h2 {
-  font-weight: 800;
   letter-spacing: -0.02em;
 }
 
+:root[data-modo="oscuro"] a,
+:root[data-contraste="alto"] a {
+  text-underline-offset: 3px;
+}
 :root[data-contraste="alto"] a {
   text-decoration: underline;
 }
 
 :focus-visible {
-  outline: 3px solid var(--c-acento);
+  outline: 3px solid var(--c-primario);
   outline-offset: 2px;
 }

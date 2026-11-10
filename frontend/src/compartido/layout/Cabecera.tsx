@@ -1,7 +1,9 @@
 import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { useMenu } from '@/compartido/menu/useMenu'
+import { LogoFcee } from '@/compartido/marca/LogoFcee'
 import { useSesion } from '@/compartido/sesion/useSesion'
+import { useTema } from '@/compartido/tema/contexto'
 import { PanelAccesibilidad } from '@/compartido/tema/PanelAccesibilidad'
 import { MenuDinamico } from './MenuDinamico'
 
@@ -9,6 +11,7 @@ export function Cabecera() {
   const { data: menu } = useMenu()
   const { data: usuario } = useSesion()
   const navegar = useNavigate()
+  const { modoActivo } = useTema()
   const [menuMovil, setMenuMovil] = useState(false)
   const [busqueda, setBusqueda] = useState('')
 
@@ -22,7 +25,7 @@ export function Cabecera() {
   return (
     <header>
       {/* Franja superior */}
-      <div className="bg-cabecera text-xs text-sobre-cabecera">
+      <div className="bg-marino-oscuro text-xs text-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-1.5">
           <span>UNIVERSIDAD AUTÓNOMA GABRIEL RENÉ MORENO | FCEE</span>
           {usuario ? (
@@ -40,13 +43,12 @@ export function Cabecera() {
       {/* Marca, buscador y accesibilidad */}
       <div className="border-b border-borde bg-fondo">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-4 px-4 py-4">
-          <Link to="/" className="flex items-center gap-3" aria-label="Ir al inicio">
-            <span className="grid h-12 w-12 place-items-center rounded-tema bg-marino text-lg font-bold text-white">
-              AE
-            </span>
-            <span className="leading-tight">
-              <span className="block font-titulos text-xl font-bold text-titulo">Administración de Empresas</span>
-              <span className="block text-sm font-semibold text-acento">Facultad de Ciencias Económicas y Empresariales</span>
+          <Link to="/" className="flex items-center gap-4" aria-label="Ir al inicio: Carrera de Administración de Empresas">
+            {/* Logo oficial de la FCEE (la carrera no tiene logo propio, según el manual de marca) */}
+            <LogoFcee version={modoActivo === 'oscuro' ? 'negativo' : 'positivo'} className="h-14 md:h-16" />
+            <span className="hidden border-l-2 border-primario pl-4 leading-tight sm:block">
+              <span className="block text-xs font-semibold uppercase tracking-wide text-texto-suave">Carrera de</span>
+              <span className="block font-titulos text-lg font-extrabold text-titulo">Administración de Empresas</span>
             </span>
           </Link>
 
@@ -62,7 +64,7 @@ export function Cabecera() {
               placeholder="Buscar noticias, documentos, materias..."
               className="w-full rounded-tema border border-borde bg-fondo px-3 py-2 text-texto md:w-72"
             />
-            <button type="submit" className="rounded-tema bg-primario px-4 py-2 font-semibold text-sobre-primario hover:bg-primario-oscuro">
+            <button type="submit" className="rounded-tema bg-primario px-4 py-2 font-semibold text-sobre-primario hover:bg-marino">
               Buscar
             </button>
           </form>
@@ -83,12 +85,12 @@ export function Cabecera() {
       </div>
 
       {/* Menú dinámico */}
-      <nav id="navegacion" aria-label="Navegación principal" className={`bg-marino text-white ${menuMovil ? '' : 'hidden lg:block'}`}>
+      <nav id="navegacion" aria-label="Navegación principal" className={`border-b-4 border-primario bg-marino text-white ${menuMovil ? '' : 'hidden lg:block'}`}>
         <div className="mx-auto max-w-7xl px-4 py-2">
           <MenuDinamico opciones={menu?.publico ?? []} alNavegar={() => setMenuMovil(false)} />
         </div>
         {menu && menu.gestion.length > 0 && (
-          <div className="border-t border-white/15 bg-primario-oscuro">
+          <div className="border-t border-white/15 bg-marino-oscuro">
             <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-1">
               <span className="text-xs font-bold uppercase tracking-wide">Gestión</span>
               <MenuDinamico opciones={menu.gestion} alNavegar={() => setMenuMovil(false)} />
