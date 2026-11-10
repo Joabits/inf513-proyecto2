@@ -7,10 +7,12 @@ import { TituloPagina } from '@/compartido/ui/TituloPagina'
 import { FormAccesos } from '../componentes/FormAccesos'
 import { FormCifras } from '../componentes/FormCifras'
 import { FormContenido } from '../componentes/FormContenido'
+import { GestorBanner } from '../componentes/GestorBanner'
 import { useInicio } from '../useInicio'
 
 const SECCIONES = [
   { id: 'contenido', titulo: 'Presentación y mensaje' },
+  { id: 'banner', titulo: 'Banner' },
   { id: 'cifras', titulo: 'Cifras' },
   { id: 'accesos', titulo: 'Accesos rápidos' },
 ]
@@ -57,6 +59,9 @@ export function GestionInicio() {
           {/* Los paneles ocultos siguen montados: cambiar de pestaña no pierde lo escrito */}
           <div role="tabpanel" id="panel-contenido" aria-labelledby="pestana-contenido" hidden={activa !== 'contenido'} className="pt-6">
             <FormContenido portada={data.portada} />
+          </div>
+          <div role="tabpanel" id="panel-banner" aria-labelledby="pestana-banner" hidden={activa !== 'banner'} className="pt-6">
+            <GestorBanner banners={data.banners} />
           </div>
           <div role="tabpanel" id="panel-cifras" aria-labelledby="pestana-cifras" hidden={activa !== 'cifras'} className="pt-6">
             <FormCifras cifras={data.cifras} />

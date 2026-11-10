@@ -38,5 +38,15 @@ export const esquemaAccesos = z.object({
     .max(MAXIMO_FILAS),
 })
 
+export const esquemaBanner = z.object({
+  texto_alternativo: texto('qué muestra la imagen', 200),
+  enlace: z
+    .string()
+    .trim()
+    .max(200, 'Use como máximo 200 caracteres.')
+    .refine((v) => v === '' || ENLACE_VALIDO.test(v), MENSAJE_ENLACE),
+})
+
+export type DatosBanner = z.infer<typeof esquemaBanner>
 export type DatosCifras = z.infer<typeof esquemaCifras>
 export type DatosAccesos = z.infer<typeof esquemaAccesos>
