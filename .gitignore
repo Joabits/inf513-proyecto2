@@ -1,5 +1,77 @@
-.DS_Store
-Thumbs.db
+# =====================================================================
+#  Archivos que NUNCA se suben al repositorio
+#  (un solo .gitignore para todo el proyecto: backend y frontend)
+# =====================================================================
+
+# ---------- Secretos y configuración local de cada integrante ----------
+# El .env tiene la contraseña de la BD: cada uno crea el suyo desde .env.example
+.env
+.env.*
+!.env.example
+# El frontend sí sube sus .env de Vite porque no tienen secretos (solo la ruta base)
+!frontend/.env.development
+!frontend/.env.production
+*.local
+auth.json
+*.pem
+*.key
+*.p12
+id_rsa*
+id_ed25519*
+
+# ---------- Dependencias (se instalan con composer install / npm install) ----------
+vendor/
+node_modules/
+
+# ---------- Compilados (se generan con npm run build) ----------
+backend/public/spa/
+backend/public/build/
+backend/public/hot
+backend/public/storage
+frontend/dist/
+
+# ---------- Bases de datos locales y respaldos ----------
+*.sqlite
+*.sqlite3
+*.sqlite-journal
+*.dump
+*.backup
+
+# ---------- Archivos temporales de Laravel ----------
+backend/storage/pail/
+.phpunit.cache/
+.phpunit.result.cache
+coverage/
+
+# ---------- Logs ----------
+*.log
+npm-debug.log*
+
+# ---------- Entregables comprimidos (se suben a Moodle, no a GitHub) ----------
+*.tar.gz
+*.zip
+*.rar
+
+# ---------- Editores e IDEs ----------
 .idea/
 .vscode/
-*.tar.gz
+.zed/
+.fleet/
+.nova/
+*.swp
+*~
+_ide_helper*.php
+.phpstorm.meta.php
+.phpactor.json
+Homestead.json
+Homestead.yaml
+
+# ---------- Asistentes de IA ----------
+AGENTS.md
+.cursor/
+.codex/
+
+# ---------- Sistema operativo ----------
+.DS_Store
+Thumbs.db
+desktop.ini

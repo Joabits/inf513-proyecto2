@@ -1,9 +1,0 @@
-# Dependencias y compilados
-node_modules
-dist
-
-# Variables locales de cada uno
-*.local
-
-# Logs
-*.log
