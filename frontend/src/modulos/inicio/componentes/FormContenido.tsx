@@ -9,8 +9,9 @@ import { useGuardarInicio } from '../useInicio'
 import { BarraGuardar } from './BarraGuardar'
 import { FotoDirector } from './FotoDirector'
 
-const SECCION = 'space-y-5 rounded-tema border border-borde bg-fondo p-5 sm:p-6'
-const LEYENDA = 'mb-1 text-lg font-bold text-titulo'
+// La leyenda flota para quedar dentro del recuadro y no cortar su borde superior
+const SECCION = 'space-y-5 rounded-tema border border-borde bg-fondo p-5 sm:p-6 [&>legend+*]:clear-both'
+const LEYENDA = 'float-left mb-1 w-full text-lg font-bold text-titulo'
 
 const valoresDe = (portada: Portada | null): DatosContenido => ({
   distintivo: portada?.distintivo ?? '',

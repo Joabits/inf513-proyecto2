@@ -24,7 +24,7 @@ export function Pestanas(props: { etiqueta: string; opciones: Pestana[]; activa:
   }
 
   return (
-    <div role="tablist" aria-label={etiqueta} onKeyDown={moverConTeclado} className="flex gap-1 overflow-x-auto border-b border-borde">
+    <div role="tablist" aria-label={etiqueta} onKeyDown={moverConTeclado} className="flex gap-1 overflow-x-auto overflow-y-hidden border-b border-borde">
       {opciones.map((o) => (
         <button
           key={o.id}
@@ -35,7 +35,7 @@ export function Pestanas(props: { etiqueta: string; opciones: Pestana[]; activa:
           aria-controls={`panel-${o.id}`}
           tabIndex={o.id === activa ? 0 : -1}
           onClick={() => alCambiar(o.id)}
-          className={`-mb-px shrink-0 border-b-2 px-4 py-3 text-sm font-semibold transition-colors ${
+          className={`shrink-0 border-b-2 px-4 py-3 text-sm font-semibold transition-colors ${
             o.id === activa ? 'border-primario text-titulo' : 'border-transparent text-texto-suave hover:text-titulo'
           }`}
         >
