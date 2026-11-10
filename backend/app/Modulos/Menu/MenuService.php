@@ -9,28 +9,36 @@ class MenuService
 {
     /**
      * Menú público: lo ve cualquiera.
-     * Menú de gestión: solo las opciones que la matriz rol_menu asigna al rol del usuario.
+     * Menú de gestión: solo las opciones cuyo permiso tiene el rol activo (matriz de acceso).
      */
     public function paraUsuario(?User $usuario): array
     {
+        $permisos = $usuario?->rol?->permisos()->pluck('permisos.id')->all() ?? [];
+
         return [
-            'publico' => $this->arbol('publico', null),
-            'gestion' => $usuario?->rol_id ? $this->arbol('gestion', $usuario->rol_id) : [],
+            'publico' => $this->publico(),
+            'gestion' => $usuario && $usuario->activo && $permisos ? $this->gestion($permisos) : collect(),
         ];
     }
 
-    private function arbol(string $seccion, ?int $rolId): Collection
+    private function publico(): Collection
     {
-        $filtroRol = fn ($q) => $q->where('rol_id', $rolId);
+        return Menu::query()
+            ->where('seccion', 'publico')->whereNull('parent_id')->where('activo', true)
+            ->with('hijos')
+            ->orderBy('orden')
+            ->get();
+    }
+
+    /** Grupos de gestión con solo las opciones permitidas; los grupos vacíos no se muestran. */
+    private function gestion(array $permisos): Collection
+    {
+        $permitidas = fn ($q) => $q->whereIn('permiso_id', $permisos);
 
         return Menu::query()
-            ->where('seccion', $seccion)
-            ->whereNull('parent_id')
-            ->where('activo', true)
-            ->when($rolId, fn ($q) => $q->where(fn ($q) => $q
-                ->whereHas('roles', $filtroRol)
-                ->orWhereHas('hijos.roles', $filtroRol)))
-            ->with(['hijos' => fn ($q) => $q->when($rolId, fn ($q) => $q->whereHas('roles', $filtroRol))])
+            ->where('seccion', 'gestion')->whereNull('parent_id')->where('activo', true)
+            ->whereHas('hijos', $permitidas)
+            ->with(['hijos' => $permitidas])
             ->orderBy('orden')
             ->get();
     }

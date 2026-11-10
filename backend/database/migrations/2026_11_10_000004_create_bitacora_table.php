@@ -4,7 +4,13 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-// Bitácora (req. 4 y RF-19): ingresos aceptados, fallidos y acciones sobre contenidos
+/*
+ * Bitácora de auditoría (req. 4 y RF-19). Tipos:
+ *   ingreso_ok, ingreso_fallido, salida  -> inicios de sesión (con IP)
+ *   accion     -> lo que hace un usuario en un módulo (crear, editar, eliminar...)
+ *   acceso     -> cada llamada a la API (para "recursos más accedidos")
+ *   auditoria  -> cambios en tablas sensibles, escritos por triggers de PostgreSQL
+ */
 return new class extends Migration
 {
     public function up(): void
@@ -12,9 +18,9 @@ return new class extends Migration
         Schema::create('bitacora', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->string('tipo', 20)->index();      // ingreso_ok | ingreso_fallido | salida | accion
-            $table->string('accion', 40)->nullable(); // crear | modificar | publicar | eliminar ...
-            $table->string('recurso', 120)->nullable(); // p. ej. "Noticia #12"
+            $table->string('tipo', 20)->index();
+            $table->string('accion', 40)->nullable();
+            $table->string('recurso', 150)->nullable()->index();
             $table->string('detalle')->nullable();
             $table->string('ip', 45)->nullable();
             $table->string('navegador')->nullable();

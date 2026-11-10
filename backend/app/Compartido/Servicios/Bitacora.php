@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Registro único de la bitácora. Todos los módulos la usan así:
+ * Registro único de la bitácora. Desde cualquier módulo:
  *   app(Bitacora::class)->accion($usuario, 'crear', $noticia);
+ * Los cambios de usuarios y permisos los registran además triggers de PostgreSQL.
  */
 class Bitacora
 {
@@ -34,6 +35,11 @@ class Bitacora
     public function salida(User $usuario): void
     {
         $this->guardar('salida', $usuario->id);
+    }
+
+    public function acceso(?User $usuario, string $metodo, string $recurso, int $estado): void
+    {
+        $this->guardar('acceso', $usuario?->id, $metodo, $recurso, 'HTTP '.$estado);
     }
 
     private function guardar(string $tipo, ?int $userId, ?string $accion = null, ?string $recurso = null, ?string $detalle = null): void

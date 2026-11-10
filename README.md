@@ -29,13 +29,15 @@ Cada módulo es una carpeta independiente en los dos lados. Ver `frontend/src/mo
 | Requisito | Dónde |
 |---|---|
 | 4 roles fijos (Director de Carrera, Editor Institucional, Editor de Comunicación, Usuario) | `RolSeeder`, `App\Models\Rol` |
-| Menú dinámico en BD + matriz de acceso rol × opción | tablas `menus`, `rol_menu`; `MenuSeeder`; `GET /api/menu` |
-| Control de acceso en la API | middleware `rol:director,editor_comunicacion` |
-| Bitácora (ingresos aceptados, fallidos, acciones) | tabla `bitacora`; servicio `App\Compartido\Servicios\Bitacora` |
-| Contador de visitas por página en el pie | tabla `visitas_pagina`; `POST /api/visitas`; `Pie.tsx` |
+| Matriz de acceso por recurso y acción (`noticias.crear`, `usuarios.eliminar`...) | tablas `permisos`, `rol_permiso`; `PermisoSeeder`; middleware `permiso:` |
+| Menú dinámico en BD según los permisos del rol activo | tabla `menus` (cada opción ligada a un permiso); `GET /api/menu` |
+| Bitácora: ingresos, fallidos, IP, acciones y recursos más accedidos | tabla `bitacora`; servicio `Bitacora`; middleware `RegistrarAcceso` |
+| Triggers de PostgreSQL: contador de visitas y auditoría de usuarios y permisos | migración `create_triggers` |
+| Contador de visitas por página en el pie | tablas `visitas` y `visitas_pagina`; `POST /api/visitas`; `Pie.tsx` |
 | 3 temas (niños, jóvenes, adultos), día/noche por hora, tamaño de letra y contraste | `frontend/src/index.css`, `compartido/tema/` |
-| Validación con mensajes en español | `backend/lang/es/` |
+| Validación con mensajes en español | `backend/lang/es/` (servidor) y Zod en cada formulario (cliente) |
 | Buscador en el header | `Cabecera.tsx` (la página de resultados es del CU-07) |
+| Esquema de PostgreSQL configurable | `DB_SCHEMA` en `.env` (en el servidor, el esquema del grupo) |
 
 Colores institucionales: rojo `#DE1D2A` y azul marino `#1C2549` sobre blanco. En los
 componentes se usan solo las clases del tema (`bg-fondo`, `text-texto`, `text-titulo`,

@@ -15,8 +15,15 @@ return Application::configure(basePath: dirname(__DIR__))
         // React y Laravel comparten dominio: sesión por cookie con Sanctum
         $middleware->statefulApi();
 
+        // Autor de los cambios para los triggers de auditoría y registro de recursos accedidos
+        $middleware->appendToGroup('api', [
+            \App\Compartido\Middleware\EstablecerUsuarioBD::class,
+            \App\Compartido\Middleware\RegistrarAcceso::class,
+        ]);
+
+        // Matriz de acceso: ->middleware('permiso:noticias.crear')
         $middleware->alias([
-            'rol' => \App\Compartido\Middleware\VerificarRol::class,
+            'permiso' => \App\Compartido\Middleware\VerificarPermiso::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -10,6 +10,10 @@ class VisitaController extends Controller
 
     public function store(RegistrarVisitaRequest $request)
     {
-        return ['total' => $this->servicio->registrar($request->validated('pagina'))];
+        return ['total' => $this->servicio->registrar(
+            $request->validated('pagina'),
+            $request->user('sanctum')?->id,
+            $request->ip(),
+        )];
     }
 }

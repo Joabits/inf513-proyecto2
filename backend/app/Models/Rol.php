@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Modulos\Menu\Menu;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -22,8 +21,9 @@ class Rol extends Model
         return $this->hasMany(User::class);
     }
 
-    public function menus(): BelongsToMany
+    /** Fila de la matriz de acceso de este rol. */
+    public function permisos(): BelongsToMany
     {
-        return $this->belongsToMany(Menu::class, 'rol_menu');
+        return $this->belongsToMany(Permiso::class, 'rol_permiso');
     }
 }

@@ -5,4 +5,6 @@ export interface UsuarioSesion {
   nombre: string
   email: string
   rol: { slug: SlugRol; nombre: string } | null
+  /** Permisos del rol según la matriz de acceso, por ejemplo 'noticias.crear' */
+  permisos: string[]
 }

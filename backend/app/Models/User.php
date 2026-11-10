@@ -33,8 +33,20 @@ class User extends Authenticatable
         return $this->belongsTo(Rol::class);
     }
 
-    public function tieneRol(string ...$slugs): bool
+    /** Permisos del rol del usuario, por ejemplo ['noticias.ver', 'noticias.crear']. */
+    public function permisos(): array
     {
-        return in_array($this->rol?->slug, $slugs, true);
+        if (! $this->activo || ! $this->rol_id) {
+            return [];
+        }
+
+        return $this->permisosCache ??= $this->rol->permisos()->pluck('slug')->all();
     }
+
+    public function tienePermiso(string $slug): bool
+    {
+        return in_array($slug, $this->permisos(), true);
+    }
+
+    private ?array $permisosCache = null;
 }

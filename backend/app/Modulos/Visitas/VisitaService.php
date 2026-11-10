@@ -6,14 +6,21 @@ use Illuminate\Support\Facades\DB;
 
 class VisitaService
 {
-    /** Suma una visita a la página y devuelve el total actualizado. */
-    public function registrar(string $pagina): int
+    /**
+     * Guarda la visita en "visitas". El trigger trg_contar_visita de la BD
+     * actualiza el total en "visitas_pagina", que es lo que se devuelve.
+     */
+    public function registrar(string $pagina, ?int $userId, ?string $ip): int
     {
-        return DB::transaction(function () use ($pagina) {
-            $visita = VisitaPagina::lockForUpdate()->firstOrCreate(['pagina' => $pagina]);
-            $visita->increment('total');
+        return DB::transaction(function () use ($pagina, $userId, $ip) {
+            DB::table('visitas')->insert([
+                'pagina' => $pagina,
+                'user_id' => $userId,
+                'ip' => $ip,
+                'created_at' => now(),
+            ]);
 
-            return $visita->total;
+            return (int) DB::table('visitas_pagina')->where('pagina', $pagina)->value('total');
         });
     }
 }

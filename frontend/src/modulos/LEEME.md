@@ -10,7 +10,7 @@ modulos/<modulo>/
 ├── use<Modulo>.ts        ← hooks de TanStack Query
 ├── componentes/
 ├── paginas/              ← públicas y de gestión
-├── rutas.tsx             ← rutas del módulo (las de gestión con <RutaProtegida roles={[...]}>)
+├── rutas.tsx             ← rutas del módulo (las de gestión con <RutaProtegida permiso="modulo.ver">)
 └── index.ts              ← lo único que se exporta (las rutas y los tipos públicos)
 ```
 
@@ -21,3 +21,12 @@ Reglas:
 3. Para registrar el módulo, agregar sus rutas en `src/app/rutas.tsx`.
 
 Ejemplo completo de un módulo: `~/tecno-web/ejemplo-arquitecturas/2-recomendada`.
+
+## Permisos (matriz de acceso)
+
+Cada acción se protege con un permiso `recurso.accion` definido en
+`backend/database/seeders/PermisoSeeder.php`:
+
+- Backend: `->middleware(['auth:sanctum', 'permiso:noticias.crear'])` en `rutas.php`.
+- Frontend: `<RutaProtegida permiso="noticias.ver">` para páginas y
+  `usePermiso('noticias.crear')` para mostrar u ocultar botones.

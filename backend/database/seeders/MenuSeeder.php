@@ -2,26 +2,18 @@
 
 namespace Database\Seeders;
 
-use App\Models\Rol;
+use App\Models\Permiso;
 use App\Modulos\Menu\Menu;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 /**
- * Menú dinámico y matriz de acceso (rol_menu).
- * Para cambiar qué rol ve qué opción, se edita este archivo y se vuelve a correr:
- *   php artisan db:seed --class=MenuSeeder
+ * Menú dinámico. Las opciones de gestión se ligan al permiso "<recurso>.ver":
+ * cada rol ve solo las opciones de los recursos que la matriz de acceso le permite ver.
  */
 class MenuSeeder extends Seeder
 {
-    private const D = Rol::DIRECTOR;
-    private const EI = Rol::EDITOR_INSTITUCIONAL;
-    private const EC = Rol::EDITOR_COMUNICACION;
-    private const U = Rol::USUARIO;
-
     public function run(): void
     {
-        DB::table('rol_menu')->delete();
         Menu::query()->delete();
 
         // ---------- Menú público (lo ve cualquier visitante) ----------
@@ -53,41 +45,39 @@ class MenuSeeder extends Seeder
             ['Contacto', '/contacto'],
         ];
 
-        // ---------- Menú de gestión: [título, ruta, roles] ----------
+        // ---------- Menú de gestión: [título, ruta, recurso] ----------
         $gestion = [
-            ['Contenido institucional', null, [
-                ['Página de inicio', '/gestion/inicio', [self::D, self::EI]],
-                ['Información institucional', '/gestion/institucional', [self::D, self::EI]],
-                ['Autoridades y docentes', '/gestion/docentes', [self::D, self::EI]],
-                ['Información académica', '/gestion/informacion-academica', [self::D, self::EI]],
-                ['Documentos', '/gestion/documentos', [self::D, self::EI]],
+            ['Contenido institucional', [
+                ['Página de inicio', '/gestion/inicio', 'inicio'],
+                ['Información institucional', '/gestion/institucional', 'institucional'],
+                ['Autoridades y docentes', '/gestion/docentes', 'docentes'],
+                ['Información académica', '/gestion/informacion-academica', 'info_academica'],
+                ['Documentos', '/gestion/documentos', 'documentos'],
             ]],
-            ['Investigación y vinculación', null, [
-                ['Investigación', '/gestion/investigacion', [self::D, self::EI]],
-                ['Revista INNOVAR', '/gestion/revista-innovar', [self::D, self::EI]],
-                ['Convenios y vinculación', '/gestion/vinculacion', [self::D, self::EI]],
-                ['Empresa Junior INNOVA', '/gestion/empresa-junior', [self::D, self::EI]],
-                ['Solicitudes a INNOVA', '/gestion/solicitudes-innova', [self::D, self::EI]],
+            ['Investigación y vinculación', [
+                ['Investigación', '/gestion/investigacion', 'investigacion'],
+                ['Revista INNOVAR', '/gestion/revista-innovar', 'revista'],
+                ['Convenios y vinculación', '/gestion/vinculacion', 'vinculacion'],
+                ['Empresa Junior INNOVA', '/gestion/empresa-junior', 'empresa_junior'],
+                ['Solicitudes a INNOVA', '/gestion/solicitudes-innova', 'solicitudes_innova'],
             ]],
-            ['Comunicación', null, [
-                ['Noticias', '/gestion/noticias', [self::D, self::EC]],
-                ['Eventos académicos', '/gestion/eventos', [self::D, self::EC]],
-                ['Galería multimedia', '/gestion/galeria', [self::D, self::EC]],
-                ['Mensajes de contacto', '/gestion/mensajes', [self::D, self::EC]],
+            ['Comunicación', [
+                ['Noticias', '/gestion/noticias', 'noticias'],
+                ['Eventos académicos', '/gestion/eventos', 'eventos'],
+                ['Galería multimedia', '/gestion/galeria', 'galeria'],
+                ['Mensajes de contacto', '/gestion/mensajes', 'mensajes'],
             ]],
-            ['Administración', null, [
-                ['Usuarios', '/gestion/usuarios', [self::D]],
-                ['Graduados', '/gestion/graduados', [self::D]],
-                ['Bitácora', '/gestion/bitacora', [self::D]],
-                ['Estadísticas', '/gestion/estadisticas', [self::D]],
-                ['Datos de contacto y enlaces', '/gestion/configuracion', [self::D]],
+            ['Administración', [
+                ['Estadísticas', '/gestion/estadisticas', 'estadisticas'],
+                ['Usuarios', '/gestion/usuarios', 'usuarios'],
+                ['Graduados', '/gestion/graduados', 'graduados'],
+                ['Bitácora', '/gestion/bitacora', 'bitacora'],
+                ['Datos de contacto y enlaces', '/gestion/configuracion', 'configuracion'],
             ]],
-            ['Mi cuenta', null, [
-                ['Mis datos de graduado', '/mi-cuenta/graduado', [self::U]],
+            ['Mi cuenta', [
+                ['Mis datos de graduado', '/mi-cuenta/graduado', 'mi_graduado'],
             ]],
         ];
-
-        $idsRol = DB::table('roles')->pluck('id', 'slug');
 
         foreach ($publico as $i => $item) {
             $padre = Menu::create(['titulo' => $item[0], 'ruta' => $item[1], 'seccion' => 'publico', 'orden' => $i]);
@@ -96,11 +86,19 @@ class MenuSeeder extends Seeder
             }
         }
 
-        foreach ($gestion as $i => [$tituloGrupo, $rutaGrupo, $hijos]) {
-            $grupo = Menu::create(['titulo' => $tituloGrupo, 'ruta' => $rutaGrupo, 'seccion' => 'gestion', 'orden' => $i]);
-            foreach ($hijos as $j => [$titulo, $ruta, $roles]) {
-                $opcion = Menu::create(['parent_id' => $grupo->id, 'titulo' => $titulo, 'ruta' => $ruta, 'seccion' => 'gestion', 'orden' => $j]);
-                $opcion->roles()->attach($idsRol->only($roles)->values());
+        $permisoVer = Permiso::where('accion', 'ver')->pluck('id', 'recurso');
+
+        foreach ($gestion as $i => [$tituloGrupo, $hijos]) {
+            $grupo = Menu::create(['titulo' => $tituloGrupo, 'seccion' => 'gestion', 'orden' => $i]);
+            foreach ($hijos as $j => [$titulo, $ruta, $recurso]) {
+                Menu::create([
+                    'parent_id' => $grupo->id,
+                    'permiso_id' => $permisoVer[$recurso],
+                    'titulo' => $titulo,
+                    'ruta' => $ruta,
+                    'seccion' => 'gestion',
+                    'orden' => $j,
+                ]);
             }
         }
     }
