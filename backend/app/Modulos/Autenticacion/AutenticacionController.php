@@ -14,7 +14,7 @@ class AutenticacionController extends Controller
         // Sanctum solo abre sesión para los dominios de SANCTUM_STATEFUL_DOMAINS
         abort_unless($request->hasSession(), 403, 'Origen no autorizado para iniciar sesión.');
 
-        $this->servicio->iniciarSesion($request->validated('email'), $request->validated('password'));
+        $this->servicio->iniciarSesion($request->validated('email'), $request->validated('password'), $request->ip());
 
         $request->session()->regenerate();
 

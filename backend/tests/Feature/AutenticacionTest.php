@@ -104,6 +104,38 @@ class AutenticacionTest extends TestCase
             ->assertJsonPath('errors.password.0', 'El campo contraseña es obligatorio.');
     }
 
+    public function test_bloquea_tras_cinco_intentos_aunque_la_clave_sea_correcta(): void
+    {
+        $this->usuario();
+
+        foreach (range(1, 5) as $intento) {
+            $this->ingresar('otra-clave')->assertUnprocessable();
+        }
+
+        $this->ingresar()
+            ->assertTooManyRequests()
+            ->assertJsonPath('errors.email.0', fn (string $mensaje) => str_starts_with($mensaje, 'Demasiados intentos'));
+
+        $this->assertGuest();
+        $this->assertSame(5, $this->registros('ingreso_fallido'));
+    }
+
+    public function test_un_ingreso_correcto_reinicia_los_intentos(): void
+    {
+        $this->usuario();
+
+        foreach (range(1, 4) as $intento) {
+            $this->ingresar('otra-clave')->assertUnprocessable();
+        }
+        $this->ingresar()->assertNoContent();
+        $this->postJson('/api/logout')->assertNoContent();
+        $this->app['auth']->forgetGuards();
+
+        foreach (range(1, 5) as $intento) {
+            $this->ingresar('otra-clave')->assertUnprocessable();
+        }
+    }
+
     public function test_rechaza_peticiones_de_origenes_no_autorizados(): void
     {
         $this->usuario();
