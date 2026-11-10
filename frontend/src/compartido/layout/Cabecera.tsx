@@ -17,7 +17,7 @@ const botonIcono = 'grid h-10 w-10 shrink-0 place-items-center rounded-full text
 const ANCHO_ESCRITORIO = 1024
 
 /**
- * Cabecera de UNA sola fila (64 px), sin líneas divisorias:
+ * Cabecera de UNA sola fila (64 px en celular, 72 px en PC), sin líneas divisorias:
  *   logo · menú (si cabe) · buscador · visualización · ingresar/gestión · ☰ (si el menú no cabe)
  *
  * La cabecera MIDE si el menú cabe en la fila. Si no cabe (pantalla chica, tema Niños
@@ -79,9 +79,10 @@ export function Cabecera() {
         conSombra ? 'shadow-[0_8px_24px_-12px_rgb(15_30_69/0.35)]' : ''
       }`}
     >
-      <div ref={fila} className="contenedor flex h-16 items-center gap-4">
+      <div ref={fila} className="contenedor flex h-16 items-center gap-4 lg:h-18">
         <Link ref={logo} to="/" className="shrink-0" aria-label="Inicio: Carrera de Administración de Empresas">
-          <LogoFcee version={modoActivo === 'oscuro' ? 'negativo' : 'positivo'} className="h-9" />
+          {/* Alto suficiente para que se lea el texto del logo oficial */}
+          <LogoFcee version={modoActivo === 'oscuro' ? 'negativo' : 'positivo'} className="h-11 min-[375px]:h-12 lg:h-14" />
         </Link>
 
         {/* Cuando no cabe, el menú sigue en la página (invisible e inerte) solo para poder medirlo */}
@@ -95,7 +96,7 @@ export function Cabecera() {
         </nav>
 
         <div ref={acciones} className={`flex shrink-0 items-center gap-1 ${menuCabe ? '' : 'ml-auto'}`}>
-          <div className="mr-1 hidden w-44 lg:block">
+          <div className="mr-1 hidden w-40 lg:block">
             <Buscador id="buscar-escritorio" placeholder="Buscar..." />
           </div>
 

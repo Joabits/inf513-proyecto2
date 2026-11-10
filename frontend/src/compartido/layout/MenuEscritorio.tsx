@@ -7,8 +7,8 @@ import { IconoAbajo } from '@/compartido/ui/Iconos'
 const soltarFoco = () => (document.activeElement as HTMLElement | null)?.blur()
 
 const claseEnlace = ({ isActive }: { isActive: boolean }) =>
-  `relative flex h-16 items-center px-2 text-[0.8125rem] font-semibold whitespace-nowrap transition-colors hover:text-acento ${
-    isActive ? 'text-acento after:absolute after:inset-x-2 after:bottom-3.5 after:h-0.5 after:rounded-full after:bg-primario' : 'text-titulo'
+  `relative flex h-18 items-center px-2 text-[0.8125rem] font-semibold whitespace-nowrap transition-colors hover:text-acento ${
+    isActive ? 'text-acento after:absolute after:inset-x-2 after:bottom-4.5 after:h-0.5 after:rounded-full after:bg-primario' : 'text-titulo'
   }`
 
 /**
@@ -30,7 +30,7 @@ export const MenuEscritorio = ({ opciones, ref }: { opciones: OpcionMenu[]; ref?
             <button
               type="button"
               aria-haspopup="true"
-              className="flex h-16 items-center gap-0.5 px-2 text-[0.8125rem] font-semibold whitespace-nowrap text-titulo transition-colors hover:text-acento group-focus-within:text-acento"
+              className="flex h-18 items-center gap-0.5 px-2 text-[0.8125rem] font-semibold whitespace-nowrap text-titulo transition-colors hover:text-acento group-focus-within:text-acento"
             >
               {op.titulo}
               <IconoAbajo width={13} height={13} className="transition-transform group-hover:rotate-180 group-focus-within:rotate-180" />

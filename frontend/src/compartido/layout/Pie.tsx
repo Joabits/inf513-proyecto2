@@ -24,7 +24,7 @@ export function Pie() {
     <footer className="mt-auto border-t border-borde bg-fondo text-texto">
       <div className="contenedor grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr]">
         <div className="sm:col-span-2 lg:col-span-1">
-          <LogoFcee version={modoActivo === 'oscuro' ? 'negativo' : 'positivo'} className="h-12" />
+          <LogoFcee version={modoActivo === 'oscuro' ? 'negativo' : 'positivo'} className="h-14 sm:h-16" />
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-texto-suave">
             Carrera de Administración de Empresas. Formamos profesionales para gerenciar y liderar organizaciones.
             Acreditada ante el CEUB.
