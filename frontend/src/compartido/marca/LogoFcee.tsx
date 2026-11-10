@@ -13,7 +13,7 @@ export function LogoFcee({ version = 'positivo', className = '' }: { version?: '
     <img
       src={version === 'positivo' ? logoPositivo : logoNegativo}
       alt="Facultad de Ciencias Económicas y Empresariales - Universidad Autónoma Gabriel René Moreno"
-      className={`h-auto w-auto ${className}`}
+      className={`w-auto max-w-full ${className}`}
       width={1600}
       height={422}
     />

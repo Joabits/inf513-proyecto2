@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { IconoVisualizacion } from '@/compartido/ui/Iconos'
 import { useTema } from './contexto'
 import { TAMANOS, type Contraste, type PreferenciaModo, type Tema } from './tipos'
 
@@ -72,19 +73,20 @@ export function PanelAccesibilidad() {
         type="button"
         onClick={() => setAbierto(!abierto)}
         aria-expanded={abierto}
-        aria-label="Opciones de visualización y accesibilidad"
-        className="flex items-center gap-1 rounded-tema border border-borde px-3 py-2 text-sm hover:border-acento"
+        aria-label="Visualización y accesibilidad: tema, modo día/noche, tamaño de letra y contraste"
+        title="Visualización y accesibilidad"
+        className="grid h-10 w-10 place-items-center rounded-full text-titulo transition-colors hover:bg-superficie"
       >
-        <span aria-hidden="true">{t.modoActivo === 'oscuro' ? '☾' : '☀'}</span>
-        <span className="hidden sm:inline">Visualización</span>
+        <IconoVisualizacion />
       </button>
 
       {abierto && (
         <div
           role="dialog"
           aria-label="Opciones de visualización"
-          className="absolute right-0 z-50 mt-2 w-72 rounded-tema border border-borde bg-fondo p-4 text-texto shadow-xl"
+          className="fixed inset-x-4 top-20 z-50 rounded-tema border border-borde bg-fondo p-4 text-texto shadow-xl sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2 sm:w-80"
         >
+          <p className="mb-3 font-titulos font-bold text-titulo">Visualización</p>
           <Grupo titulo="Tema" opciones={TEMAS} actual={t.tema} alElegir={(tema) => t.cambiar({ tema })} />
           <Grupo titulo="Modo día / noche" opciones={MODOS} actual={t.modo} alElegir={(modo) => t.cambiar({ modo })} />
           <Grupo

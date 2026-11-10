@@ -7,9 +7,10 @@ export function TituloPagina({ titulo, subtitulo }: { titulo: string; subtitulo?
   }, [titulo])
 
   return (
-    <header className="mb-8 border-b-4 border-primario pb-3">
-      <h1 className="text-3xl font-bold text-titulo">{titulo}</h1>
-      {subtitulo && <p className="mt-1 text-texto-suave">{subtitulo}</p>}
+    <header className="mb-8 md:mb-10">
+      <span className="mb-3 block h-1 w-12 rounded-full bg-primario" aria-hidden="true" />
+      <h1 className="text-3xl text-titulo md:text-4xl">{titulo}</h1>
+      {subtitulo && <p className="mt-2 max-w-2xl text-texto-suave md:text-lg">{subtitulo}</p>}
     </header>
   )
 }
