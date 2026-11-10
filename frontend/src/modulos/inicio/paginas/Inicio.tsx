@@ -2,6 +2,7 @@ import { Link } from 'react-router'
 import { Boton } from '@/compartido/ui/Boton'
 import { MensajeError } from '@/compartido/ui/EstadoCarga'
 import { IconoFlecha } from '@/compartido/ui/Iconos'
+import { BannerInicio } from '../componentes/BannerInicio'
 import { EnlaceInicio } from '../componentes/EnlaceInicio'
 import { EsqueletoInicio } from '../componentes/EsqueletoInicio'
 import { MensajeDirector } from '../componentes/MensajeDirector'
@@ -23,11 +24,13 @@ export function Inicio() {
     )
   }
 
-  const { portada, cifras, accesos } = data
+  const { portada, banners, cifras, accesos } = data
 
   return (
     <>
       <title>Administración de Empresas | FCEE - UAGRM</title>
+
+      {banners.length > 0 && <BannerInicio banners={banners} />}
 
       {portada && (
         <section className={`grid items-center gap-10 py-4 md:py-10 lg:gap-16 ${cifras.length > 0 ? 'lg:grid-cols-[1.3fr_1fr]' : ''}`}>
