@@ -1,0 +1,1 @@
+export { rutasGestionDocumentos } from './rutas'
