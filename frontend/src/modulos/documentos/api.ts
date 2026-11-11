@@ -18,6 +18,9 @@ export const actualizarDocumento = (id: number, datos: FormData) => {
   return cliente.post<{ data: Documento }>(`${GESTION}/${id}`, datos).then((r) => r.data.data)
 }
 
+export const cambiarPublicacion = (id: number, publicado: boolean) =>
+  cliente.patch<{ data: Documento }>(`${GESTION}/${id}/publicacion`, { publicado }).then((r) => r.data.data)
+
 export const eliminarDocumento = (id: number) => cliente.delete(`${GESTION}/${id}`)
 
 export const listarVersiones = (id: number) =>

@@ -6,6 +6,7 @@ import { urlDocumento } from '../api'
 import { formatoFecha, formatoTamano } from '../formato'
 import type { Documento } from '../tipos'
 import { useEliminarDocumento } from '../useDocumentos'
+import { EstadoPublicacion } from './EstadoPublicacion'
 import { EtiquetaTipo } from './EtiquetaTipo'
 import { FormDocumento } from './FormDocumento'
 import { HistorialVersiones } from './HistorialVersiones'
@@ -33,9 +34,7 @@ export function FilaDocumento({ documento }: { documento: Documento }) {
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <h3 className="font-cuerpo text-base font-bold text-titulo">{documento.titulo}</h3>
-            {!documento.publicado && (
-              <span className="rounded-full border border-borde px-2 py-0.5 text-xs font-semibold text-texto-suave">Oculto</span>
-            )}
+            <EstadoPublicacion documento={documento} editable={puedeEditar} />
           </div>
           {documento.descripcion && <p className="mt-1 text-sm text-texto">{documento.descripcion}</p>}
           <p className="mt-1 text-sm text-texto-suave">

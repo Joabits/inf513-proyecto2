@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { crearCategoria, eliminarDocumento, listarCategorias, listarDocumentos, listarVersiones } from './api'
+import { cambiarPublicacion, crearCategoria, eliminarDocumento, listarCategorias, listarDocumentos, listarVersiones } from './api'
 import type { Categoria, Documento } from './tipos'
 
 export const CLAVE_DOCUMENTOS = ['documentos']
@@ -48,5 +48,16 @@ export function useCrearCategoria() {
       consultas.setQueryData<Categoria[]>(CLAVE_CATEGORIAS, (lista = []) =>
         [...lista, nueva].sort((a, b) => a.nombre.localeCompare(b.nombre, 'es')),
       ),
+  })
+}
+
+/** Reemplaza solo ese documento en la lista: el resto no se vuelve a pedir. */
+export function useCambiarPublicacion() {
+  const consultas = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ id, publicado }: { id: number; publicado: boolean }) => cambiarPublicacion(id, publicado),
+    onSuccess: (cambiado) =>
+      consultas.setQueryData<Documento[]>(CLAVE_DOCUMENTOS, (lista) => lista?.map((documento) => (documento.id === cambiado.id ? cambiado : documento))),
   })
 }
