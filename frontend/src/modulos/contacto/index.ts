@@ -1,0 +1,1 @@
+export { rutasContacto } from './rutas'

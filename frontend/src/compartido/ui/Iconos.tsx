@@ -3,6 +3,7 @@ import {
   ArrowRight,
   ArrowUp,
   Check,
+  Clock,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -18,11 +19,15 @@ import {
   Lock,
   LogIn,
   LogOut,
+  MapPin,
   Mail,
   Menu,
+  MessageCircle,
   Pencil,
+  Phone,
   Plus,
   Search,
+  Send,
   Trash2,
   User,
   UserCheck,
@@ -63,3 +68,8 @@ export const IconoOcultar = icono(EyeOff)
 export const IconoLlave = icono(KeyRound)
 export const IconoActivar = icono(UserCheck)
 export const IconoDesactivar = icono(UserX)
+export const IconoUbicacion = icono(MapPin)
+export const IconoTelefono = icono(Phone)
+export const IconoMensaje = icono(MessageCircle)
+export const IconoHorario = icono(Clock)
+export const IconoEnviar = icono(Send)
