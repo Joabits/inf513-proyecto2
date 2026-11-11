@@ -38,12 +38,7 @@ export function Inicio() {
 
       {portada && (
         // Sobre el fondo del modo (blanco de día, azul oscuro de noche); sube con -mt hasta la cabecera
-        <section aria-labelledby="titulo-portada" className="relative -mt-8 overflow-y-clip pb-14 pt-10 md:-mt-12 md:pb-20 md:pt-16">
-          <span
-            aria-hidden="true"
-            className="adorno pointer-events-none absolute -right-40 -top-40 hidden h-[36rem] w-[36rem] rounded-full bg-seccion lg:block"
-          />
-
+        <section aria-labelledby="titulo-portada" className="relative -mt-8 pb-14 pt-10 md:-mt-12 md:pb-20 md:pt-16">
           {banners.length > 0 && (
             <div className="relative">
               <BannerInicio banners={banners} />

@@ -14,7 +14,7 @@ interface Props {
 
 /**
  * Título visible de la página + título de la pestaña del navegador.
- * Cambia según la plantilla: título grande con adorno en el portal, ícono y título en el panel.
+ * Cambia según la plantilla: título grande con el ícono de la sección en el portal, ícono y título en el panel.
  */
 export function TituloPagina(props: Props) {
   const plantilla = usePlantilla()
@@ -46,18 +46,20 @@ function EncabezadoPortal({ titulo, subtitulo }: Props) {
   const Icono = iconoDeRuta(pathname)
 
   return (
-    <header className="relative -mt-8 mb-10 overflow-y-clip py-10 md:-mt-12 md:mb-14 md:py-16">
-      {/* Adorno: círculo completo, gris claro de día y negro de noche, con el ícono de la sección */}
+    <header className="relative -mt-8 mb-10 py-10 md:-mt-12 md:mb-14 md:py-16">
+      {/* Ícono grande de la sección, sin fondo */}
       {Icono && (
-        <div
+        <IconoDinamico
+          icono={Icono}
+          width={112}
+          height={112}
+          strokeWidth={1}
           aria-hidden="true"
-          className="adorno pointer-events-none absolute right-0 top-1/2 hidden h-60 w-60 -translate-y-1/2 place-items-center rounded-full bg-seccion md:grid"
-        >
-          <IconoDinamico icono={Icono} width={104} height={104} strokeWidth={1} className="text-titulo" />
-        </div>
+          className="pointer-events-none absolute right-6 top-1/2 hidden -translate-y-1/2 text-titulo md:block"
+        />
       )}
 
-      <div className="relative max-w-3xl md:pr-68 xl:pr-0">
+      <div className="relative max-w-3xl md:pr-44 xl:pr-0">
         <nav aria-label="Ruta de navegación">
           <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-sm text-texto-suave">
             <li>

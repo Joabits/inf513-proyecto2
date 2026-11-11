@@ -134,7 +134,6 @@ export function LaCarrera() {
 
       {/* Invitación final: tarjeta sobre el fondo del modo */}
       <section className="relative mt-16 overflow-hidden rounded-tema border border-borde-tarjeta bg-tarjeta p-6 sombra-suave md:mt-20 md:p-10">
-        <span aria-hidden="true" className="adorno pointer-events-none absolute -right-24 -top-20 hidden h-80 w-80 rounded-full bg-seccion md:block" />
         <div className="relative flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
           <div className="min-w-0">
             <h2 className="text-2xl text-titulo md:text-3xl">¿Quiere estudiar Administración de Empresas?</h2>

@@ -12,7 +12,7 @@
  *   bg-fondo, bg-superficie, text-texto, text-texto-suave, text-titulo,
  *   bg-primario, text-sobre-primario, text-acento, bg-marino, bg-marino-oscuro,
  *   border-borde, border-borde-tarjeta (tarjetas: solo se ve en alto contraste), rounded-tema,
- *   bg-tarjeta, bg-seccion, bg-banda, bg-chip, text-sobre-chip,
+ *   bg-tarjeta, bg-banda, bg-chip, text-sobre-chip,
  *   text-sobre-marino, text-sobre-marino-suave, sombra-suave, sombra-elevada
  * Así funcionan los temas, el modo noche y el alto contraste sin tocar cada pantalla.
  */
@@ -30,7 +30,6 @@
   --color-borde: var(--c-borde);
   --color-borde-tarjeta: var(--c-borde-tarjeta);
   --color-tarjeta: var(--c-tarjeta);
-  --color-seccion: var(--c-seccion);
   --color-banda: var(--c-banda);
   --color-chip: var(--c-chip);
   --color-sobre-chip: var(--c-sobre-chip);
@@ -56,7 +55,6 @@
   --c-borde: #d9dce3; /* línea neutra de interfaz, no es un color de marca */
   --c-borde-tarjeta: transparent; /* tarjetas sin línea (diseño limpio); en alto contraste sí la llevan */
   --c-tarjeta: #ffffff;
-  --c-seccion: #f4f5f7; /* franja alterna para separar secciones */
   --c-banda: #21366e; /* azul de acento: titulaciones, semestres de la malla, panel del ingreso */
   --c-chip: #21366e; /* fondo de los íconos destacados */
   --c-sobre-chip: #ffffff;
@@ -81,7 +79,6 @@
   --c-borde: #21366e;
   /* igual que de día: la tarjeta tiene el mismo fondo que la página y se marca con su borde */
   --c-tarjeta: #0f1e45;
-  --c-seccion: #0a0a0a;
   --c-chip: #21366e;
   /* sombra muy suave también de noche: negra semitransparente, se nota sobre el azul oscuro */
   --sombra-suave: 0 1px 2px rgb(10 10 10 / 0.3), 0 8px 22px -10px rgb(10 10 10 / 0.75);
@@ -101,7 +98,6 @@
   --c-marino-oscuro: #0a0a0a;
   --c-borde: #0a0a0a;
   --c-tarjeta: #ffffff;
-  --c-seccion: #ffffff;
   --c-banda: #0a0a0a;
   --c-chip: #0a0a0a;
   --c-sobre-chip: #ffffff;
@@ -120,7 +116,6 @@
   --c-acento: #ffffff;
   --c-borde: #ffffff;
   --c-tarjeta: #0a0a0a;
-  --c-seccion: #0a0a0a;
   --c-chip: #ffffff;
   --c-sobre-chip: #0a0a0a;
   --c-borde-tarjeta: #ffffff;
@@ -202,9 +197,4 @@
 
 @utility sombra-elevada {
   box-shadow: var(--sombra-elevada);
-}
-
-/* Adornos geométricos de las franjas (clase adorno): en alto contraste no se pintan, así no tapan las líneas de la franja */
-:root[data-contraste="alto"] .adorno {
-  background: transparent;
 }
