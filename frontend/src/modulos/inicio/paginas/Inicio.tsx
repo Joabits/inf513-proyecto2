@@ -76,7 +76,7 @@ export function Inicio() {
             {cifras.length > 0 && (
               <dl className="grid grid-cols-2 gap-3 sm:gap-4 [&>div:last-child:nth-child(odd)]:col-span-2">
                 {cifras.map((cifra) => (
-                  <div key={cifra.etiqueta} className="flex flex-col-reverse rounded-tema border border-borde bg-tarjeta p-5 sombra-suave sm:p-7">
+                  <div key={cifra.etiqueta} className="flex flex-col-reverse rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave sm:p-7">
                     <dt className="mt-1 text-sm text-texto-suave">{cifra.etiqueta}</dt>
                     <dd className="font-titulos text-3xl font-extrabold text-titulo sm:text-4xl">{cifra.valor}</dd>
                     <span aria-hidden="true" className="mb-4 block h-1 w-8 rounded-full bg-primario" />
@@ -104,7 +104,7 @@ export function Inicio() {
                 <EnlaceInicio
                   key={acceso.titulo}
                   destino={acceso.ruta}
-                  className="group flex flex-col rounded-tema border border-borde bg-tarjeta p-6 sombra-suave transition hover:-translate-y-1 hover:border-primario hover:sombra-elevada motion-reduce:hover:translate-y-0"
+                  className="group flex flex-col rounded-tema border border-borde-tarjeta bg-tarjeta p-6 sombra-suave transition hover:-translate-y-1 hover:border-primario hover:sombra-elevada motion-reduce:hover:translate-y-0"
                 >
                   <ChipIcono icono={Icono} className="transition-colors group-hover:bg-primario" />
                   <h3 className="mt-5 text-lg text-titulo group-hover:text-acento">{acceso.titulo}</h3>

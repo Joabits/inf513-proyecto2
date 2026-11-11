@@ -28,7 +28,7 @@ export function DatosDeContacto() {
   if (!contacto) return null
 
   return (
-    <aside aria-labelledby="titulo-datos" className="self-start rounded-tema border border-borde bg-tarjeta p-6 sombra-suave sm:p-8">
+    <aside aria-labelledby="titulo-datos" className="self-start rounded-tema border border-borde-tarjeta bg-tarjeta p-6 sombra-suave sm:p-8">
       <h2 id="titulo-datos" className="text-2xl text-titulo">
         Datos de contacto
       </h2>

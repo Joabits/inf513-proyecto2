@@ -104,7 +104,7 @@ export function MallaCurricular() {
         <section aria-label="Datos del plan de estudios" className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
           <dl className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {datos.map(([etiqueta, valor, icono]) => (
-              <div key={etiqueta} className="flex items-center gap-3 rounded-tema border border-borde bg-tarjeta p-4 sombra-suave">
+              <div key={etiqueta} className="flex items-center gap-3 rounded-tema border border-borde-tarjeta bg-tarjeta p-4 sombra-suave">
                 <ChipIcono icono={icono} tamano="sm" className="hidden sm:grid" />
                 <div className="min-w-0">
                   <dt className="text-sm text-texto-suave">{etiqueta}</dt>
@@ -114,7 +114,7 @@ export function MallaCurricular() {
             ))}
           </dl>
           {plan.titulaciones && (
-            <div className="rounded-tema border border-borde bg-tarjeta p-6 sombra-suave">
+            <div className="rounded-tema border border-borde-tarjeta bg-tarjeta p-6 sombra-suave">
               <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-titulo">
                 <IconoMedalla width={18} height={18} aria-hidden="true" className="text-acento" /> Titulaciones intermedias
               </h2>

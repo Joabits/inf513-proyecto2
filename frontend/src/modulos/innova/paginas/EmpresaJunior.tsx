@@ -68,7 +68,7 @@ export function EmpresaJunior() {
           {proposito.length > 0 && (
             <div className="space-y-4 self-start">
               {proposito.map(({ titulo, texto, icono }) => (
-                <article key={titulo} className="flex gap-4 rounded-tema border border-borde bg-tarjeta p-5 sombra-suave">
+                <article key={titulo} className="flex gap-4 rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave">
                   <ChipIcono icono={icono} />
                   <div>
                     <h3 className="text-lg text-titulo">{titulo}</h3>
@@ -91,7 +91,7 @@ export function EmpresaJunior() {
             {servicios.map((servicio, i) => (
               <li
                 key={servicio.id}
-                className="flex flex-col rounded-tema border border-borde bg-tarjeta p-6 sombra-suave transition hover:-translate-y-1 hover:border-primario hover:sombra-elevada motion-reduce:hover:translate-y-0"
+                className="flex flex-col rounded-tema border border-borde-tarjeta bg-tarjeta p-6 sombra-suave transition hover:-translate-y-1 hover:border-primario hover:sombra-elevada motion-reduce:hover:translate-y-0"
               >
                 <span aria-hidden="true" className="grid h-11 w-11 place-items-center rounded-tema bg-chip font-titulos text-sm font-extrabold text-sobre-chip">
                   {String(i + 1).padStart(2, '0')}

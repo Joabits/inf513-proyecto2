@@ -35,7 +35,7 @@ export function FormMensaje() {
 
   if (envio.isSuccess) {
     return (
-      <div role="status" className="self-start rounded-tema border border-borde bg-tarjeta p-6 text-center sombra-suave sm:p-10">
+      <div role="status" className="self-start rounded-tema border border-borde-tarjeta bg-tarjeta p-6 text-center sombra-suave sm:p-10">
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-primario text-sobre-primario" aria-hidden="true">
           <IconoListo width={28} height={28} />
         </span>
@@ -49,7 +49,7 @@ export function FormMensaje() {
   }
 
   return (
-    <form onSubmit={handleSubmit(enviar)} noValidate className="space-y-5 rounded-tema border border-borde bg-tarjeta p-5 sombra-suave sm:p-8">
+    <form onSubmit={handleSubmit(enviar)} noValidate className="space-y-5 rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave sm:p-8">
       <div>
         <h2 className="text-2xl text-titulo">Escríbanos</h2>
         <p className="mt-1 text-sm text-texto-suave">Responderemos a su correo electrónico. Los campos sin la marca «Opcional» son obligatorios.</p>

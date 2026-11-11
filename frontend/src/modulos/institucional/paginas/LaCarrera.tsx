@@ -36,7 +36,7 @@ function Parrafos({ texto, className = '' }: { texto: string; className?: string
 /** Tarjeta con ícono para misión, visión, perfil y campo ocupacional. */
 function TarjetaTexto({ titulo, texto, icono }: { titulo: string; texto: string; icono: ComponenteIcono }) {
   return (
-    <article className="rounded-tema border border-borde bg-tarjeta p-6 sombra-suave md:p-8">
+    <article className="rounded-tema border border-borde-tarjeta bg-tarjeta p-6 sombra-suave md:p-8">
       <ChipIcono icono={icono} tamano="lg" />
       <h2 className="mt-5 text-2xl text-titulo">{titulo}</h2>
       <Parrafos texto={texto} className="mt-3" />
@@ -92,7 +92,7 @@ export function LaCarrera() {
         {datos.length > 0 && (
           <dl className="space-y-3 self-start">
             {datos.map(({ etiqueta, valor, icono }) => (
-              <div key={etiqueta} className="flex items-center gap-4 rounded-tema border border-borde bg-tarjeta p-4 sombra-suave">
+              <div key={etiqueta} className="flex items-center gap-4 rounded-tema border border-borde-tarjeta bg-tarjeta p-4 sombra-suave">
                 <ChipIcono icono={icono} />
                 <div className="min-w-0">
                   <dt className="text-sm text-texto-suave">{etiqueta}</dt>
@@ -118,7 +118,7 @@ export function LaCarrera() {
           <Parrafos texto={contenido.resena_historica} className="mt-5" />
         </div>
         {hitos.length > 0 && (
-          <div className="self-start rounded-tema border border-borde bg-tarjeta p-6 sombra-suave md:p-8">
+          <div className="self-start rounded-tema border border-borde-tarjeta bg-tarjeta p-6 sombra-suave md:p-8">
             <h2 className="mb-7 flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-titulo">
               <IconoHistorial width={18} height={18} aria-hidden="true" className="text-acento" /> Hitos
             </h2>
@@ -133,7 +133,7 @@ export function LaCarrera() {
       </section>
 
       {/* Invitación final: tarjeta sobre el fondo del modo */}
-      <section className="relative mt-16 overflow-hidden rounded-tema border border-borde bg-tarjeta p-6 sombra-suave md:mt-20 md:p-10">
+      <section className="relative mt-16 overflow-hidden rounded-tema border border-borde-tarjeta bg-tarjeta p-6 sombra-suave md:mt-20 md:p-10">
         <span aria-hidden="true" className="adorno pointer-events-none absolute -right-24 -top-20 hidden h-80 w-80 rounded-full bg-seccion md:block" />
         <div className="relative flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
           <div className="min-w-0">
