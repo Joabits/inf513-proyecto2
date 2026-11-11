@@ -13,6 +13,7 @@ import { rutasGestionDocumentos } from '@/modulos/documentos'
 import { rutasGestionInicio, rutasInicio } from '@/modulos/inicio'
 import { rutasGestionInnova, rutasInnova } from '@/modulos/innova'
 import { rutasGestionInvestigacion } from '@/modulos/investigacion'
+import { rutasMallaCurricular } from '@/modulos/malla-curricular'
 import { rutasGestionInstitucional, rutasInstitucional } from '@/modulos/institucional'
 import { rutasGestionUsuarios } from '@/modulos/usuarios'
 
@@ -32,6 +33,7 @@ export const router = createBrowserRouter(
         ...rutasContacto,
         ...rutasInstitucional,
         ...rutasInnova,
+        ...rutasMallaCurricular,
         // Cualquier ruta del menú cuyo módulo aún no existe
         { path: '*', element: <EnConstruccion /> },
       ],

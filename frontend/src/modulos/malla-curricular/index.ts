@@ -1,0 +1,1 @@
+export { rutasMallaCurricular } from './rutas'
