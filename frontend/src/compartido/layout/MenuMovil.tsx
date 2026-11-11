@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { Link, NavLink } from 'react-router'
 import { iconoDeRuta } from '@/compartido/menu/iconosRuta'
 import type { OpcionMenu } from '@/compartido/menu/tipos'
-import { IconoAbajo, IconoCerrar, IconoIngresar, IconoPanel, IconoSalir } from '@/compartido/ui/Iconos'
+import { IconoAbajo, IconoCerrar, IconoPanel, IconoSalir } from '@/compartido/ui/Iconos'
 import type { UsuarioSesion } from '@/compartido/sesion/tipos'
 import { useCerrarSesion } from '@/compartido/sesion/useCerrarSesion'
 import { Boton } from '@/compartido/ui/Boton'
@@ -99,18 +99,6 @@ export function MenuMovil(props: {
           <Buscador id="buscar-movil" alBuscar={alCerrar} />
           <Lista opciones={props.publico} alNavegar={alCerrar} />
         </div>
-
-        {!props.usuario && (
-          <div className="border-t border-borde p-4">
-            <Link
-              to="/gestion/ingresar"
-              onClick={alCerrar}
-              className="flex items-center justify-center gap-2 rounded-tema border border-borde px-4 py-2 text-sm font-semibold text-titulo"
-            >
-              <IconoIngresar width={16} height={16} aria-hidden="true" /> Acceso del personal
-            </Link>
-          </div>
-        )}
 
         {props.usuario && (
           <div className="border-t border-borde p-4">

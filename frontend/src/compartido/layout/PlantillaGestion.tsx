@@ -37,6 +37,7 @@ export function PlantillaGestion() {
 
   return (
     <div className="flex min-h-screen">
+      <meta name="robots" content="noindex, nofollow" />
       <a
         href="#contenido"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-tema focus:bg-primario focus:px-4 focus:py-2 focus:text-sobre-primario"

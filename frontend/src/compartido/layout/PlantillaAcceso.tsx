@@ -14,6 +14,8 @@ export function PlantillaAcceso() {
 
   return (
     <div className="flex min-h-screen">
+      {/* Los buscadores no deben mostrar la pantalla de ingreso */}
+      <meta name="robots" content="noindex, nofollow" />
       <aside className="relative hidden w-[44%] max-w-2xl shrink-0 flex-col justify-between overflow-hidden bg-banda p-12 text-sobre-marino lg:flex xl:p-16">
         <span aria-hidden="true" className="adorno absolute -bottom-40 -right-40 h-[30rem] w-[30rem] rounded-full bg-marino-oscuro" />
         <span aria-hidden="true" className="absolute -bottom-10 right-24 h-28 w-28 rounded-full border-[14px] border-primario" />

@@ -1,14 +1,13 @@
-import { Link } from 'react-router'
 import { enlaceTelefono, useConfiguracion } from '@/compartido/configuracion/useConfiguracion'
 import { useSesion } from '@/compartido/sesion/useSesion'
-import { IconoCorreo, IconoIngresar, IconoTelefono } from '@/compartido/ui/Iconos'
+import { IconoCorreo, IconoTelefono } from '@/compartido/ui/Iconos'
 
 const ENLACE = 'inline-flex items-center gap-1.5 underline-offset-4 hover:underline'
 
 /**
  * Franja azul oscuro sobre la cabecera, solo en PC y para visitantes:
- * universidad, teléfono y correo (de CU-28) y el acceso del personal.
- * Con sesión iniciada se muestra AvisoPanel en su lugar.
+ * universidad, teléfono y correo (de CU-28). Con sesión iniciada se muestra AvisoPanel en su lugar.
+ * A propósito NO enlaza a la pantalla de ingreso: el personal entra escribiendo /gestion en la barra de direcciones.
  */
 export function BarraSuperior() {
   const { data: usuario, isPending } = useSesion()
@@ -38,11 +37,6 @@ export function BarraSuperior() {
               </a>
             </li>
           )}
-          <li>
-            <Link to="/gestion/ingresar" className={`${ENLACE} font-semibold`}>
-              <IconoIngresar width={14} height={14} aria-hidden="true" /> Acceso del personal
-            </Link>
-          </li>
         </ul>
       </div>
     </div>
