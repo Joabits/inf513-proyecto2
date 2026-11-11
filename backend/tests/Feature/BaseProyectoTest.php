@@ -172,7 +172,8 @@ class BaseProyectoTest extends TestCase
         $usuario->update(['rol_id' => Rol::where('slug', Rol::EDITOR_COMUNICACION)->value('id')]);
         $usuario->update(['activo' => false]);
 
-        $acciones = DB::table('bitacora')->where('tipo', 'auditoria')->orderBy('id')->pluck('accion')->all();
+        // Solo los registros de este usuario: en PostgreSQL el trigger de permisos también anota lo que cargan los seeders
+        $acciones = DB::table('bitacora')->where('tipo', 'auditoria')->where('recurso', 'Usuario #'.$usuario->id)->orderBy('id')->pluck('accion')->all();
         $this->assertSame(['crear_usuario', 'cambiar_rol', 'desactivar_usuario'], $acciones);
         $this->assertSame('Usuario -> Editor de Comunicación', DB::table('bitacora')->where('accion', 'cambiar_rol')->value('detalle'));
     }
