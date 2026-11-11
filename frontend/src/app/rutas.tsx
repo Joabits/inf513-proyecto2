@@ -9,6 +9,7 @@ import { PanelGestion } from '@/compartido/paginas/PanelGestion'
 import { rutasAutenticacion } from '@/modulos/autenticacion'
 import { rutasGestionDocumentos } from '@/modulos/documentos'
 import { rutasGestionInicio, rutasInicio } from '@/modulos/inicio'
+import { rutasGestionUsuarios } from '@/modulos/usuarios'
 
 /*
  * Cada módulo exporta sus rutas desde src/modulos/<modulo>/index.ts
@@ -34,6 +35,7 @@ export const router = createBrowserRouter(
         { path: 'gestion', element: <PanelGestion /> },
         ...rutasGestionInicio,
         ...rutasGestionDocumentos,
+        ...rutasGestionUsuarios,
         // Cualquier opción del panel cuyo módulo aún no existe
         { path: 'gestion/*', element: <EnConstruccion /> },
       ],

@@ -8,9 +8,12 @@ import {
   ChevronRight,
   Contrast,
   ExternalLink,
+  Eye,
+  EyeOff,
   FileUp,
   History,
   ImagePlus,
+  KeyRound,
   LayoutDashboard,
   Lock,
   LogIn,
@@ -22,6 +25,8 @@ import {
   Search,
   Trash2,
   User,
+  UserCheck,
+  UserX,
   X,
 } from 'lucide-react'
 import type { LucideIcon, LucideProps } from 'lucide-react'
@@ -53,3 +58,8 @@ export const IconoPanel = icono(LayoutDashboard)
 export const IconoSubirArchivo = icono(FileUp)
 export const IconoEditar = icono(Pencil)
 export const IconoHistorial = icono(History)
+export const IconoVer = icono(Eye)
+export const IconoOcultar = icono(EyeOff)
+export const IconoLlave = icono(KeyRound)
+export const IconoActivar = icono(UserCheck)
+export const IconoDesactivar = icono(UserX)
