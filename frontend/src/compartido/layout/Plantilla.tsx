@@ -1,6 +1,5 @@
 import { Outlet, ScrollRestoration } from 'react-router'
 import { AvisoPanel } from './AvisoPanel'
-import { BarraSuperior } from './BarraSuperior'
 import { Cabecera } from './Cabecera'
 import { Pie } from './Pie'
 
@@ -18,7 +17,6 @@ export function Plantilla() {
         Saltar al contenido
       </a>
       <AvisoPanel />
-      <BarraSuperior />
       <Cabecera />
       {/* La franja del título de cada página sube con -mt-8 / -mt-12 hasta la cabecera */}
       <main id="contenido" className="contenedor flex-1 pt-8 pb-16 md:pt-12 md:pb-20">
