@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             UsuarioPruebaSeeder::class,
             InicioSeeder::class,
             DocumentoCategoriaSeeder::class,
+            ConfiguracionSeeder::class,
             // Cada módulo agrega aquí su seeder (p. ej. InstitucionalSeeder::class)
         ]);
 
