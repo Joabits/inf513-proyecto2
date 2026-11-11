@@ -37,11 +37,11 @@ export function Inicio() {
       {!portada && banners.length > 0 && <BannerInicio banners={banners} />}
 
       {portada && (
-        // Franja azul pegada a la cabecera (sube con -mt hasta ella)
-        <section aria-labelledby="titulo-portada" className="banda banda-marino -mt-8 overflow-y-clip pb-14 pt-10 md:-mt-12 md:pb-20 md:pt-16">
+        // Sobre el fondo del modo (blanco de día, azul oscuro de noche); sube con -mt hasta la cabecera
+        <section aria-labelledby="titulo-portada" className="relative -mt-8 overflow-y-clip pb-14 pt-10 md:-mt-12 md:pb-20 md:pt-16">
           <span
             aria-hidden="true"
-            className="adorno pointer-events-none absolute -right-40 -top-40 hidden h-[36rem] w-[36rem] rounded-full bg-marino-oscuro lg:block"
+            className="adorno pointer-events-none absolute -right-40 -top-40 hidden h-[36rem] w-[36rem] rounded-full bg-seccion lg:block"
           />
 
           {banners.length > 0 && (
@@ -53,21 +53,21 @@ export function Inicio() {
           <div className={`relative grid items-center gap-10 lg:gap-16 ${cifras.length > 0 ? 'lg:grid-cols-[1.25fr_1fr]' : ''}`}>
             <div>
               {portada.distintivo && (
-                <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-sobre-marino-suave px-3.5 py-1.5 text-sm font-semibold">
-                  <IconoVerificado width={16} height={16} aria-hidden="true" />
+                <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-borde bg-fondo px-3.5 py-1.5 text-sm font-semibold text-titulo">
+                  <IconoVerificado width={16} height={16} aria-hidden="true" className="text-acento" />
                   {portada.distintivo}
                 </p>
               )}
-              <h1 id="titulo-portada" className="text-4xl leading-tight sm:text-5xl lg:text-6xl">
+              <h1 id="titulo-portada" className="text-4xl leading-tight text-titulo sm:text-5xl lg:text-6xl">
                 {portada.titulo}
               </h1>
               <span aria-hidden="true" className="mt-6 block h-1 w-16 rounded-full bg-primario" />
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-sobre-marino-suave sm:text-lg">{portada.presentacion}</p>
+              <p className="mt-6 max-w-xl text-base leading-relaxed text-texto-suave sm:text-lg">{portada.presentacion}</p>
               <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-                <Link to="/malla-curricular" className={`${BOTON} bg-primario text-sobre-primario hover:bg-marino-oscuro`}>
+                <Link to="/malla-curricular" className={`${BOTON} bg-primario text-sobre-primario hover:bg-marino`}>
                   Ver malla curricular <IconoFlecha width={18} height={18} aria-hidden="true" />
                 </Link>
-                <Link to="/contacto" className={`${BOTON} border border-sobre-marino hover:bg-sobre-marino hover:text-marino`}>
+                <Link to="/contacto" className={`${BOTON} border border-borde bg-fondo text-titulo hover:border-primario hover:text-acento`}>
                   Contacto
                 </Link>
               </div>
@@ -76,9 +76,9 @@ export function Inicio() {
             {cifras.length > 0 && (
               <dl className="grid grid-cols-2 gap-3 sm:gap-4 [&>div:last-child:nth-child(odd)]:col-span-2">
                 {cifras.map((cifra) => (
-                  <div key={cifra.etiqueta} className="flex flex-col-reverse rounded-tema border border-marino bg-marino-oscuro p-5 sm:p-7">
-                    <dt className="mt-1 text-sm text-sobre-marino-suave">{cifra.etiqueta}</dt>
-                    <dd className="font-titulos text-3xl font-extrabold sm:text-4xl">{cifra.valor}</dd>
+                  <div key={cifra.etiqueta} className="flex flex-col-reverse rounded-tema border border-borde bg-tarjeta p-5 sombra-suave sm:p-7">
+                    <dt className="mt-1 text-sm text-texto-suave">{cifra.etiqueta}</dt>
+                    <dd className="font-titulos text-3xl font-extrabold text-titulo sm:text-4xl">{cifra.valor}</dd>
                     <span aria-hidden="true" className="mb-4 block h-1 w-8 rounded-full bg-primario" />
                   </div>
                 ))}

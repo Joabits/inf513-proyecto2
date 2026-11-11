@@ -14,7 +14,7 @@
  *   border-borde, rounded-tema,
  *   bg-tarjeta, bg-seccion, bg-banda, bg-pie, bg-chip, text-sobre-chip,
  *   text-sobre-marino, text-sobre-marino-suave, sombra-suave, sombra-elevada,
- *   banda + banda-marino / banda-seccion (fondo de lado a lado de la pantalla)
+ *   banda + banda-seccion (franja gris de lado a lado de la pantalla)
  * Así funcionan los temas, el modo noche y el alto contraste sin tocar cada pantalla.
  */
 @theme inline {
@@ -201,7 +201,7 @@
 /*
  * Franja de color de lado a lado de la pantalla. El contenido sigue en su columna
  * (alineado con el resto de la página); solo el fondo se estira con un ::before.
- * Usar en bloques que ocupan todo el ancho de su página, junto con banda-marino o banda-seccion.
+ * Usar en bloques que ocupan todo el ancho de su página, junto con banda-seccion.
  */
 @utility banda {
   position: relative;
@@ -218,11 +218,6 @@
     background: var(--fondo-banda, var(--c-seccion));
     border-block: 1px solid var(--c-borde-banda);
   }
-}
-
-@utility banda-marino {
-  --fondo-banda: var(--c-banda);
-  color: var(--c-sobre-marino);
 }
 
 @utility banda-seccion {

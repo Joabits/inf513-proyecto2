@@ -14,7 +14,7 @@ interface Props {
 
 /**
  * Título visible de la página + título de la pestaña del navegador.
- * Cambia según la plantilla: franja azul en el portal, ícono y título en el panel.
+ * Cambia según la plantilla: título grande con adorno en el portal, ícono y título en el panel.
  */
 export function TituloPagina(props: Props) {
   const plantilla = usePlantilla()
@@ -36,8 +36,8 @@ export function TituloPagina(props: Props) {
 }
 
 /**
- * Franja azul de lado a lado, pegada a la cabecera (debe ser lo primero de la página).
- * La ruta de navegación sale del menú de la BD: Inicio › sección › página.
+ * Encabezado sobre el fondo del modo (blanco de día, azul oscuro de noche), pegado a la cabecera:
+ * debe ser lo primero de la página. La ruta de navegación sale del menú de la BD: Inicio › sección › página.
  */
 function EncabezadoPortal({ titulo, subtitulo }: Props) {
   const { pathname } = useLocation()
@@ -46,20 +46,22 @@ function EncabezadoPortal({ titulo, subtitulo }: Props) {
   const Icono = iconoDeRuta(pathname)
 
   return (
-    <header className="banda banda-marino -mt-8 mb-10 overflow-y-clip py-10 md:-mt-12 md:mb-14 md:py-16">
-      {/* Adorno con colores del manual: círculo azul oscuro con el ícono de la sección */}
-      <div
-        aria-hidden="true"
-        className="adorno pointer-events-none absolute -right-24 -top-24 hidden h-[28rem] w-[28rem] place-items-center rounded-full bg-marino-oscuro md:grid"
-      >
-        {Icono && <IconoDinamico icono={Icono} width={128} height={128} strokeWidth={0.9} className="text-sobre-marino" />}
-      </div>
+    <header className="relative -mt-8 mb-10 overflow-y-clip py-10 md:-mt-12 md:mb-14 md:py-16">
+      {/* Adorno: círculo completo, gris claro de día y negro de noche, con el ícono de la sección */}
+      {Icono && (
+        <div
+          aria-hidden="true"
+          className="adorno pointer-events-none absolute right-0 top-1/2 hidden h-60 w-60 -translate-y-1/2 place-items-center rounded-full bg-seccion md:grid"
+        >
+          <IconoDinamico icono={Icono} width={104} height={104} strokeWidth={1} className="text-titulo" />
+        </div>
+      )}
 
-      <div className="relative max-w-3xl md:pr-48 lg:pr-0">
+      <div className="relative max-w-3xl md:pr-68 xl:pr-0">
         <nav aria-label="Ruta de navegación">
-          <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-sm text-sobre-marino-suave">
+          <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-sm text-texto-suave">
             <li>
-              <Link to="/" className="underline-offset-4 hover:underline">
+              <Link to="/" className="underline-offset-4 hover:text-acento hover:underline">
                 Inicio
               </Link>
             </li>
@@ -69,14 +71,14 @@ function EncabezadoPortal({ titulo, subtitulo }: Props) {
                 {seccion}
               </li>
             )}
-            <li aria-current="page" className="flex items-center gap-1.5 font-semibold text-sobre-marino">
+            <li aria-current="page" className="flex items-center gap-1.5 font-semibold text-titulo">
               <IconoSiguiente width={14} height={14} aria-hidden="true" />
               {titulo}
             </li>
           </ol>
         </nav>
-        <h1 className="mt-4 text-4xl leading-tight md:text-5xl">{titulo}</h1>
-        {subtitulo && <p className="mt-4 max-w-2xl text-sobre-marino-suave md:text-lg">{subtitulo}</p>}
+        <h1 className="mt-4 text-4xl leading-tight text-titulo md:text-5xl">{titulo}</h1>
+        {subtitulo && <p className="mt-4 max-w-2xl text-texto-suave md:text-lg">{subtitulo}</p>}
         <span aria-hidden="true" className="mt-8 block h-1 w-14 rounded-full bg-primario" />
       </div>
     </header>

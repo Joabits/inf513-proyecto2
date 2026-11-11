@@ -132,19 +132,19 @@ export function LaCarrera() {
         <TarjetaTexto titulo="Campo ocupacional" texto={contenido.campo_ocupacional} icono={IconoEmpresa} />
       </section>
 
-      {/* Franja final pegada al pie (-mb anula el espacio inferior de la plantilla) */}
-      <section className="banda banda-marino -mb-16 mt-16 overflow-y-clip py-12 md:-mb-20 md:mt-20 md:py-16">
-        <span aria-hidden="true" className="adorno pointer-events-none absolute -right-24 -top-20 hidden h-80 w-80 rounded-full bg-marino-oscuro md:block" />
+      {/* Invitación final: tarjeta sobre el fondo del modo */}
+      <section className="relative mt-16 overflow-hidden rounded-tema border border-borde bg-tarjeta p-6 sombra-suave md:mt-20 md:p-10">
+        <span aria-hidden="true" className="adorno pointer-events-none absolute -right-24 -top-20 hidden h-80 w-80 rounded-full bg-seccion md:block" />
         <div className="relative flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
-          <div>
-            <h2 className="text-2xl md:text-3xl">¿Quiere estudiar Administración de Empresas?</h2>
-            <p className="mt-2 text-sobre-marino-suave">Revise el plan de estudios 101-4 y escríbanos si tiene dudas.</p>
+          <div className="min-w-0">
+            <h2 className="text-2xl text-titulo md:text-3xl">¿Quiere estudiar Administración de Empresas?</h2>
+            <p className="mt-2 text-texto-suave">Revise el plan de estudios 101-4 y escríbanos si tiene dudas.</p>
           </div>
-          <div className="flex flex-wrap gap-3">
-            <Link to="/malla-curricular" className={`${BOTON} bg-primario text-sobre-primario hover:bg-marino-oscuro`}>
+          <div className="flex flex-wrap gap-3 md:shrink-0 md:flex-nowrap">
+            <Link to="/malla-curricular" className={`${BOTON} bg-primario text-sobre-primario hover:bg-marino`}>
               Ver malla curricular <IconoFlecha width={18} height={18} aria-hidden="true" />
             </Link>
-            <Link to="/contacto" className={`${BOTON} border border-sobre-marino hover:bg-sobre-marino hover:text-marino`}>
+            <Link to="/contacto" className={`${BOTON} border border-borde bg-tarjeta text-titulo hover:border-primario hover:text-acento`}>
               Contacto
             </Link>
           </div>
