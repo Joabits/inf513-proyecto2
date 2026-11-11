@@ -41,7 +41,7 @@ export function FormServicios({ servicios }: { servicios: ServicioInnova[] }) {
   })
 
   return (
-    <form onSubmit={handleSubmit(enviar)} noValidate className="space-y-5 rounded-tema border border-borde bg-fondo p-5 sm:p-6">
+    <form onSubmit={handleSubmit(enviar)} noValidate className="space-y-5 rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave sm:p-6">
       <div>
         <h2 className="text-lg font-bold text-titulo">Servicios</h2>
         <p className="text-sm text-texto-suave">
@@ -51,7 +51,7 @@ export function FormServicios({ servicios }: { servicios: ServicioInnova[] }) {
       </div>
 
       {fields.length === 0 && (
-        <p className="rounded-tema border border-dashed border-borde p-6 text-center text-sm text-texto-suave">
+        <p className="p-6 text-center text-sm text-texto-suave">
           No hay servicios: el formulario solo ofrecerá «Otro / no estoy seguro».
         </p>
       )}

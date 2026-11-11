@@ -45,7 +45,7 @@ export function GestionDocumentos() {
       </div>
 
       {subiendo && (
-        <section aria-labelledby="titulo-subir" className="mb-10 rounded-tema border border-borde bg-fondo p-5 md:p-6">
+        <section aria-labelledby="titulo-subir" className="mb-10 rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave md:p-6">
           <h2 id="titulo-subir" className="text-xl text-titulo">
             Subir documento
           </h2>
@@ -66,7 +66,7 @@ export function GestionDocumentos() {
       )}
 
       {documentos && documentos.length === 0 && !subiendo && (
-        <div className="rounded-tema border border-dashed border-borde px-6 py-12 text-center">
+        <div className="rounded-tema border border-borde-tarjeta bg-tarjeta px-6 py-12 text-center sombra-suave">
           <p className="font-semibold text-titulo">Todavía no hay documentos.</p>
           <p className="mt-1 text-texto-suave">Los que suba aparecerán aquí y en la sección Documentos del portal.</p>
         </div>
@@ -106,7 +106,7 @@ export function GestionDocumentos() {
           </p>
 
           {visibles.length > 0 ? (
-            <ul className="divide-y divide-borde border-y border-borde">
+            <ul className="space-y-3">
               {visibles.map((documento) => (
                 <FilaDocumento key={documento.id} documento={documento} />
               ))}

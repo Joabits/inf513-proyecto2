@@ -22,7 +22,7 @@ export function GestorBanner({ banners }: { banners: Banner[] }) {
   }
 
   return (
-    <div className="space-y-5 rounded-tema border border-borde bg-fondo p-5 sm:p-6">
+    <div className="space-y-5 rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave sm:p-6">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <div>
           <h2 className="text-lg font-bold text-titulo">Banner</h2>
@@ -41,7 +41,7 @@ export function GestorBanner({ banners }: { banners: Banner[] }) {
 
       <ol className="space-y-3">
         {banners.map((banner, i) => (
-          <li key={banner.id} className="flex flex-col gap-4 rounded-tema border border-borde p-3 sm:flex-row sm:items-center">
+          <li key={banner.id} className="flex flex-col gap-4 rounded-tema border border-borde-tarjeta bg-tarjeta p-3 sombra-suave sm:flex-row sm:items-center">
             <img src={banner.imagen} alt="" className="aspect-[21/8] w-full rounded-tema object-cover sm:w-56" />
             <div className="min-w-0 flex-1 text-sm">
               <p className="font-semibold text-titulo">{banner.texto_alternativo}</p>

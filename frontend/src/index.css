@@ -12,8 +12,7 @@
  *   bg-fondo, bg-superficie, text-texto, text-texto-suave, text-titulo,
  *   bg-primario, text-sobre-primario, text-acento, bg-marino, bg-marino-oscuro,
  *   border-borde, border-borde-tarjeta (tarjetas: solo se ve en alto contraste), rounded-tema,
- *   bg-tarjeta, bg-banda, bg-chip, text-sobre-chip,
- *   text-sobre-marino, text-sobre-marino-suave, sombra-suave, sombra-elevada, sombra-lateral
+ *   bg-tarjeta, bg-chip, text-sobre-chip, sombra-suave, sombra-elevada, sombra-lateral
  * Así funcionan los temas, el modo noche y el alto contraste sin tocar cada pantalla.
  */
 @theme inline {
@@ -30,11 +29,8 @@
   --color-borde: var(--c-borde);
   --color-borde-tarjeta: var(--c-borde-tarjeta);
   --color-tarjeta: var(--c-tarjeta);
-  --color-banda: var(--c-banda);
   --color-chip: var(--c-chip);
   --color-sobre-chip: var(--c-sobre-chip);
-  --color-sobre-marino: var(--c-sobre-marino);
-  --color-sobre-marino-suave: var(--c-sobre-marino-suave);
   --radius-tema: var(--radio);
   --font-titulos: "Montserrat Variable", system-ui, sans-serif;
   --font-cuerpo: "Montserrat Variable", system-ui, sans-serif;
@@ -57,11 +53,8 @@
   --c-barra: #d9dce3; /* barras de desplazamiento */
   --c-barra-activa: #21366e;
   --c-tarjeta: #ffffff;
-  --c-banda: #21366e; /* azul de acento: titulaciones, semestres de la malla, panel del ingreso */
   --c-chip: #21366e; /* fondo de los íconos destacados */
   --c-sobre-chip: #ffffff;
-  --c-sobre-marino: #ffffff;
-  --c-sobre-marino-suave: #f4f5f7;
   --sombra-suave: 0 1px 2px rgb(15 30 69 / 0.06), 0 6px 16px -10px rgb(15 30 69 / 0.18);
   --sombra-elevada: 0 2px 4px rgb(15 30 69 / 0.06), 0 18px 36px -14px rgb(15 30 69 / 0.32);
   --sombra-lateral: 6px 0 24px -18px rgb(15 30 69 / 0.45);
@@ -104,11 +97,8 @@
   --c-marino-oscuro: #0a0a0a;
   --c-borde: #0a0a0a;
   --c-tarjeta: #ffffff;
-  --c-banda: #0a0a0a;
   --c-chip: #0a0a0a;
   --c-sobre-chip: #ffffff;
-  --c-sobre-marino: #ffffff;
-  --c-sobre-marino-suave: #ffffff;
   --c-borde-tarjeta: #0a0a0a;
   --c-barra: #0a0a0a;
   --c-barra-activa: #0a0a0a;

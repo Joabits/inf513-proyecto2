@@ -24,7 +24,7 @@ export function ZonaArchivo(props: {
     const tipo = archivo.name.split('.').pop()?.toLowerCase() as TipoDocumento
     return (
       <div>
-        <div className="flex items-center gap-4 rounded-tema border border-borde p-4">
+        <div className="flex items-center gap-4 rounded-tema border border-borde-tarjeta bg-tarjeta p-4 sombra-suave">
           <EtiquetaTipo tipo={tipo} />
           <span className="min-w-0 flex-1">
             <span className="block truncate font-semibold text-titulo">{archivo.name}</span>

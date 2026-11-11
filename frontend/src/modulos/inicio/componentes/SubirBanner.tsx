@@ -82,7 +82,7 @@ export function SubirBanner({ deshabilitado }: { deshabilitado: boolean }) {
   }
 
   return (
-    <form onSubmit={handleSubmit(enviar)} noValidate className="space-y-4 rounded-tema border border-dashed border-borde p-5">
+    <form onSubmit={handleSubmit(enviar)} noValidate className="space-y-4 rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave">
       <h3 className="font-bold text-titulo">Agregar imagen</h3>
 
       <label

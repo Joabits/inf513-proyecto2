@@ -53,7 +53,7 @@ function Proyectos({ datos }: { datos: Datos }) {
       )}
 
       {creando && (
-        <section aria-labelledby="titulo-nuevo-proyecto" className="mb-10 rounded-tema border border-borde bg-fondo p-5 md:p-6">
+        <section aria-labelledby="titulo-nuevo-proyecto" className="mb-10 rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave md:p-6">
           <h2 id="titulo-nuevo-proyecto" className="mb-6 text-xl text-titulo">
             Nuevo proyecto
           </h2>
@@ -62,7 +62,7 @@ function Proyectos({ datos }: { datos: Datos }) {
       )}
 
       {proyectos.length === 0 && !creando && (
-        <div className="rounded-tema border border-dashed border-borde px-6 py-12 text-center">
+        <div className="rounded-tema border border-borde-tarjeta bg-tarjeta px-6 py-12 text-center sombra-suave">
           <p className="font-semibold text-titulo">Todavía no hay proyectos registrados.</p>
           <p className="mt-1 text-texto-suave">Los proyectos de investigación, de aula (PIA) y de semilleros aparecerán aquí.</p>
         </div>
@@ -114,7 +114,7 @@ function Proyectos({ datos }: { datos: Datos }) {
           </p>
 
           {visibles.length > 0 ? (
-            <ul className="divide-y divide-borde border-y border-borde">
+            <ul className="space-y-3">
               {visibles.map((proyecto) => (
                 <FilaProyecto key={proyecto.id} proyecto={proyecto} lineas={lineas} />
               ))}

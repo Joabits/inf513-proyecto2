@@ -8,7 +8,7 @@ export function EstadoCarga({ texto = 'Cargando...' }: { texto?: string }) {
 
 export function MensajeError({ texto = 'No se pudo cargar la información. Intente nuevamente.' }: { texto?: string }) {
   return (
-    <p role="alert" className="rounded-tema border border-primario bg-superficie p-4 text-acento">
+    <p role="alert" className="rounded-tema border border-primario bg-tarjeta p-4 text-acento">
       {texto}
     </p>
   )

@@ -38,14 +38,14 @@ export function FormEnlaces({ enlaces, editable }: { enlaces: Enlace[]; editable
 
   return (
     <form onSubmit={handleSubmit(enviar)} noValidate>
-      <fieldset disabled={!editable} className="space-y-5 rounded-tema border border-borde bg-fondo p-5 sm:p-6">
+      <fieldset disabled={!editable} className="space-y-5 rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave sm:p-6">
         <div>
           <h2 className="text-lg font-bold text-titulo">Enlaces de interés</h2>
           <p className="text-sm text-texto-suave">Columna «Enlaces» del pie de página: sitios de la Universidad o páginas del portal.</p>
         </div>
 
         {fields.length === 0 && (
-          <p className="rounded-tema border border-dashed border-borde p-6 text-center text-sm text-texto-suave">
+          <p className="p-6 text-center text-sm text-texto-suave">
             No hay enlaces: la columna no se mostrará.
           </p>
         )}

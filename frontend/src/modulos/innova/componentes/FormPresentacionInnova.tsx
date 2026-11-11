@@ -9,7 +9,7 @@ import { esquemaPresentacion, type DatosPresentacion } from '../innova.esquema'
 import type { ContenidoInnova } from '../tipos'
 import { useGuardarInnova } from '../useInnova'
 
-const SECCION = 'space-y-5 rounded-tema border border-borde bg-fondo p-5 sm:p-6 [&>legend+*]:clear-both'
+const SECCION = 'space-y-5 rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave sm:p-6 [&>legend+*]:clear-both'
 const LEYENDA = 'float-left mb-1 w-full text-lg font-bold text-titulo'
 
 const valoresDe = (contenido: ContenidoInnova | null): DatosPresentacion => ({

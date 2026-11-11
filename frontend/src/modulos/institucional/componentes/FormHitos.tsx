@@ -32,7 +32,7 @@ export function FormHitos({ hitos }: { hitos: Hito[] }) {
     guardar.mutate(datos, { onSuccess: (info) => reset(aFormulario(info.hitos)), onError: (e) => aplicarErrores(e, setError) })
 
   return (
-    <form onSubmit={handleSubmit(enviar)} noValidate className="space-y-5 rounded-tema border border-borde bg-fondo p-5 sm:p-6">
+    <form onSubmit={handleSubmit(enviar)} noValidate className="space-y-5 rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave sm:p-6">
       <div>
         <h2 className="text-lg font-bold text-titulo">Hitos de la historia</h2>
         <p className="text-sm text-texto-suave">
@@ -41,7 +41,7 @@ export function FormHitos({ hitos }: { hitos: Hito[] }) {
       </div>
 
       {fields.length === 0 && (
-        <p className="rounded-tema border border-dashed border-borde p-6 text-center text-sm text-texto-suave">
+        <p className="p-6 text-center text-sm text-texto-suave">
           No hay hitos: la línea de tiempo no se mostrará.
         </p>
       )}

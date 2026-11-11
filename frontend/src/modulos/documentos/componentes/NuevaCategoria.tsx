@@ -25,7 +25,7 @@ export function NuevaCategoria({ id, alCrear, alCancelar }: { id: string; alCrea
   }
 
   return (
-    <div className="mt-2 rounded-tema border border-borde bg-superficie p-3">
+    <div className="mt-2 rounded-tema border border-borde-tarjeta bg-tarjeta p-3 sombra-suave">
       <label htmlFor={id} className="text-sm font-semibold text-titulo">
         Nombre de la categoría nueva
       </label>

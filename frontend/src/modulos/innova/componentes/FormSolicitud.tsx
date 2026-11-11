@@ -114,7 +114,7 @@ export function FormSolicitud({ servicios, servicioElegido }: { servicios: Servi
         </p>
       )}
 
-      <div className="flex justify-end border-t border-borde pt-5">
+      <div className="flex justify-end pt-5">
         <Boton type="submit" disabled={envio.isPending} className="inline-flex items-center gap-2">
           <IconoEnviar width={18} height={18} />
           {envio.isPending ? 'Enviando...' : 'Enviar solicitud'}

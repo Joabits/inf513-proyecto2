@@ -27,14 +27,14 @@ export function FormCifras({ cifras }: { cifras: Cifra[] }) {
     guardar.mutate(datos, { onSuccess: () => reset(datos), onError: (e) => aplicarErrores(e, setError) })
 
   return (
-    <form onSubmit={handleSubmit(enviar)} noValidate className="space-y-5 rounded-tema border border-borde bg-fondo p-5 sm:p-6">
+    <form onSubmit={handleSubmit(enviar)} noValidate className="space-y-5 rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave sm:p-6">
       <div>
         <h2 className="text-lg font-bold text-titulo">Cifras de la Carrera</h2>
         <p className="text-sm text-texto-suave">Se muestran junto a la presentación. Publique solo datos confirmados por la Carrera.</p>
       </div>
 
       {fields.length === 0 && (
-        <p className="rounded-tema border border-dashed border-borde p-6 text-center text-sm text-texto-suave">
+        <p className="p-6 text-center text-sm text-texto-suave">
           No hay cifras: la presentación ocupará todo el ancho.
         </p>
       )}

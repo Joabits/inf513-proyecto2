@@ -69,7 +69,7 @@ export function PlantillaGestion() {
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-borde bg-fondo px-4 lg:justify-end lg:px-8">
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 bg-fondo px-4 lg:justify-end lg:px-8">
           <button
             type="button"
             aria-label="Abrir menú de gestión"

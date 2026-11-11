@@ -17,7 +17,7 @@ export function BarraGuardar(props: { sucio: boolean; guardando: boolean; guarda
   }, [sucio])
 
   return (
-    <div className="sticky bottom-0 -mx-5 -mb-5 mt-6 flex flex-wrap items-center justify-between gap-3 rounded-b-tema border-t border-borde bg-fondo px-5 py-4 sm:-mx-6 sm:-mb-6 sm:px-6">
+    <div className="sticky bottom-0 -mx-5 -mb-5 mt-6 flex flex-wrap items-center justify-between gap-3 rounded-b-tema bg-tarjeta px-5 py-4 sm:-mx-6 sm:-mb-6 sm:px-6">
       <p role="status" className="text-sm">
         {error ? (
           <span className="font-semibold text-acento">{error}</span>

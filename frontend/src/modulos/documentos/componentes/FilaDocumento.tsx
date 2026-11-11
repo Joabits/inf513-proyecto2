@@ -27,7 +27,7 @@ export function FilaDocumento({ documento }: { documento: Documento }) {
   const alternar = (nuevo: Panel) => setPanel((actual) => (actual === nuevo ? null : nuevo))
 
   return (
-    <li className="py-5">
+    <li className="rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave">
       <div className="flex gap-4">
         <EtiquetaTipo tipo={documento.tipo} />
 
@@ -76,7 +76,7 @@ export function FilaDocumento({ documento }: { documento: Documento }) {
           )}
 
           {panel && (
-            <div id={idPanel} className="mt-4 rounded-tema border border-borde p-5">
+            <div id={idPanel} className="mt-5">
               {panel === 'editar' ? (
                 <FormDocumento documento={documento} alTerminar={() => setPanel(null)} />
               ) : (

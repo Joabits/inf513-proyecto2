@@ -40,7 +40,7 @@ export function FormLineas({ lineas }: { lineas: Linea[] }) {
   })
 
   return (
-    <form onSubmit={handleSubmit(enviar)} noValidate className="space-y-5 rounded-tema border border-borde bg-fondo p-5 sm:p-6">
+    <form onSubmit={handleSubmit(enviar)} noValidate className="space-y-5 rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave sm:p-6">
       <div>
         <h2 className="text-lg font-bold text-titulo">Líneas de investigación</h2>
         <p className="text-sm text-texto-suave">
@@ -50,7 +50,7 @@ export function FormLineas({ lineas }: { lineas: Linea[] }) {
       </div>
 
       {fields.length === 0 && (
-        <p className="rounded-tema border border-dashed border-borde p-6 text-center text-sm text-texto-suave">No hay líneas de investigación.</p>
+        <p className="p-6 text-center text-sm text-texto-suave">No hay líneas de investigación.</p>
       )}
 
       <ol className="space-y-3">

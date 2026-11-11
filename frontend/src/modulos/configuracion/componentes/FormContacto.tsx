@@ -9,7 +9,7 @@ import { esquemaContacto, type DatosContactoForm } from '../configuracion.esquem
 import { useGuardarConfiguracion } from '../useGuardarConfiguracion'
 
 // La leyenda flota para quedar dentro del recuadro y no cortar su borde superior
-const SECCION = 'space-y-5 rounded-tema border border-borde bg-fondo p-5 sm:p-6 [&>legend+*]:clear-both'
+const SECCION = 'space-y-5 rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave sm:p-6 [&>legend+*]:clear-both'
 const LEYENDA = 'float-left mb-1 w-full text-lg font-bold text-titulo'
 
 const valoresDe = (contacto: DatosContacto | null): DatosContactoForm => ({

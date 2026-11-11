@@ -37,14 +37,14 @@ export function FormAccesos({ accesos }: { accesos: Acceso[] }) {
   })
 
   return (
-    <form onSubmit={handleSubmit(enviar)} noValidate className="space-y-5 rounded-tema border border-borde bg-fondo p-5 sm:p-6">
+    <form onSubmit={handleSubmit(enviar)} noValidate className="space-y-5 rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave sm:p-6">
       <div>
         <h2 className="text-lg font-bold text-titulo">Accesos rápidos</h2>
         <p className="text-sm text-texto-suave">Tarjetas de «Explora la Carrera». Se recomiendan cuatro, una por columna.</p>
       </div>
 
       {fields.length === 0 && (
-        <p className="rounded-tema border border-dashed border-borde p-6 text-center text-sm text-texto-suave">
+        <p className="p-6 text-center text-sm text-texto-suave">
           No hay accesos rápidos: la sección no se mostrará.
         </p>
       )}

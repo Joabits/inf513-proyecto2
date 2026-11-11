@@ -48,7 +48,7 @@ export function GestionInstitucional() {
       {data && (
         <>
           {!editable && (
-            <p className="mb-6 rounded-tema border border-borde bg-superficie p-4 text-sm text-texto-suave">
+            <p className="mb-6 rounded-tema border border-borde-tarjeta bg-tarjeta p-4 text-sm text-texto-suave sombra-suave">
               Su rol puede ver esta información, pero no modificarla.
             </p>
           )}

@@ -10,7 +10,7 @@ export function HistorialVersiones({ id }: { id: number }) {
   if (isError) return <MensajeError texto="No se pudo cargar el historial." />
 
   return (
-    <ol className="divide-y divide-borde text-sm">
+    <ol className="space-y-3 text-sm">
       {data.map((version) => (
         <li key={version.id} className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-3">
           <span className="min-w-0">
