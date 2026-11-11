@@ -18,7 +18,7 @@ const ANCHO_ESCRITORIO = 1024
 
 /**
  * Cabecera de UNA sola fila (64 px en celular, 72 px en PC), sin líneas divisorias:
- *   logo · menú (si cabe) · buscador · visualización · gestión (con sesión) · ☰ (si el menú no cabe)
+ *   logo · menú (si cabe) · buscador · visualización · mi cuenta (con sesión) · ☰ (si el menú no cabe)
  *
  * La cabecera MIDE si el menú cabe en la fila. Si no cabe (pantalla chica, tema Niños
  * o letra agrandada), lo oculta y muestra el botón ☰ con el menú lateral.
@@ -41,7 +41,6 @@ export function Cabecera() {
   const hamburguesa = useRef<HTMLButtonElement>(null)
 
   const publico = menu?.publico ?? []
-  const gestion = menu?.gestion ?? []
 
   // ¿Entran logo + menú + acciones en el ancho disponible?
   useLayoutEffect(() => {
@@ -114,7 +113,7 @@ export function Cabecera() {
 
           {usuario && (
             <div className="hidden lg:block">
-              <MenuUsuario usuario={usuario} gestion={gestion} />
+              <MenuUsuario usuario={usuario} />
             </div>
           )}
 
@@ -134,7 +133,7 @@ export function Cabecera() {
       )}
 
       {/* Si el menú vuelve a caber en la fila, el menú lateral se cierra solo */}
-      <MenuMovil abierto={menuAbierto && !menuCabe} alCerrar={cerrarMenu} publico={publico} gestion={gestion} usuario={usuario} />
+      <MenuMovil abierto={menuAbierto && !menuCabe} alCerrar={cerrarMenu} publico={publico} usuario={usuario} />
     </header>
   )
 }

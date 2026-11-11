@@ -1,17 +1,13 @@
 import { useCallback, useRef, useState } from 'react'
-import { NavLink } from 'react-router'
-import type { OpcionMenu } from '@/compartido/menu/tipos'
+import { Link } from 'react-router'
 import type { UsuarioSesion } from '@/compartido/sesion/tipos'
 import { useCerrarSesion } from '@/compartido/sesion/useCerrarSesion'
 import { Boton } from '@/compartido/ui/Boton'
-import { IconoAbajo, IconoSalir, IconoUsuario } from '@/compartido/ui/Iconos'
+import { IconoAbajo, IconoPanel, IconoSalir, IconoUsuario } from '@/compartido/ui/Iconos'
 import { useClicFuera } from '@/compartido/ui/useClicFuera'
 
-/**
- * Botón del usuario con sesión iniciada: muestra su nombre, su rol, el menú de gestión
- * que le permite la matriz de acceso y la opción de cerrar sesión.
- */
-export function MenuUsuario({ usuario, gestion }: { usuario: UsuarioSesion; gestion: OpcionMenu[] }) {
+/** Botón del usuario con sesión iniciada que visita el portal: lleva a su panel o cierra la sesión. */
+export function MenuUsuario({ usuario }: { usuario: UsuarioSesion }) {
   const [abierto, setAbierto] = useState(false)
   const caja = useRef<HTMLDivElement>(null)
   const cerrar = useCallback(() => setAbierto(false), [])
@@ -25,7 +21,7 @@ export function MenuUsuario({ usuario, gestion }: { usuario: UsuarioSesion; gest
         aria-expanded={abierto}
         aria-label={`Menú de ${usuario.nombre}`}
         onClick={() => setAbierto(!abierto)}
-        title="Gestión"
+        title="Mi cuenta"
         className="flex h-10 items-center gap-1 rounded-full border border-borde pl-1 pr-2 text-titulo transition-colors hover:border-titulo"
       >
         <span className="grid h-8 w-8 place-items-center rounded-full bg-superficie">
@@ -35,44 +31,21 @@ export function MenuUsuario({ usuario, gestion }: { usuario: UsuarioSesion; gest
       </button>
 
       {abierto && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-[min(34rem,calc(100vw-2rem))] rounded-tema border border-borde bg-fondo p-5 text-texto shadow-xl">
-          <p className="text-xs font-bold uppercase tracking-wider text-texto-suave">Gestión</p>
-          <p className="mt-2 font-semibold text-titulo">{usuario.nombre}</p>
-          <p className="text-sm text-texto-suave">{usuario.rol?.nombre}</p>
-
-          {gestion.length > 0 && (
-            <div className="mt-4 grid gap-5 border-t border-borde pt-4 sm:grid-cols-2">
-              {gestion.map((grupo) => (
-                <div key={grupo.id}>
-                  <p className="mb-1 px-2 text-xs font-bold uppercase tracking-wider text-texto-suave">{grupo.titulo}</p>
-                  <ul>
-                    {grupo.hijos.map((h) => (
-                      <li key={h.id}>
-                        <NavLink
-                          to={h.ruta ?? '/'}
-                          onClick={cerrar}
-                          className={({ isActive }) =>
-                            `block rounded-tema px-2 py-1.5 text-sm transition-colors hover:bg-superficie ${
-                              isActive ? 'font-semibold text-acento' : 'text-texto'
-                            }`
-                          }
-                        >
-                          {h.titulo}
-                        </NavLink>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <div className="mt-4 border-t border-borde pt-4">
-            <Boton variante="borde" disabled={cerrarSesion.isPending} onClick={() => cerrarSesion.mutate()} className="flex w-full items-center justify-center gap-2 text-sm">
-              <IconoSalir width={16} height={16} />
-              Cerrar sesión
-            </Boton>
-          </div>
+        <div className="absolute right-0 top-full z-50 mt-2 w-64 space-y-3 rounded-tema border border-borde bg-fondo p-4 text-texto shadow-xl">
+          <p>
+            <span className="block font-semibold text-titulo">{usuario.nombre}</span>
+            <span className="text-sm text-texto-suave">{usuario.rol?.nombre}</span>
+          </p>
+          <Link
+            to="/gestion"
+            onClick={cerrar}
+            className="flex items-center justify-center gap-2 rounded-tema bg-primario px-4 py-2 text-sm font-semibold text-sobre-primario transition-colors hover:bg-marino"
+          >
+            <IconoPanel width={16} height={16} /> Ir al panel
+          </Link>
+          <Boton variante="borde" disabled={cerrarSesion.isPending} onClick={() => cerrarSesion.mutate()} className="flex w-full items-center justify-center gap-2 text-sm">
+            <IconoSalir width={16} height={16} /> Cerrar sesión
+          </Boton>
         </div>
       )}
     </div>

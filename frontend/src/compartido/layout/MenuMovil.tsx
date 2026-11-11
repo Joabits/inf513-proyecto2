@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { NavLink } from 'react-router'
+import { Link, NavLink } from 'react-router'
 import type { OpcionMenu } from '@/compartido/menu/tipos'
-import { IconoAbajo, IconoCerrar, IconoSalir } from '@/compartido/ui/Iconos'
+import { IconoAbajo, IconoCerrar, IconoPanel, IconoSalir } from '@/compartido/ui/Iconos'
 import type { UsuarioSesion } from '@/compartido/sesion/tipos'
 import { useCerrarSesion } from '@/compartido/sesion/useCerrarSesion'
 import { Boton } from '@/compartido/ui/Boton'
@@ -51,7 +51,6 @@ export function MenuMovil(props: {
   abierto: boolean
   alCerrar: () => void
   publico: OpcionMenu[]
-  gestion: OpcionMenu[]
   usuario: UsuarioSesion | null | undefined
 }) {
   const { abierto, alCerrar } = props
@@ -86,12 +85,6 @@ export function MenuMovil(props: {
         <div className="flex-1 space-y-6 overflow-y-auto p-4">
           <Buscador id="buscar-movil" alBuscar={alCerrar} />
           <Lista opciones={props.publico} alNavegar={alCerrar} />
-          {props.gestion.length > 0 && (
-            <div>
-              <p className="mb-2 px-3 text-xs font-bold uppercase tracking-wider text-texto-suave">Gestión</p>
-              <Lista opciones={props.gestion} alNavegar={alCerrar} />
-            </div>
-          )}
         </div>
 
         {props.usuario && (
@@ -100,6 +93,13 @@ export function MenuMovil(props: {
               <span className="font-semibold">{props.usuario.nombre}</span>
               <span className="block text-texto-suave">{props.usuario.rol?.nombre}</span>
             </p>
+            <Link
+              to="/gestion"
+              onClick={alCerrar}
+              className="mt-3 flex items-center justify-center gap-2 rounded-tema bg-primario px-4 py-2 text-sm font-semibold text-sobre-primario"
+            >
+              <IconoPanel width={16} height={16} /> Ir al panel
+            </Link>
             <Boton
               variante="borde"
               disabled={cerrarSesion.isPending}
@@ -107,7 +107,7 @@ export function MenuMovil(props: {
                 cerrarSesion.mutate()
                 alCerrar()
               }}
-              className="mt-3 flex w-full items-center justify-center gap-2 text-sm"
+              className="mt-2 flex w-full items-center justify-center gap-2 text-sm"
             >
               <IconoSalir width={16} height={16} />
               Cerrar sesión
