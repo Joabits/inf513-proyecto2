@@ -7,7 +7,7 @@ import { IconoAgregar, IconoBuscar } from '@/compartido/ui/Iconos'
 import { TituloPagina } from '@/compartido/ui/TituloPagina'
 import { FilaDocumento } from '../componentes/FilaDocumento'
 import { FormDocumento } from '../componentes/FormDocumento'
-import { useDocumentos } from '../useDocumentos'
+import { useCategorias, useDocumentos } from '../useDocumentos'
 
 const normalizar = (texto: string) =>
   texto
@@ -22,16 +22,13 @@ export function GestionDocumentos() {
   const [busqueda, setBusqueda] = useState('')
   const [categoria, setCategoria] = useState('')
 
-  const categorias = useMemo(
-    () => [...new Set(documentos?.map((documento) => documento.categoria))].sort((a, b) => a.localeCompare(b, 'es')),
-    [documentos],
-  )
+  const { data: categorias = [] } = useCategorias()
 
   const visibles = useMemo(() => {
     const buscado = normalizar(busqueda.trim())
     return (documentos ?? []).filter(
       (documento) =>
-        (!categoria || documento.categoria === categoria) &&
+        (!categoria || String(documento.categoria.id) === categoria) &&
         (!buscado || normalizar(`${documento.titulo} ${documento.descripcion ?? ''}`).includes(buscado)),
     )
   }, [documentos, busqueda, categoria])
@@ -39,7 +36,7 @@ export function GestionDocumentos() {
   return (
     <div className="mx-auto max-w-4xl">
       <div className="flex flex-wrap items-start justify-between gap-x-6">
-        <TituloPagina titulo="Documentos" subtitulo="Reglamentos, formularios y demás archivos que los visitantes pueden descargar." />
+        <TituloPagina titulo="Documentos" subtitulo="Reglamentos, formularios y demás archivos que la comunidad universitaria puede descargar." />
         {puedeCrear && !subiendo && (
           <Boton type="button" onClick={() => setSubiendo(true)} className="mb-6 inline-flex items-center gap-2">
             <IconoAgregar width={18} height={18} /> Subir documento
@@ -49,10 +46,11 @@ export function GestionDocumentos() {
 
       {subiendo && (
         <section aria-labelledby="titulo-subir" className="mb-10 rounded-tema border border-borde bg-fondo p-5 md:p-6">
-          <h2 id="titulo-subir" className="mb-5 text-xl text-titulo">
+          <h2 id="titulo-subir" className="text-xl text-titulo">
             Subir documento
           </h2>
-          <FormDocumento categorias={categorias} alTerminar={() => setSubiendo(false)} />
+          <p className="mb-6 mt-1 text-sm text-texto-suave">Quedará disponible en la sección Documentos del portal.</p>
+          <FormDocumento alTerminar={() => setSubiendo(false)} />
         </section>
       )}
 
@@ -92,8 +90,8 @@ export function GestionDocumentos() {
               <span className="sr-only">Filtrar por categoría</span>
               <select value={categoria} onChange={(e) => setCategoria(e.target.value)} className={CLASE_ENTRADA}>
                 <option value="">Todas las categorías</option>
-                {categorias.map((nombre) => (
-                  <option key={nombre} value={nombre}>
+                {categorias.map(({ id, nombre }) => (
+                  <option key={id} value={id}>
                     {nombre}
                   </option>
                 ))}
@@ -110,7 +108,7 @@ export function GestionDocumentos() {
           {visibles.length > 0 ? (
             <ul className="divide-y divide-borde border-y border-borde">
               {visibles.map((documento) => (
-                <FilaDocumento key={documento.id} documento={documento} categorias={categorias} />
+                <FilaDocumento key={documento.id} documento={documento} />
               ))}
             </ul>
           ) : (

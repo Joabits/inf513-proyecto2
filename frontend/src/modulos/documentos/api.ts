@@ -1,9 +1,14 @@
 import { cliente, RUTA_BASE } from '@/compartido/api/cliente'
-import type { Documento, VersionDocumento } from './tipos'
+import type { Categoria, Documento, VersionDocumento } from './tipos'
 
 const GESTION = '/gestion/documentos'
 
 export const listarDocumentos = () => cliente.get<{ data: Documento[] }>(GESTION).then((r) => r.data.data)
+
+export const listarCategorias = () => cliente.get<{ data: Categoria[] }>(`${GESTION}/categorias`).then((r) => r.data.data)
+
+export const crearCategoria = (nombre: string) =>
+  cliente.post<{ data: Categoria }>(`${GESTION}/categorias`, { nombre }).then((r) => r.data.data)
 
 export const crearDocumento = (datos: FormData) => cliente.post<{ data: Documento }>(GESTION, datos).then((r) => r.data.data)
 

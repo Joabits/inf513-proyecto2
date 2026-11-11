@@ -4,41 +4,51 @@ import { useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import type { ErroresValidacion } from '@/compartido/api/cliente'
 import { aplicarErrores } from '@/compartido/api/errores'
+import { usePermiso } from '@/compartido/sesion/usePermiso'
 import { Boton } from '@/compartido/ui/Boton'
 import { Campo, CLASE_ENTRADA } from '@/compartido/ui/Campo'
-import { IconoSubirArchivo } from '@/compartido/ui/Iconos'
+import { Interruptor } from '@/compartido/ui/Interruptor'
 import { actualizarDocumento, crearDocumento } from '../api'
-import { esquemaDocumento, EXTENSIONES, MAXIMO_MB, problemaDeArchivo, type DatosDocumento } from '../documentos.esquema'
-import { formatoTamano } from '../formato'
+import { esquemaDocumento, problemaDeArchivo, type DatosDocumento } from '../documentos.esquema'
 import type { Documento } from '../tipos'
-import { useGuardarDocumento } from '../useDocumentos'
+import { useCategorias, useGuardarDocumento } from '../useDocumentos'
+import { NuevaCategoria } from './NuevaCategoria'
+import { ZonaArchivo } from './ZonaArchivo'
+
+const OPCION_NUEVA = 'nueva'
 
 /**
  * Sirve para subir uno nuevo y para editar. Al editar, el archivo es opcional:
  * si se elige otro, el actual pasa al historial de versiones.
  */
-export function FormDocumento(props: { documento?: Documento; categorias: string[]; alTerminar: () => void }) {
-  const { documento, categorias, alTerminar } = props
+export function FormDocumento({ documento, alTerminar }: { documento?: Documento; alTerminar: () => void }) {
   const prefijo = documento ? `doc-${documento.id}` : 'doc-nuevo'
   const guardar = useGuardarDocumento((datos: FormData) => (documento ? actualizarDocumento(documento.id, datos) : crearDocumento(datos)))
+  const { data: categorias = [] } = useCategorias()
+  const puedeCrearCategoria = usePermiso('documentos.crear')
   const [archivo, setArchivo] = useState<File | null>(null)
   const [errorArchivo, setErrorArchivo] = useState<string | null>(null)
+  const [creandoCategoria, setCreandoCategoria] = useState(false)
   const {
     register,
     handleSubmit,
     setError,
+    setValue,
     control,
     formState: { errors },
   } = useForm<DatosDocumento>({
     resolver: zodResolver(esquemaDocumento),
     defaultValues: {
       titulo: documento?.titulo ?? '',
-      categoria: documento?.categoria ?? '',
+      categoria_id: documento ? String(documento.categoria.id) : '',
       descripcion: documento?.descripcion ?? '',
       publicado: documento?.publicado ?? true,
     },
   })
   const descripcion = useWatch({ control, name: 'descripcion' })
+  // Controlado: así una categoría recién creada queda elegida apenas aparece en la lista
+  const categoriaElegida = useWatch({ control, name: 'categoria_id' })
+  const campoCategoria = register('categoria_id')
 
   function elegir(nuevo: File | undefined) {
     if (!nuevo) return
@@ -54,7 +64,7 @@ export function FormDocumento(props: { documento?: Documento; categorias: string
     }
     const formulario = new FormData()
     formulario.append('titulo', datos.titulo)
-    formulario.append('categoria', datos.categoria)
+    formulario.append('categoria_id', datos.categoria_id)
     formulario.append('descripcion', datos.descripcion)
     formulario.append('publicado', datos.publicado ? '1' : '0')
     if (archivo) formulario.append('archivo', archivo)
@@ -70,84 +80,79 @@ export function FormDocumento(props: { documento?: Documento; categorias: string
   }
 
   return (
-    <form onSubmit={handleSubmit(enviar)} noValidate className="space-y-5">
-      <label
-        className={`flex cursor-pointer items-center gap-4 rounded-tema border border-dashed p-4 transition-colors focus-within:border-titulo hover:border-acento ${
-          errorArchivo ? 'border-primario' : 'border-borde'
-        }`}
-      >
-        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-superficie text-titulo">
-          <IconoSubirArchivo />
-        </span>
-        <span className="min-w-0 text-sm">
-          {archivo ? (
-            <>
-              <span className="block truncate font-semibold text-titulo">{archivo.name}</span>
-              <span className="text-texto-suave">{formatoTamano(archivo.size)} · Clic para cambiarlo</span>
-            </>
-          ) : (
-            <>
-              <span className="block font-semibold text-titulo">{documento ? 'Reemplazar el archivo' : 'Elegir archivo'}</span>
-              <span className="text-texto-suave">
-                {documento ? 'Opcional. El archivo actual se guardará en el historial. ' : ''}PDF o Excel (.xlsx), hasta {MAXIMO_MB} MB
-              </span>
-            </>
-          )}
-        </span>
-        <input
-          type="file"
-          accept={EXTENSIONES.join(',')}
-          className="sr-only"
-          aria-describedby={`${prefijo}-archivo-info`}
-          onChange={(e) => {
-            elegir(e.target.files?.[0])
-            e.target.value = ''
-          }}
+    <form onSubmit={handleSubmit(enviar)} noValidate className="space-y-6">
+      <div>
+        <p className="mb-2 text-sm font-semibold text-titulo">Archivo</p>
+        <ZonaArchivo
+          id={`${prefijo}-archivo`}
+          archivo={archivo}
+          error={errorArchivo}
+          reemplazando={documento?.nombre_original}
+          alElegir={elegir}
+          alQuitar={() => setArchivo(null)}
         />
-      </label>
-      <p id={`${prefijo}-archivo-info`} role="alert" className="-mt-3 text-sm font-semibold text-acento empty:hidden">
-        {errorArchivo}
-      </p>
-
-      <div className="grid gap-5 md:grid-cols-[2fr_1fr]">
-        <Campo id={`${prefijo}-titulo`} etiqueta="Título" error={errors.titulo?.message}>
-          <input
-            id={`${prefijo}-titulo`}
-            aria-describedby={`${prefijo}-titulo-info`}
-            aria-invalid={!!errors.titulo}
-            className={CLASE_ENTRADA}
-            {...register('titulo')}
-          />
-        </Campo>
-        <Campo id={`${prefijo}-categoria`} etiqueta="Categoría" ayuda="Agrupa los documentos en el portal." error={errors.categoria?.message}>
-          <input
-            id={`${prefijo}-categoria`}
-            list={`${prefijo}-categorias`}
-            aria-describedby={`${prefijo}-categoria-info`}
-            aria-invalid={!!errors.categoria}
-            className={CLASE_ENTRADA}
-            {...register('categoria')}
-          />
-          <datalist id={`${prefijo}-categorias`}>
-            {categorias.map((categoria) => (
-              <option key={categoria} value={categoria} />
-            ))}
-          </datalist>
-        </Campo>
       </div>
+
+      <Campo id={`${prefijo}-titulo`} etiqueta="Título" error={errors.titulo?.message}>
+        <input
+          id={`${prefijo}-titulo`}
+          placeholder="Ej. Reglamento de titulación 2026"
+          aria-describedby={`${prefijo}-titulo-info`}
+          aria-invalid={!!errors.titulo}
+          className={CLASE_ENTRADA}
+          {...register('titulo')}
+        />
+      </Campo>
+
+      <Campo id={`${prefijo}-categoria`} etiqueta="Categoría" error={errors.categoria_id?.message}>
+        <select
+          id={`${prefijo}-categoria`}
+          aria-describedby={`${prefijo}-categoria-info`}
+          aria-invalid={!!errors.categoria_id}
+          className={CLASE_ENTRADA}
+          {...campoCategoria}
+          value={categoriaElegida}
+          onChange={(e) => {
+            if (e.target.value === OPCION_NUEVA) {
+              setCreandoCategoria(true)
+              setValue('categoria_id', '')
+              return
+            }
+            void campoCategoria.onChange(e)
+          }}
+        >
+          <option value="">Seleccione una categoría</option>
+          {categorias.map((categoria) => (
+            <option key={categoria.id} value={categoria.id}>
+              {categoria.nombre}
+            </option>
+          ))}
+          {puedeCrearCategoria && <option value={OPCION_NUEVA}>+ Nueva categoría…</option>}
+        </select>
+        {creandoCategoria && (
+          <NuevaCategoria
+            id={`${prefijo}-categoria-nueva`}
+            alCrear={(nueva) => {
+              setCreandoCategoria(false)
+              setValue('categoria_id', String(nueva.id), { shouldValidate: true })
+            }}
+            alCancelar={() => setCreandoCategoria(false)}
+          />
+        )}
+      </Campo>
 
       <Campo
         id={`${prefijo}-descripcion`}
         etiqueta="Descripción"
         opcional
-        ayuda="Una línea que ayude a saber qué contiene."
         error={errors.descripcion?.message}
         usados={descripcion.length}
         limite={300}
       >
         <textarea
           id={`${prefijo}-descripcion`}
-          rows={2}
+          rows={3}
+          placeholder="Describa brevemente el contenido del documento"
           aria-describedby={`${prefijo}-descripcion-info`}
           aria-invalid={!!errors.descripcion}
           className={CLASE_ENTRADA}
@@ -155,13 +160,14 @@ export function FormDocumento(props: { documento?: Documento; categorias: string
         />
       </Campo>
 
-      <label className="flex items-start gap-3">
-        <input type="checkbox" className="mt-1 h-4 w-4 accent-[var(--c-titulo)]" {...register('publicado')} />
-        <span>
-          <span className="block text-sm font-semibold text-titulo">Visible en el portal</span>
-          <span className="text-sm text-texto-suave">Si lo desmarca, solo el personal del panel puede verlo.</span>
-        </span>
-      </label>
+      <div className="border-t border-borde pt-5">
+        <Interruptor
+          id={`${prefijo}-publicado`}
+          etiqueta="Publicar en el portal"
+          ayuda="Los visitantes podrán ver y descargar el documento. Si lo desactiva, solo lo ve el personal del panel."
+          {...register('publicado')}
+        />
+      </div>
 
       {errors.root && (
         <p role="alert" className="text-sm font-semibold text-acento">
@@ -169,12 +175,12 @@ export function FormDocumento(props: { documento?: Documento; categorias: string
         </p>
       )}
 
-      <div className="flex flex-wrap gap-3">
-        <Boton type="submit" disabled={guardar.isPending}>
-          {guardar.isPending ? 'Guardando...' : documento ? 'Guardar cambios' : 'Subir documento'}
-        </Boton>
+      <div className="flex flex-wrap justify-end gap-3 border-t border-borde pt-5">
         <Boton type="button" variante="borde" onClick={alTerminar}>
           Cancelar
+        </Boton>
+        <Boton type="submit" disabled={guardar.isPending}>
+          {guardar.isPending ? 'Guardando...' : documento ? 'Guardar cambios' : 'Subir documento'}
         </Boton>
       </div>
     </form>

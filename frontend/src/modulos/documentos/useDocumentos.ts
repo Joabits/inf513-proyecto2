@@ -1,8 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { eliminarDocumento, listarDocumentos, listarVersiones } from './api'
-import type { Documento } from './tipos'
+import { crearCategoria, eliminarDocumento, listarCategorias, listarDocumentos, listarVersiones } from './api'
+import type { Categoria, Documento } from './tipos'
 
 export const CLAVE_DOCUMENTOS = ['documentos']
+const CLAVE_CATEGORIAS = ['documentos-categorias']
 
 export function useDocumentos() {
   return useQuery({ queryKey: CLAVE_DOCUMENTOS, queryFn: listarDocumentos })
@@ -30,5 +31,22 @@ export function useEliminarDocumento() {
     mutationFn: eliminarDocumento,
     onSuccess: (_respuesta, id) =>
       consultas.setQueryData<Documento[]>(CLAVE_DOCUMENTOS, (lista) => lista?.filter((documento) => documento.id !== id)),
+  })
+}
+
+export function useCategorias() {
+  return useQuery({ queryKey: CLAVE_CATEGORIAS, queryFn: listarCategorias, staleTime: Infinity })
+}
+
+/** La categoría nueva se agrega a la lista en orden alfabético, sin volver a pedirla. */
+export function useCrearCategoria() {
+  const consultas = useQueryClient()
+
+  return useMutation({
+    mutationFn: crearCategoria,
+    onSuccess: (nueva) =>
+      consultas.setQueryData<Categoria[]>(CLAVE_CATEGORIAS, (lista = []) =>
+        [...lista, nueva].sort((a, b) => a.nombre.localeCompare(b.nombre, 'es')),
+      ),
   })
 }

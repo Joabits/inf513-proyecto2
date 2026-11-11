@@ -8,8 +8,6 @@ import {
   ChevronRight,
   Contrast,
   ExternalLink,
-  FileSpreadsheet,
-  FileText,
   FileUp,
   History,
   ImagePlus,
@@ -52,8 +50,6 @@ export const IconoExterno = icono(ExternalLink)
 export const IconoImagen = icono(ImagePlus)
 export const IconoListo = icono(Check)
 export const IconoPanel = icono(LayoutDashboard)
-export const IconoPdf = icono(FileText)
-export const IconoExcel = icono(FileSpreadsheet)
 export const IconoSubirArchivo = icono(FileUp)
 export const IconoEditar = icono(Pencil)
 export const IconoHistorial = icono(History)

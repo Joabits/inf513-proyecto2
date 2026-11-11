@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { usePermiso } from '@/compartido/sesion/usePermiso'
 import { BotonConfirmar } from '@/compartido/ui/BotonConfirmar'
-import { IconoEditar, IconoEliminar, IconoExcel, IconoExterno, IconoHistorial, IconoPdf } from '@/compartido/ui/Iconos'
+import { IconoEditar, IconoEliminar, IconoExterno, IconoHistorial } from '@/compartido/ui/Iconos'
 import { urlDocumento } from '../api'
-import { formatoFecha, formatoTamano, NOMBRE_TIPO } from '../formato'
+import { formatoFecha, formatoTamano } from '../formato'
 import type { Documento } from '../tipos'
 import { useEliminarDocumento } from '../useDocumentos'
+import { EtiquetaTipo } from './EtiquetaTipo'
 import { FormDocumento } from './FormDocumento'
 import { HistorialVersiones } from './HistorialVersiones'
 
@@ -15,12 +16,11 @@ const ACCION =
 type Panel = 'editar' | 'historial' | null
 
 /** Un documento con sus acciones. Editar y el historial se abren dentro de la misma fila, sin perder el contexto. */
-export function FilaDocumento({ documento, categorias }: { documento: Documento; categorias: string[] }) {
+export function FilaDocumento({ documento }: { documento: Documento }) {
   const [panel, setPanel] = useState<Panel>(null)
   const eliminar = useEliminarDocumento()
   const puedeEditar = usePermiso('documentos.editar')
   const puedeEliminar = usePermiso('documentos.eliminar')
-  const Icono = documento.tipo === 'pdf' ? IconoPdf : IconoExcel
   const idPanel = `panel-documento-${documento.id}`
 
   const alternar = (nuevo: Panel) => setPanel((actual) => (actual === nuevo ? null : nuevo))
@@ -28,9 +28,7 @@ export function FilaDocumento({ documento, categorias }: { documento: Documento;
   return (
     <li className="py-5">
       <div className="flex gap-4">
-        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-tema bg-superficie text-titulo" aria-hidden="true">
-          <Icono />
-        </span>
+        <EtiquetaTipo tipo={documento.tipo} />
 
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -41,8 +39,8 @@ export function FilaDocumento({ documento, categorias }: { documento: Documento;
           </div>
           {documento.descripcion && <p className="mt-1 text-sm text-texto">{documento.descripcion}</p>}
           <p className="mt-1 text-sm text-texto-suave">
-            {documento.categoria} · {NOMBRE_TIPO[documento.tipo]} · {formatoTamano(documento.tamano)} · Actualizado el{' '}
-            {formatoFecha(documento.actualizado)}
+            {documento.categoria.nombre} · {formatoTamano(documento.tamano)} · Actualizado el {formatoFecha(documento.actualizado)}
+            {documento.subido_por && ` · Subido por ${documento.subido_por}`}
           </p>
 
           <div className="-ml-3 mt-2 flex flex-wrap items-center gap-1">
@@ -81,7 +79,7 @@ export function FilaDocumento({ documento, categorias }: { documento: Documento;
           {panel && (
             <div id={idPanel} className="mt-4 rounded-tema border border-borde p-5">
               {panel === 'editar' ? (
-                <FormDocumento documento={documento} categorias={categorias} alTerminar={() => setPanel(null)} />
+                <FormDocumento documento={documento} alTerminar={() => setPanel(null)} />
               ) : (
                 <HistorialVersiones id={documento.id} />
               )}

@@ -7,4 +7,4 @@ export function formatoTamano(bytes: number) {
   return `${(bytes / 1024 / 1024).toFixed(1).replace('.', ',')} MB`
 }
 
-export const NOMBRE_TIPO = { pdf: 'PDF', xlsx: 'Excel' } as const
+export const NOMBRE_TIPO = { pdf: 'PDF', docx: 'Word', xlsx: 'Excel' } as const

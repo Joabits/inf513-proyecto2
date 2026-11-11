@@ -17,6 +17,7 @@ export function HistorialVersiones({ id }: { id: number }) {
             <span className="block truncate font-semibold text-titulo">{version.nombre_original}</span>
             <span className="text-texto-suave">
               Reemplazado el {formatoFecha(version.reemplazado)} · {NOMBRE_TIPO[version.tipo]} · {formatoTamano(version.tamano)}
+              {version.subido_por && ` · Subido por ${version.subido_por}`}
             </span>
           </span>
           <a href={urlVersion(id, version.id)} target="_blank" rel="noopener" className="font-semibold text-titulo underline underline-offset-4 hover:text-acento">
