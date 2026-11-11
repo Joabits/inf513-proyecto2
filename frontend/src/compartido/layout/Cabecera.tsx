@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'
-import { LogoCarrera } from '@/compartido/marca/LogoCarrera'
+import { MarcaCarrera } from '@/compartido/marca/LogoCarrera'
 import { useMenu } from '@/compartido/menu/useMenu'
 import { useSesion } from '@/compartido/sesion/useSesion'
 import { PanelAccesibilidad } from '@/compartido/tema/PanelAccesibilidad'
@@ -78,7 +78,7 @@ export function Cabecera() {
     >
       <div ref={fila} className="contenedor flex h-16 items-center gap-4 lg:h-18">
         <Link ref={logo} to="/" className="shrink-0" aria-label="Inicio: Carrera de Administración de Empresas">
-          <LogoCarrera className="h-12 lg:h-14" />
+          <MarcaCarrera />
         </Link>
 
         {/* Cuando no cabe, el menú sigue en la página (invisible e inerte) solo para poder medirlo */}
