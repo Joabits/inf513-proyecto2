@@ -65,6 +65,23 @@ class DocumentosService
         return $this->completo($documento);
     }
 
+    /**
+     * Publicar u ocultar no cambia el contenido: no toca la fecha de actualización,
+     * así el documento no salta al inicio de la lista.
+     */
+    public function cambiarPublicacion(Documento $documento, bool $publicado, User $usuario): Documento
+    {
+        if ($documento->publicado !== $publicado) {
+            $documento->timestamps = false;
+            $documento->update(['publicado' => $publicado]);
+            $documento->timestamps = true;
+
+            $this->bitacora->accion($usuario, $publicado ? 'publicar' : 'ocultar', $documento, $documento->titulo);
+        }
+
+        return $this->completo($documento);
+    }
+
     /** Borra el documento, su historial y todos sus archivos. */
     public function eliminar(Documento $documento, User $usuario): void
     {

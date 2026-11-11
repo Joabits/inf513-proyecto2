@@ -41,6 +41,11 @@ class DocumentosController extends Controller
         return new DocumentoResource($documento);
     }
 
+    public function cambiarPublicacion(CambiarPublicacionRequest $request, Documento $documento)
+    {
+        return new DocumentoResource($this->servicio->cambiarPublicacion($documento, $request->boolean('publicado'), $request->user()));
+    }
+
     public function eliminar(Request $request, Documento $documento)
     {
         $this->servicio->eliminar($documento, $request->user());
