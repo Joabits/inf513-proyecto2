@@ -2,24 +2,59 @@ import { Link, Outlet, ScrollRestoration } from 'react-router'
 import { LogoFcee } from '@/compartido/marca/LogoFcee'
 import { useTema } from '@/compartido/tema/contexto'
 import { PanelAccesibilidad } from '@/compartido/tema/PanelAccesibilidad'
-import { Pie } from './Pie'
+import { IconoAnterior, IconoCorrecto } from '@/compartido/ui/Iconos'
+import { ContextoPlantilla } from './contextoPlantilla'
+import { PieSimple } from './Pie'
 
-/** Pantalla de acceso del personal: sin el menú ni el buscador del portal público. */
+const TAREAS = ['Portada, información institucional y documentos', 'Investigación, INNOVA y sus solicitudes', 'Noticias, eventos, usuarios y bitácora']
+
+/** Pantalla de acceso del personal: en PC, presentación azul a la izquierda y formulario a la derecha. */
 export function PlantillaAcceso() {
   const { modoActivo } = useTema()
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className="contenedor flex h-16 items-center justify-between lg:h-18">
-        <Link to="/" className="shrink-0" aria-label="Volver al portal">
-          <LogoFcee version={modoActivo === 'oscuro' ? 'negativo' : 'positivo'} className="h-11 min-[375px]:h-12 lg:h-14" />
+    <div className="flex min-h-screen">
+      <aside className="relative hidden w-[44%] max-w-2xl shrink-0 flex-col justify-between overflow-hidden bg-banda p-12 text-sobre-marino lg:flex xl:p-16">
+        <span aria-hidden="true" className="adorno absolute -bottom-40 -right-40 h-[30rem] w-[30rem] rounded-full bg-marino-oscuro" />
+        <span aria-hidden="true" className="absolute -bottom-10 right-24 h-28 w-28 rounded-full border-[14px] border-primario" />
+
+        <Link to="/" className="relative self-start" aria-label="Volver al portal">
+          <LogoFcee version="negativo" className="h-14" />
         </Link>
-        <PanelAccesibilidad />
-      </header>
-      <main id="contenido" className="contenedor flex-1 py-8 md:py-12">
-        <Outlet />
-      </main>
-      <Pie />
+
+        <div className="relative max-w-md">
+          <span aria-hidden="true" className="mb-6 block h-1 w-14 rounded-full bg-primario" />
+          <p className="font-titulos text-4xl font-bold leading-tight">Panel de gestión del portal</p>
+          <p className="mt-4 text-lg text-sobre-marino-suave">Desde aquí el personal de la Carrera mantiene al día el contenido del portal.</p>
+          <ul className="mt-8 space-y-3">
+            {TAREAS.map((tarea) => (
+              <li key={tarea} className="flex items-start gap-3">
+                <IconoCorrecto width={20} height={20} aria-hidden="true" className="mt-0.5 shrink-0" />
+                {tarea}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <Link to="/" className="relative inline-flex items-center gap-1.5 self-start text-sm font-semibold underline-offset-4 hover:underline">
+          <IconoAnterior width={16} height={16} aria-hidden="true" /> Volver al portal
+        </Link>
+      </aside>
+
+      <div className="flex min-w-0 flex-1 flex-col">
+        <header className="flex h-16 items-center justify-between px-4 lg:h-18 lg:justify-end lg:px-8">
+          <Link to="/" className="shrink-0 lg:hidden" aria-label="Volver al portal">
+            <LogoFcee version={modoActivo === 'oscuro' ? 'negativo' : 'positivo'} className="h-11 min-[375px]:h-12" />
+          </Link>
+          <PanelAccesibilidad />
+        </header>
+        <main id="contenido" className="flex flex-1 flex-col justify-center px-4 py-10 lg:px-8">
+          <ContextoPlantilla.Provider value="acceso">
+            <Outlet />
+          </ContextoPlantilla.Provider>
+        </main>
+        <PieSimple />
+      </div>
       <ScrollRestoration />
     </div>
   )

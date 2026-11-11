@@ -6,9 +6,10 @@ import { useSesion } from '@/compartido/sesion/useSesion'
 import { useTema } from '@/compartido/tema/contexto'
 import { PanelAccesibilidad } from '@/compartido/tema/PanelAccesibilidad'
 import { EstadoCarga } from '@/compartido/ui/EstadoCarga'
-import { IconoCerrar, IconoMenu } from '@/compartido/ui/Iconos'
+import { IconoCerrar, IconoExterno, IconoMenu } from '@/compartido/ui/Iconos'
 import { BarraGestion } from './BarraGestion'
-import { Pie } from './Pie'
+import { ContextoPlantilla } from './contextoPlantilla'
+import { PieSimple } from './Pie'
 
 /** Vista del personal: barra lateral fija en PC y desplegable en celular y tablet. */
 export function PlantillaGestion() {
@@ -79,15 +80,24 @@ export function PlantillaGestion() {
           <Link to="/gestion" className="lg:hidden" aria-label="Ir al panel de gestión">
             <LogoFcee version={modoActivo === 'oscuro' ? 'negativo' : 'positivo'} className="h-11" />
           </Link>
-          <div className="ml-auto lg:ml-0">
+          <div className="ml-auto flex items-center gap-2 lg:ml-0">
+            <Link
+              to="/"
+              target="_blank"
+              className="hidden items-center gap-1.5 rounded-full border border-borde px-3 py-1.5 text-sm font-semibold text-titulo transition-colors hover:border-titulo sm:inline-flex"
+            >
+              <IconoExterno width={15} height={15} aria-hidden="true" /> Ver el portal
+            </Link>
             <PanelAccesibilidad />
           </div>
         </header>
 
         <main id="contenido" className="flex-1 px-4 py-8 md:py-10 lg:px-8">
-          <Outlet />
+          <ContextoPlantilla.Provider value="gestion">
+            <Outlet />
+          </ContextoPlantilla.Provider>
         </main>
-        <Pie />
+        <PieSimple />
       </div>
       <ScrollRestoration />
     </div>
