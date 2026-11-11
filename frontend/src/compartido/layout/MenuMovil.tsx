@@ -1,25 +1,40 @@
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { Link, NavLink } from 'react-router'
+import { iconoDeRuta } from '@/compartido/menu/iconosRuta'
 import type { OpcionMenu } from '@/compartido/menu/tipos'
-import { IconoAbajo, IconoCerrar, IconoPanel, IconoSalir } from '@/compartido/ui/Iconos'
+import { IconoAbajo, IconoCerrar, IconoIngresar, IconoPanel, IconoSalir } from '@/compartido/ui/Iconos'
 import type { UsuarioSesion } from '@/compartido/sesion/tipos'
 import { useCerrarSesion } from '@/compartido/sesion/useCerrarSesion'
 import { Boton } from '@/compartido/ui/Boton'
+import { IconoDinamico } from '@/compartido/ui/IconoDinamico'
 import { Buscador } from './Buscador'
 
-function Lista({ opciones, alNavegar }: { opciones: OpcionMenu[]; alNavegar: () => void }) {
-  const clase = ({ isActive }: { isActive: boolean }) =>
-    `block rounded-tema px-3 py-2.5 ${isActive ? 'bg-superficie font-semibold text-acento' : 'text-texto'}`
+/** Opción del menú con el ícono de su sección (si tiene uno). */
+function Opcion({ opcion, fin, alNavegar }: { opcion: OpcionMenu; fin?: boolean; alNavegar: () => void }) {
+  const Icono = iconoDeRuta(opcion.ruta)
+  return (
+    <NavLink
+      to={opcion.ruta ?? '/'}
+      end={fin}
+      onClick={alNavegar}
+      className={({ isActive }) =>
+        `flex items-center gap-3 rounded-tema px-3 py-2.5 ${isActive ? 'bg-superficie font-semibold text-acento' : 'text-texto'}`
+      }
+    >
+      {Icono && <IconoDinamico icono={Icono} width={18} height={18} aria-hidden="true" className="shrink-0 text-acento" />}
+      {opcion.titulo}
+    </NavLink>
+  )
+}
 
+function Lista({ opciones, alNavegar }: { opciones: OpcionMenu[]; alNavegar: () => void }) {
   return (
     <ul className="space-y-0.5">
       {opciones.map((op) =>
         op.hijos.length === 0 ? (
           <li key={op.id}>
-            <NavLink to={op.ruta ?? '/'} end onClick={alNavegar} className={clase}>
-              {op.titulo}
-            </NavLink>
+            <Opcion opcion={op} fin alNavegar={alNavegar} />
           </li>
         ) : (
           <li key={op.id}>
@@ -32,9 +47,7 @@ function Lista({ opciones, alNavegar }: { opciones: OpcionMenu[]; alNavegar: () 
               <ul className="mb-1 ml-3 border-l-2 border-borde pl-2">
                 {op.hijos.map((h) => (
                   <li key={h.id}>
-                    <NavLink to={h.ruta ?? '/'} onClick={alNavegar} className={clase}>
-                      {h.titulo}
-                    </NavLink>
+                    <Opcion opcion={h} alNavegar={alNavegar} />
                   </li>
                 ))}
               </ul>
@@ -86,6 +99,18 @@ export function MenuMovil(props: {
           <Buscador id="buscar-movil" alBuscar={alCerrar} />
           <Lista opciones={props.publico} alNavegar={alCerrar} />
         </div>
+
+        {!props.usuario && (
+          <div className="border-t border-borde p-4">
+            <Link
+              to="/gestion/ingresar"
+              onClick={alCerrar}
+              className="flex items-center justify-center gap-2 rounded-tema border border-borde px-4 py-2 text-sm font-semibold text-titulo"
+            >
+              <IconoIngresar width={16} height={16} aria-hidden="true" /> Acceso del personal
+            </Link>
+          </div>
+        )}
 
         {props.usuario && (
           <div className="border-t border-borde p-4">
