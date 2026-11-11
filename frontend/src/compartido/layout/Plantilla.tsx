@@ -1,4 +1,5 @@
 import { Outlet, ScrollRestoration } from 'react-router'
+import { AvisoPanel } from './AvisoPanel'
 import { Cabecera } from './Cabecera'
 import { Pie } from './Pie'
 
@@ -12,6 +13,7 @@ export function Plantilla() {
       >
         Saltar al contenido
       </a>
+      <AvisoPanel />
       <Cabecera />
       <main id="contenido" className="contenedor flex-1 py-8 md:py-12">
         <Outlet />
