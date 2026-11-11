@@ -1,10 +1,9 @@
 import { Link, NavLink } from 'react-router'
-import { LogoFcee } from '@/compartido/marca/LogoFcee'
+import { MarcaCarrera } from '@/compartido/marca/LogoCarrera'
 import { iconoDeRuta } from '@/compartido/menu/iconosRuta'
 import type { OpcionMenu } from '@/compartido/menu/tipos'
 import type { UsuarioSesion } from '@/compartido/sesion/tipos'
 import { useCerrarSesion } from '@/compartido/sesion/useCerrarSesion'
-import { useTema } from '@/compartido/tema/contexto'
 import { IconoExterno, IconoPanel, IconoSalir } from '@/compartido/ui/Iconos'
 
 const claseEnlace = ({ isActive }: { isActive: boolean }) =>
@@ -28,13 +27,12 @@ const iniciales = (nombre: string) =>
 /** Barra lateral del panel, con las opciones que permite el rol. Sigue el modo: mismo fondo que la página. */
 export function BarraGestion({ usuario, grupos, alNavegar }: { usuario: UsuarioSesion; grupos: OpcionMenu[]; alNavegar?: () => void }) {
   const cerrarSesion = useCerrarSesion()
-  const { modoActivo } = useTema()
 
   return (
     <div className="flex h-full flex-col border-r border-borde-tarjeta bg-fondo text-texto sombra-lateral">
       <div className="px-5 pb-4 pt-5">
         <Link to="/gestion" onClick={alNavegar} aria-label="Ir al panel de gestión" className="inline-block">
-          <LogoFcee version={modoActivo === 'oscuro' ? 'negativo' : 'positivo'} className="h-12" />
+          <MarcaCarrera />
         </Link>
       </div>
 

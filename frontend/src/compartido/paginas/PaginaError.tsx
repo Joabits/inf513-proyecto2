@@ -1,19 +1,17 @@
 import { isRouteErrorResponse, Link, useRouteError } from 'react-router'
-import { LogoFcee } from '@/compartido/marca/LogoFcee'
-import { useTema } from '@/compartido/tema/contexto'
+import { MarcaCarrera } from '@/compartido/marca/LogoCarrera'
 import { ChipIcono } from '@/compartido/ui/ChipIcono'
 import { IconoAlerta, IconoAnterior } from '@/compartido/ui/Iconos'
 
 /** Pantalla de error de las rutas (se muestra sin cabecera ni pie). */
 export function PaginaError() {
   const error = useRouteError()
-  const { modoActivo } = useTema()
   const noExiste = isRouteErrorResponse(error) && error.status === 404
 
   return (
     <main className="grid min-h-screen place-items-center px-4 py-16">
       <div className="flex max-w-md flex-col items-center text-center">
-        <LogoFcee version={modoActivo === 'oscuro' ? 'negativo' : 'positivo'} className="mb-10 h-14" />
+        <MarcaCarrera className="mb-10" />
         <ChipIcono icono={IconoAlerta} tamano="lg" />
         <h1 className="mt-5 text-3xl text-titulo">{noExiste ? 'Página no encontrada' : 'Ocurrió un error'}</h1>
         <p className="mt-2 text-texto-suave">

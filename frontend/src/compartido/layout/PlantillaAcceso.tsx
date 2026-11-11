@@ -1,6 +1,5 @@
 import { Link, Outlet, ScrollRestoration } from 'react-router'
-import { LogoFcee } from '@/compartido/marca/LogoFcee'
-import { useTema } from '@/compartido/tema/contexto'
+import { MarcaCarrera } from '@/compartido/marca/LogoCarrera'
 import { PanelAccesibilidad } from '@/compartido/tema/PanelAccesibilidad'
 import { IconoAnterior, IconoCorrecto } from '@/compartido/ui/Iconos'
 import { ContextoPlantilla } from './contextoPlantilla'
@@ -10,7 +9,6 @@ const TAREAS = ['Portada, información institucional y documentos', 'Investigaci
 
 /** Pantalla de acceso del personal: en PC, presentación a la izquierda y formulario a la derecha, con el fondo del modo. */
 export function PlantillaAcceso() {
-  const { modoActivo } = useTema()
 
   return (
     <div className="flex min-h-screen">
@@ -18,7 +16,7 @@ export function PlantillaAcceso() {
       <meta name="robots" content="noindex, nofollow" />
       <aside className="relative hidden w-[44%] max-w-2xl shrink-0 flex-col justify-between border-r border-borde-tarjeta bg-fondo p-12 text-texto sombra-lateral lg:flex xl:p-16">
         <Link to="/" className="relative self-start" aria-label="Volver al portal">
-          <LogoFcee version={modoActivo === 'oscuro' ? 'negativo' : 'positivo'} className="h-14" />
+          <MarcaCarrera />
         </Link>
 
         <div className="relative max-w-md">
@@ -43,7 +41,7 @@ export function PlantillaAcceso() {
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex h-16 items-center justify-between px-4 lg:h-18 lg:justify-end lg:px-8">
           <Link to="/" className="shrink-0 lg:hidden" aria-label="Volver al portal">
-            <LogoFcee version={modoActivo === 'oscuro' ? 'negativo' : 'positivo'} className="h-11 min-[375px]:h-12" />
+            <MarcaCarrera />
           </Link>
           <PanelAccesibilidad />
         </header>

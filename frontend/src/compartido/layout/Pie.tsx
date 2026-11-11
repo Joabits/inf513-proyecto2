@@ -2,8 +2,7 @@ import type { ReactNode } from 'react'
 import { EnlaceConfigurable } from '@/compartido/configuracion/EnlaceConfigurable'
 import { NOMBRE_RED } from '@/compartido/configuracion/tipos'
 import { enlaceTelefono, enlaceWhatsapp, formatoWhatsapp, useConfiguracion } from '@/compartido/configuracion/useConfiguracion'
-import { LogoFcee } from '@/compartido/marca/LogoFcee'
-import { useTema } from '@/compartido/tema/contexto'
+import { MarcaCarrera } from '@/compartido/marca/LogoCarrera'
 import { IconoCorreo, IconoHorario, IconoMensaje, IconoSiguiente, IconoTelefono, IconoUbicacion, IconoVer } from '@/compartido/ui/Iconos'
 import { useContadorVisitas } from '@/compartido/visitas/useContadorVisitas'
 
@@ -42,7 +41,6 @@ export function ContadorVisitas() {
  * Los datos de contacto, las redes y los enlaces se editan en el panel (CU-28).
  */
 export function Pie() {
-  const { modoActivo } = useTema()
   const { data: configuracion } = useConfiguracion()
   const contacto = configuracion?.contacto
   const redes = configuracion?.redes ?? []
@@ -52,7 +50,7 @@ export function Pie() {
     <footer className="mt-auto bg-fondo text-texto">
       <div className="contenedor grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr] lg:gap-16">
         <div className="sm:col-span-2 lg:col-span-1">
-          <LogoFcee version={modoActivo === 'oscuro' ? 'negativo' : 'positivo'} className="h-14 sm:h-16" />
+          <MarcaCarrera />
           <p className="mt-5 max-w-sm text-sm leading-relaxed text-texto-suave">
             Carrera de Administración de Empresas. Formamos profesionales para gerenciar y liderar organizaciones.
             Acreditada ante el CEUB.

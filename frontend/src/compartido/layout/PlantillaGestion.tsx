@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, Navigate, Outlet, ScrollRestoration } from 'react-router'
-import { LogoFcee } from '@/compartido/marca/LogoFcee'
+import { MarcaCarrera } from '@/compartido/marca/LogoCarrera'
 import { useMenu } from '@/compartido/menu/useMenu'
 import { useSesion } from '@/compartido/sesion/useSesion'
-import { useTema } from '@/compartido/tema/contexto'
 import { PanelAccesibilidad } from '@/compartido/tema/PanelAccesibilidad'
 import { EstadoCarga } from '@/compartido/ui/EstadoCarga'
 import { IconoCerrar, IconoExterno, IconoMenu } from '@/compartido/ui/Iconos'
@@ -15,7 +14,6 @@ import { PieSimple } from './Pie'
 export function PlantillaGestion() {
   const { data: usuario, isLoading } = useSesion()
   const { data: menu } = useMenu()
-  const { modoActivo } = useTema()
   const [abierto, setAbierto] = useState(false)
 
   // Bloquea el scroll de la página y cierra con Escape mientras el menú está abierto
@@ -79,7 +77,7 @@ export function PlantillaGestion() {
             <IconoMenu />
           </button>
           <Link to="/gestion" className="lg:hidden" aria-label="Ir al panel de gestión">
-            <LogoFcee version={modoActivo === 'oscuro' ? 'negativo' : 'positivo'} className="h-11" />
+            <MarcaCarrera />
           </Link>
           <div className="ml-auto flex items-center gap-2 lg:ml-0">
             <Link

@@ -2,9 +2,9 @@ import logoPositivo from './fcee-logo-horizontal.svg'
 import logoNegativo from './fcee-logo-horizontal-negativo.svg'
 
 /**
- * Logo oficial de la FCEE (Manual de uso de marca FCEE, gestión 2026): pie, panel e ingreso.
- * La cabecera del portal usa el logo propio de la Carrera (LogoCarrera). El escudo de la FCEE
- * no se modifica ni se combina con otros textos: el manual lo prohíbe para carreras.
+ * Logo oficial de la FCEE (Manual de uso de marca FCEE, gestión 2026). Hoy el sitio usa en todas
+ * partes el logo de la Carrera (MarcaCarrera); este queda disponible por si se necesita.
+ * El escudo de la FCEE no se modifica ni se combina con otros textos: el manual lo prohíbe para carreras.
  *   positivo -> sobre fondo blanco o gris claro
  *   negativo -> sobre fondo azul o rojo (letras blancas)
  * No deformar, recolorear ni poner sobre fondos que dificulten la lectura.
