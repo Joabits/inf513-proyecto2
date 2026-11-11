@@ -11,9 +11,10 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class GuardarDocumentoRequest extends FormRequest
 {
-    public const TIPOS = ['pdf', 'xlsx'];
+    public const TIPOS = ['pdf', 'docx', 'xlsx'];
 
-    public const MAXIMO_KB = 10240;
+    /** 25 MB: alcanza para documentos escaneados. El servidor debe aceptarlo (public/.user.ini). */
+    public const MAXIMO_KB = 25600;
 
     public function rules(): array
     {
@@ -44,9 +45,10 @@ class GuardarDocumentoRequest extends FormRequest
         return [
             'categoria_id.required' => 'Elija una categoría.',
             'archivo.required' => 'Elija el archivo del documento.',
-            'archivo.mimes' => 'El archivo debe ser PDF o Excel (.xlsx).',
-            'archivo.extensions' => 'El archivo debe ser PDF o Excel (.xlsx).',
-            'archivo.max' => 'El archivo no debe pesar más de 10 MB.',
+            'archivo.uploaded' => 'El archivo no se pudo subir. Verifique que no pese más de 25 MB.',
+            'archivo.mimes' => 'El archivo debe ser PDF, Word (.docx) o Excel (.xlsx).',
+            'archivo.extensions' => 'El archivo debe ser PDF, Word (.docx) o Excel (.xlsx).',
+            'archivo.max' => 'El archivo no debe pesar más de 25 MB.',
         ];
     }
 
