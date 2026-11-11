@@ -5,7 +5,7 @@ import { Pie } from './Pie'
 
 /**
  * Estructura común de todas las páginas: cabecera + contenido + pie.
- * overflow-x-clip: las franjas de lado a lado (utilidad banda) no deben crear barra horizontal.
+ * overflow-x-clip: los adornos que salen por la derecha no deben crear barra horizontal.
  */
 export function Plantilla() {
   return (

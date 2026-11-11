@@ -104,7 +104,7 @@ export function LaCarrera() {
         )}
       </section>
 
-      <section aria-label="Misión y visión" className="banda banda-seccion mt-14 grid gap-6 py-14 md:mt-20 md:grid-cols-2 md:py-16">
+      <section aria-label="Misión y visión" className="mt-14 grid gap-6 md:mt-20 md:grid-cols-2">
         <TarjetaTexto titulo="Misión" texto={contenido.mision} icono={IconoObjetivo} />
         <TarjetaTexto titulo="Visión" texto={contenido.vision} icono={IconoVision} />
       </section>

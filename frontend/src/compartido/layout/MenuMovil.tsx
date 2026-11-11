@@ -83,7 +83,7 @@ export function MenuMovil(props: {
 
   if (!abierto) return null
 
-  // Portal al <body>: el header tiene backdrop-blur, que encerraría al panel "fixed" dentro del header
+  // Portal al <body>: el panel "fixed" no queda atado a los estilos de la cabecera
   return createPortal(
     <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label="Menú de navegación">
       <button type="button" aria-label="Cerrar menú" onClick={alCerrar} className="absolute inset-0 bg-black/40" />

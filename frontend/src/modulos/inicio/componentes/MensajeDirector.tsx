@@ -1,12 +1,12 @@
 import { IconoCita } from '@/compartido/ui/Iconos'
 import type { Portada } from '../tipos'
 
-/** Franja gris con el mensaje. Si todavía no hay fotografía, el mensaje va centrado. */
+/** Mensaje sobre el fondo de la página. Si todavía no hay fotografía, va centrado. */
 export function MensajeDirector({ portada }: { portada: Portada }) {
   const conFoto = !!portada.director_foto
 
   return (
-    <section aria-labelledby="mensaje-director" className="banda banda-seccion py-14 md:py-20">
+    <section aria-labelledby="mensaje-director" className="py-8 md:py-12">
       <div className={conFoto ? 'grid gap-8 md:grid-cols-[minmax(0,16rem)_1fr] md:items-center lg:gap-14' : 'mx-auto max-w-3xl text-center'}>
         {portada.director_foto && (
           <img

@@ -13,8 +13,7 @@
  *   bg-primario, text-sobre-primario, text-acento, bg-marino, bg-marino-oscuro,
  *   border-borde, rounded-tema,
  *   bg-tarjeta, bg-seccion, bg-banda, bg-chip, text-sobre-chip,
- *   text-sobre-marino, text-sobre-marino-suave, sombra-suave, sombra-elevada,
- *   banda + banda-seccion (franja gris de lado a lado de la pantalla)
+ *   text-sobre-marino, text-sobre-marino-suave, sombra-suave, sombra-elevada
  * Así funcionan los temas, el modo noche y el alto contraste sin tocar cada pantalla.
  */
 @theme inline {
@@ -56,12 +55,11 @@
   --c-borde: #d9dce3; /* línea neutra de interfaz, no es un color de marca */
   --c-tarjeta: #ffffff;
   --c-seccion: #f4f5f7; /* franja alterna para separar secciones */
-  --c-banda: #21366e; /* franja azul: títulos de página, portada */
+  --c-banda: #21366e; /* azul de acento: titulaciones, semestres de la malla, panel del ingreso */
   --c-chip: #21366e; /* fondo de los íconos destacados */
   --c-sobre-chip: #ffffff;
   --c-sobre-marino: #ffffff;
   --c-sobre-marino-suave: #f4f5f7;
-  --c-borde-banda: transparent;
   --sombra-suave: 0 1px 2px rgb(15 30 69 / 0.06), 0 6px 16px -10px rgb(15 30 69 / 0.18);
   --sombra-elevada: 0 2px 4px rgb(15 30 69 / 0.06), 0 18px 36px -14px rgb(15 30 69 / 0.32);
   color-scheme: light;
@@ -121,7 +119,6 @@
   --c-seccion: #0a0a0a;
   --c-chip: #ffffff;
   --c-sobre-chip: #0a0a0a;
-  --c-borde-banda: #ffffff; /* la franja negra sobre fondo negro se marca con líneas */
 }
 
 /* ---------- Temas por público: mismos colores y tipografía, cambia forma y tamaño ---------- */
@@ -192,32 +189,6 @@
   @media (width >= 40rem) {
     padding-inline: 1.5rem;
   }
-}
-
-/*
- * Franja de color de lado a lado de la pantalla. El contenido sigue en su columna
- * (alineado con el resto de la página); solo el fondo se estira con un ::before.
- * Usar en bloques que ocupan todo el ancho de su página, junto con banda-seccion.
- */
-@utility banda {
-  position: relative;
-  isolation: isolate;
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset-block: 0;
-    left: 50%;
-    z-index: -1;
-    width: 100vw;
-    translate: -50% 0;
-    background: var(--fondo-banda, var(--c-seccion));
-    border-block: 1px solid var(--c-borde-banda);
-  }
-}
-
-@utility banda-seccion {
-  --fondo-banda: var(--c-seccion);
 }
 
 @utility sombra-suave {

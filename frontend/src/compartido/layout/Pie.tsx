@@ -38,7 +38,7 @@ export function ContadorVisitas() {
 
 /**
  * Pie del portal con el logo, el contacto, los enlaces y el contador de visitas.
- * Sigue el modo: gris claro de día y negro de noche.
+ * Usa el mismo fondo que la página (claro u oscuro según el modo); una línea fina lo separa.
  * Los datos de contacto, las redes y los enlaces se editan en el panel (CU-28).
  */
 export function Pie() {
@@ -49,7 +49,7 @@ export function Pie() {
   const enlaces = configuracion?.enlaces ?? []
 
   return (
-    <footer className="mt-auto border-t border-borde bg-seccion text-texto">
+    <footer className="mt-auto border-t border-borde bg-fondo text-texto">
       <div className="contenedor grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr] lg:gap-16">
         <div className="sm:col-span-2 lg:col-span-1">
           <LogoFcee version={modoActivo === 'oscuro' ? 'negativo' : 'positivo'} className="h-14 sm:h-16" />

@@ -131,7 +131,7 @@ export function MallaCurricular() {
         </section>
       )}
 
-      <section aria-label="Materias por semestre" className="banda banda-seccion mt-12 py-10 md:mt-16 md:py-12">
+      <section aria-label="Materias por semestre" className="mt-12 md:mt-16">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <label className="relative lg:w-96">
             <span className="sr-only">Buscar una materia</span>

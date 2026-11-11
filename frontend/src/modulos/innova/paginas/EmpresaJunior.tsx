@@ -82,7 +82,7 @@ export function EmpresaJunior() {
       )}
 
       {servicios.length > 0 && (
-        <section aria-labelledby="titulo-servicios" className="banda banda-seccion mt-14 py-14 md:mt-20 md:py-16">
+        <section aria-labelledby="titulo-servicios" className="mt-14 md:mt-20">
           <p className={ANTETITULO}>Lo que hacemos</p>
           <h2 id="titulo-servicios" className="mt-2 text-3xl text-titulo">
             Servicios
