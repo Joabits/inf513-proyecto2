@@ -4,7 +4,9 @@ namespace Tests\Feature;
 
 use App\Models\Rol;
 use App\Models\User;
+use App\Modulos\Documentos\Categoria;
 use App\Modulos\Documentos\Documento;
+use Database\Seeders\DocumentoCategoriaSeeder;
 use Database\Seeders\PermisoSeeder;
 use Database\Seeders\RolSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -19,10 +21,12 @@ class DocumentosTest extends TestCase
 
     private const XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 
+    private const DOCX = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed([RolSeeder::class, PermisoSeeder::class]);
+        $this->seed([RolSeeder::class, PermisoSeeder::class, DocumentoCategoriaSeeder::class]);
         Storage::fake('local');
     }
 
@@ -41,7 +45,7 @@ class DocumentosTest extends TestCase
         return [
             'titulo' => 'Reglamento de titulación',
             'descripcion' => 'Modalidades y requisitos.',
-            'categoria' => 'Reglamentos',
+            'categoria_id' => Categoria::where('nombre', 'Reglamentos')->value('id'),
             'publicado' => '1',
             'archivo' => $this->pdf(),
             ...$cambios,
@@ -90,23 +94,70 @@ class DocumentosTest extends TestCase
 
         foreach ([
             UploadedFile::fake()->create('foto.pdf', 10, 'image/png'),
-            UploadedFile::fake()->create('carta.docx', 10, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'),
+            UploadedFile::fake()->create('presentacion.pptx', 10, 'application/vnd.openxmlformats-officedocument.presentationml.presentation'),
             UploadedFile::fake()->create('programa.exe', 10, 'application/x-msdownload'),
         ] as $archivo) {
             $this->actingAs($editor)->post('/api/gestion/documentos', $this->datos(['archivo' => $archivo]), ['Accept' => 'application/json'])
                 ->assertUnprocessable()
-                ->assertJsonValidationErrors(['archivo' => 'PDF o Excel']);
+                ->assertJsonValidationErrors(['archivo' => 'PDF, Word']);
         }
 
         $this->assertSame(0, Documento::count());
     }
 
-    public function test_rechaza_archivos_de_mas_de_10_mb(): void
+    public function test_acepta_word(): void
+    {
+        $documento = $this->crear(['archivo' => UploadedFile::fake()->create('instructivo.docx', 50, self::DOCX)]);
+
+        $this->assertSame('docx', $documento->tipo);
+        $this->assertSame(self::DOCX, $documento->mime);
+    }
+
+    public function test_acepta_hasta_25_mb_y_rechaza_lo_que_pasa(): void
+    {
+        $this->crear(['archivo' => $this->pdf(kb: 25600)]);
+
+        $this->actingAs($this->editor())
+            ->post('/api/gestion/documentos', $this->datos(['archivo' => $this->pdf(kb: 25601)]), ['Accept' => 'application/json'])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['archivo' => '25 MB']);
+    }
+
+    public function test_guarda_quien_subio_el_archivo(): void
+    {
+        $editor = $this->editor();
+        $id = $this->actingAs($editor)->post('/api/gestion/documentos', $this->datos(), ['Accept' => 'application/json'])
+            ->assertCreated()
+            ->assertJsonPath('data.subido_por', $editor->name)
+            ->assertJsonPath('data.categoria.nombre', 'Reglamentos')
+            ->json('data.id');
+
+        $this->assertSame('application/pdf', Documento::find($id)->mime);
+    }
+
+    public function test_la_categoria_debe_existir(): void
     {
         $this->actingAs($this->editor())
-            ->post('/api/gestion/documentos', $this->datos(['archivo' => $this->pdf(kb: 10241)]), ['Accept' => 'application/json'])
+            ->post('/api/gestion/documentos', $this->datos(['categoria_id' => 999]), ['Accept' => 'application/json'])
             ->assertUnprocessable()
-            ->assertJsonValidationErrors(['archivo' => '10 MB']);
+            ->assertJsonValidationErrors('categoria_id');
+    }
+
+    public function test_no_se_repite_una_categoria_aunque_cambien_mayusculas_o_tildes(): void
+    {
+        $editor = $this->editor();
+
+        foreach (['reglamentos', 'REGLAMENTOS', '  Reglamentos ', 'Guias e instructivos'] as $nombre) {
+            $this->actingAs($editor)->postJson('/api/gestion/documentos/categorias', ['nombre' => $nombre])
+                ->assertUnprocessable()
+                ->assertJsonValidationErrors(['nombre' => 'Ya existe']);
+        }
+
+        $this->actingAs($editor)->postJson('/api/gestion/documentos/categorias', ['nombre' => 'Convocatorias'])
+            ->assertCreated()
+            ->assertJsonPath('data.nombre', 'Convocatorias');
+
+        $this->getJson('/api/gestion/documentos/categorias')->assertOk()->assertJsonCount(7, 'data');
     }
 
     public function test_editar_sin_archivo_no_crea_version(): void
@@ -154,7 +205,7 @@ class DocumentosTest extends TestCase
     {
         $documento = $this->crear();
         $otro = $this->crear(['titulo' => 'Otro']);
-        $version = $documento->versiones()->create($documento->only(['archivo', 'nombre_original', 'tipo', 'tamano']));
+        $version = $documento->versiones()->create($documento->only(['archivo', 'nombre_original', 'tipo', 'mime', 'tamano', 'user_id']));
 
         $this->get("/api/gestion/documentos/{$otro->id}/versiones/{$version->id}/descargar")->assertNotFound();
         $this->get("/api/gestion/documentos/{$documento->id}/versiones/{$version->id}/descargar")->assertOk();
