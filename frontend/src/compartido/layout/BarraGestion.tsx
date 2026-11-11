@@ -4,15 +4,16 @@ import { iconoDeRuta } from '@/compartido/menu/iconosRuta'
 import type { OpcionMenu } from '@/compartido/menu/tipos'
 import type { UsuarioSesion } from '@/compartido/sesion/tipos'
 import { useCerrarSesion } from '@/compartido/sesion/useCerrarSesion'
+import { useTema } from '@/compartido/tema/contexto'
 import { IconoExterno, IconoPanel, IconoSalir } from '@/compartido/ui/Iconos'
 
 const claseEnlace = ({ isActive }: { isActive: boolean }) =>
   `flex items-center gap-3 rounded-tema px-3 py-2 text-sm transition-colors ${
-    isActive ? 'bg-primario font-semibold text-sobre-primario' : 'text-sobre-marino-suave hover:bg-marino hover:text-sobre-marino'
+    isActive ? 'bg-primario font-semibold text-sobre-primario' : 'text-texto hover:bg-superficie hover:text-titulo'
   }`
 
 const ACCION =
-  'flex w-full items-center gap-3 rounded-tema px-3 py-2 text-sm text-sobre-marino-suave transition-colors hover:bg-marino hover:text-sobre-marino disabled:opacity-60'
+  'flex w-full items-center gap-3 rounded-tema px-3 py-2 text-sm text-texto transition-colors hover:bg-superficie hover:text-titulo disabled:opacity-60'
 
 /** «Director de Carrera» → «DC» */
 const iniciales = (nombre: string) =>
@@ -24,15 +25,16 @@ const iniciales = (nombre: string) =>
     .map((palabra) => palabra[0].toUpperCase())
     .join('')
 
-/** Barra lateral del panel: siempre a la vista, con las opciones que permite el rol. */
+/** Barra lateral del panel, con las opciones que permite el rol. Sigue el modo: mismo fondo que la página. */
 export function BarraGestion({ usuario, grupos, alNavegar }: { usuario: UsuarioSesion; grupos: OpcionMenu[]; alNavegar?: () => void }) {
   const cerrarSesion = useCerrarSesion()
+  const { modoActivo } = useTema()
 
   return (
-    <div className="flex h-full flex-col bg-marino-oscuro text-sobre-marino">
+    <div className="flex h-full flex-col border-r border-borde-tarjeta bg-fondo text-texto sombra-lateral">
       <div className="px-5 pb-4 pt-5">
         <Link to="/gestion" onClick={alNavegar} aria-label="Ir al panel de gestión" className="inline-block">
-          <LogoFcee version="negativo" className="h-12" />
+          <LogoFcee version={modoActivo === 'oscuro' ? 'negativo' : 'positivo'} className="h-12" />
         </Link>
       </div>
 
@@ -43,7 +45,7 @@ export function BarraGestion({ usuario, grupos, alNavegar }: { usuario: UsuarioS
 
         {grupos.map((grupo) => (
           <div key={grupo.id}>
-            <p className="mb-1.5 px-3 text-[0.7rem] font-bold uppercase tracking-widest text-sobre-marino">{grupo.titulo}</p>
+            <p className="mb-1.5 px-3 text-[0.7rem] font-bold uppercase tracking-widest text-texto-suave">{grupo.titulo}</p>
             <ul className="space-y-0.5">
               {grupo.hijos.map((opcion) => {
                 const Icono = iconoDeRuta(opcion.ruta)
@@ -61,14 +63,14 @@ export function BarraGestion({ usuario, grupos, alNavegar }: { usuario: UsuarioS
         ))}
       </nav>
 
-      <div className="space-y-1 border-t border-marino p-3">
+      <div className="space-y-1 border-t border-borde p-3">
         <div className="flex items-center gap-3 px-3 py-2">
           <span aria-hidden="true" className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primario text-xs font-bold text-sobre-primario">
             {iniciales(usuario.nombre)}
           </span>
           <p className="min-w-0 text-sm">
-            <span className="block truncate font-semibold">{usuario.nombre}</span>
-            <span className="block truncate text-xs text-sobre-marino-suave">{usuario.rol?.nombre}</span>
+            <span className="block truncate font-semibold text-titulo">{usuario.nombre}</span>
+            <span className="block truncate text-xs text-texto-suave">{usuario.rol?.nombre}</span>
           </p>
         </div>
         <Link to="/" target="_blank" className={ACCION}>

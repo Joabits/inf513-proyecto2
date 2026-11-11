@@ -46,7 +46,7 @@ export function PlantillaGestion() {
       </a>
 
       <aside className="hidden w-72 shrink-0 lg:block">
-        <div className="sticky top-0 h-screen">
+        <div className="sticky top-0 z-40 h-screen">
           <BarraGestion usuario={usuario} grupos={grupos} />
         </div>
       </aside>
@@ -60,7 +60,7 @@ export function PlantillaGestion() {
               type="button"
               aria-label="Cerrar menú"
               onClick={() => setAbierto(false)}
-              className="absolute right-3 top-5 grid h-10 w-10 place-items-center rounded-full text-sobre-primario hover:bg-marino"
+              className="absolute right-3 top-5 grid h-10 w-10 place-items-center rounded-full text-titulo hover:bg-superficie"
             >
               <IconoCerrar />
             </button>
