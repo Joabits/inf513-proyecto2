@@ -7,5 +7,5 @@ export const ESTILO_RELACION: Record<Relacion, string> = {
   requisito: 'border-2 border-primario bg-fondo',
   habilita: 'border-marino bg-marino text-sobre-primario',
   atenuada: 'border-borde bg-fondo opacity-35',
-  normal: 'border-borde bg-fondo hover:border-titulo',
+  normal: 'border-borde bg-fondo sombra-suave hover:border-titulo hover:sombra-elevada',
 }
