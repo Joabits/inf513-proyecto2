@@ -9,6 +9,7 @@ import {
   Contrast,
   ExternalLink,
   ImagePlus,
+  LayoutDashboard,
   Lock,
   LogIn,
   LogOut,
@@ -45,3 +46,4 @@ export const IconoBajar = icono(ArrowDown)
 export const IconoExterno = icono(ExternalLink)
 export const IconoImagen = icono(ImagePlus)
 export const IconoListo = icono(Check)
+export const IconoPanel = icono(LayoutDashboard)
