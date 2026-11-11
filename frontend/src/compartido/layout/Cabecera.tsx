@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'
-import { LogoFcee } from '@/compartido/marca/LogoFcee'
+import { LogoCarrera } from '@/compartido/marca/LogoCarrera'
 import { useMenu } from '@/compartido/menu/useMenu'
 import { useSesion } from '@/compartido/sesion/useSesion'
-import { useTema } from '@/compartido/tema/contexto'
 import { PanelAccesibilidad } from '@/compartido/tema/PanelAccesibilidad'
 import { IconoBuscar, IconoCerrar, IconoMenu } from '@/compartido/ui/Iconos'
 import { Buscador } from './Buscador'
@@ -27,7 +26,6 @@ const ANCHO_ESCRITORIO = 1024
 export function Cabecera() {
   const { data: menu } = useMenu()
   const { data: usuario } = useSesion()
-  const { modoActivo } = useTema()
   const [menuAbierto, setMenuAbierto] = useState(false)
   const [buscarAbierto, setBuscarAbierto] = useState(false)
   const [conSombra, setConSombra] = useState(false)
@@ -80,8 +78,7 @@ export function Cabecera() {
     >
       <div ref={fila} className="contenedor flex h-16 items-center gap-4 lg:h-18">
         <Link ref={logo} to="/" className="shrink-0" aria-label="Inicio: Carrera de Administración de Empresas">
-          {/* Alto suficiente para que se lea el texto del logo oficial */}
-          <LogoFcee version={modoActivo === 'oscuro' ? 'negativo' : 'positivo'} className="h-11 min-[375px]:h-12 lg:h-14" />
+          <LogoCarrera className="h-12 lg:h-14" />
         </Link>
 
         {/* Cuando no cabe, el menú sigue en la página (invisible e inerte) solo para poder medirlo */}

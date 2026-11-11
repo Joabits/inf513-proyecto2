@@ -41,9 +41,9 @@ Cada módulo es una carpeta independiente en los dos lados. Ver `frontend/src/mo
 
 ### Identidad visual (Manual de uso de marca FCEE, gestión 2026)
 
-- **Logo:** el de la FCEE (`frontend/src/compartido/marca/`). La carrera no tiene logo propio:
-  el manual prohíbe crear variantes del escudo para carreras. Versión positiva sobre blanco
-  y negativa (letras blancas) sobre azul.
+- **Logos** (`frontend/src/compartido/marca/`): la cabecera del portal lleva el logo circular de la Carrera;
+  el pie, el panel y la pantalla de ingreso, el de la FCEE (positivo sobre blanco, negativo con letras
+  blancas sobre azul). El escudo de la FCEE no se modifica: el manual lo prohíbe para carreras.
 - **Colores:** rojo `#DA0A15`, azul `#21366E`, azul oscuro `#0F1E45`, gris claro `#F4F5F7`,
   blanco y negro `#0A0A0A`. El manual no permite otras tonalidades ni degradados.
 - **Tipografía:** Montserrat (incluida en el proyecto, no depende de Internet).
