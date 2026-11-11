@@ -1,12 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm, useWatch } from 'react-hook-form'
 import { aplicarErrores } from '@/compartido/api/errores'
+import { BarraGuardar } from '@/compartido/ui/BarraGuardar'
 import { Campo, CLASE_ENTRADA } from '@/compartido/ui/Campo'
 import { actualizarPortada } from '../api'
 import { esquemaContenido, type DatosContenido } from '../inicio.esquema'
 import type { Portada } from '../tipos'
 import { useGuardarInicio } from '../useInicio'
-import { BarraGuardar } from './BarraGuardar'
 import { FotoDirector } from './FotoDirector'
 
 // La leyenda flota para quedar dentro del recuadro y no cortar su borde superior

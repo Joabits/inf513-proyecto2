@@ -1,15 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { aplicarErrores } from '@/compartido/api/errores'
+import { BarraGuardar } from '@/compartido/ui/BarraGuardar'
 import { Boton } from '@/compartido/ui/Boton'
 import { Campo, CLASE_ENTRADA } from '@/compartido/ui/Campo'
+import { FilaLista } from '@/compartido/ui/FilaLista'
 import { IconoAgregar } from '@/compartido/ui/Iconos'
 import { guardarCifras } from '../api'
 import { esquemaCifras, MAXIMO_FILAS, type DatosCifras } from '../inicio.esquema'
 import type { Cifra } from '../tipos'
 import { useGuardarInicio } from '../useInicio'
-import { BarraGuardar } from './BarraGuardar'
-import { FilaLista } from './FilaLista'
 
 export function FormCifras({ cifras }: { cifras: Cifra[] }) {
   const guardar = useGuardarInicio(guardarCifras)

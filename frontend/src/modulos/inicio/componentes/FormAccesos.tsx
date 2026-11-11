@@ -1,15 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { aplicarErrores } from '@/compartido/api/errores'
+import { BarraGuardar } from '@/compartido/ui/BarraGuardar'
 import { Boton } from '@/compartido/ui/Boton'
 import { Campo, CLASE_ENTRADA } from '@/compartido/ui/Campo'
+import { FilaLista } from '@/compartido/ui/FilaLista'
 import { IconoAgregar } from '@/compartido/ui/Iconos'
 import { guardarAccesos } from '../api'
 import { esquemaAccesos, MAXIMO_FILAS, type DatosAccesos } from '../inicio.esquema'
 import type { Acceso } from '../tipos'
 import { useGuardarInicio } from '../useInicio'
-import { BarraGuardar } from './BarraGuardar'
-import { FilaLista } from './FilaLista'
 
 type CampoAcceso = 'titulo' | 'descripcion' | 'ruta'
 
