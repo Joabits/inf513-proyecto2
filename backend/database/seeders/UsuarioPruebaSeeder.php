@@ -7,21 +7,14 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 
 /**
- * Un usuario de prueba por rol. La contraseña NO está en el código:
- * se toma de SEMILLA_CLAVE en el .env de cada uno. Si está vacía, no se crean.
+ * Un usuario de prueba por rol, todos con la misma contraseña de prueba.
  */
 class UsuarioPruebaSeeder extends Seeder
 {
+    public const CLAVE = '12345678*';
+
     public function run(): void
     {
-        $clave = env('SEMILLA_CLAVE');
-
-        if (blank($clave)) {
-            $this->command?->warn('SEMILLA_CLAVE está vacía en .env: no se crearon usuarios de prueba.');
-
-            return;
-        }
-
         $usuarios = [
             [Rol::DIRECTOR, 'Director de Carrera (prueba)', 'director@cae.test'],
             [Rol::EDITOR_INSTITUCIONAL, 'Editor Institucional (prueba)', 'institucional@cae.test'],
@@ -32,7 +25,7 @@ class UsuarioPruebaSeeder extends Seeder
         foreach ($usuarios as [$slug, $nombre, $correo]) {
             User::updateOrCreate(['email' => $correo], [
                 'name' => $nombre,
-                'password' => $clave,
+                'password' => self::CLAVE,
                 'rol_id' => Rol::where('slug', $slug)->value('id'),
                 'activo' => true,
             ]);

@@ -60,7 +60,7 @@ cd backend
 composer install
 cp .env.example .env
 php artisan key:generate
-# Editar .env: DB_DATABASE, DB_USERNAME, DB_PASSWORD y SEMILLA_CLAVE (clave de los usuarios de prueba)
+# Editar .env: DB_DATABASE, DB_USERNAME y DB_PASSWORD
 createdb cae_portal            # o crear la base desde pgAdmin
 php artisan migrate --seed
 php artisan serve              # http://localhost:8000
@@ -71,8 +71,9 @@ npm install
 npm run dev                    # http://localhost:5173  (reenvía /api a Laravel)
 ```
 
-Usuarios de prueba (solo si `SEMILLA_CLAVE` tiene valor): `director@cae.test`,
-`institucional@cae.test`, `comunicacion@cae.test`, `usuario@cae.test`.
+Usuarios de prueba que crea el seeder: `director@cae.test`, `institucional@cae.test`,
+`comunicacion@cae.test` y `usuario@cae.test`. Su contraseña está en
+`backend/database/seeders/UsuarioPruebaSeeder.php`.
 
 Pruebas del backend: `cd backend && php artisan test`.
 
