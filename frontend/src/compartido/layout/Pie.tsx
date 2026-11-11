@@ -134,11 +134,16 @@ export function Pie() {
   )
 }
 
-/** Pie corto del panel y de la pantalla de ingreso: derechos y contador de visitas. */
-export function PieSimple() {
+/**
+ * Pie corto del panel y de la pantalla de ingreso: derechos y contador de visitas.
+ * enContenedor: alinea el texto con la cabecera de ancho centrado (pantalla de ingreso).
+ */
+export function PieSimple({ enContenedor = false }: { enContenedor?: boolean }) {
   return (
     <footer className="mt-auto">
-      <div className="flex flex-col gap-2 px-4 py-4 text-xs text-texto-suave sm:flex-row sm:items-center sm:justify-between lg:px-8">
+      <div
+        className={`flex flex-col gap-2 py-4 text-xs text-texto-suave sm:flex-row sm:items-center sm:justify-between ${enContenedor ? 'contenedor' : 'px-4 lg:px-8'}`}
+      >
         <p>© {ANIO} Carrera de Administración de Empresas · FCEE · UAGRM</p>
         <ContadorVisitas />
       </div>

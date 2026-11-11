@@ -7,23 +7,28 @@ import { PieSimple } from './Pie'
 
 const TAREAS = ['Portada, información institucional y documentos', 'Investigación, INNOVA y sus solicitudes', 'Noticias, eventos, usuarios y bitácora']
 
-/** Pantalla de acceso del personal: en PC, presentación a la izquierda y formulario a la derecha, con el fondo del modo. */
+/**
+ * Pantalla de acceso del personal. Cabecera de una fila como la del portal (logo y visualización a la misma altura);
+ * debajo, en PC, la presentación del panel a la izquierda y el formulario a la derecha. Un solo fondo, sin líneas.
+ */
 export function PlantillaAcceso() {
-
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen flex-col">
       {/* Los buscadores no deben mostrar la pantalla de ingreso */}
       <meta name="robots" content="noindex, nofollow" />
-      <aside className="relative hidden w-[44%] max-w-2xl shrink-0 flex-col justify-between border-r border-borde-tarjeta bg-fondo p-12 text-texto sombra-lateral lg:flex xl:p-16">
-        <Link to="/" className="relative self-start" aria-label="Volver al portal">
+      <header className="contenedor flex h-16 items-center justify-between lg:h-18">
+        <Link to="/" className="shrink-0" aria-label="Volver al portal">
           <MarcaCarrera />
         </Link>
+        <PanelAccesibilidad />
+      </header>
 
-        <div className="relative max-w-md">
+      <main id="contenido" className="contenedor grid flex-1 items-center gap-12 py-10 lg:grid-cols-2 lg:gap-20">
+        <section aria-label="Panel de gestión" className="hidden max-w-md lg:block">
           <span aria-hidden="true" className="mb-6 block h-1 w-14 rounded-full bg-primario" />
           <p className="font-titulos text-4xl font-bold leading-tight text-titulo">Panel de gestión del portal</p>
           <p className="mt-4 text-lg text-texto-suave">Desde aquí el personal de la Carrera mantiene al día el contenido del portal.</p>
-          <ul className="mt-8 space-y-3">
+          <ul className="mt-8 space-y-3 text-texto">
             {TAREAS.map((tarea) => (
               <li key={tarea} className="flex items-start gap-3">
                 <IconoCorrecto width={20} height={20} aria-hidden="true" className="mt-0.5 shrink-0 text-acento" />
@@ -31,27 +36,22 @@ export function PlantillaAcceso() {
               </li>
             ))}
           </ul>
-        </div>
-
-        <Link to="/" className="relative inline-flex items-center gap-1.5 self-start text-sm font-semibold text-titulo underline-offset-4 hover:text-acento hover:underline">
-          <IconoAnterior width={16} height={16} aria-hidden="true" /> Volver al portal
-        </Link>
-      </aside>
-
-      <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex h-16 items-center justify-between px-4 lg:h-18 lg:justify-end lg:px-8">
-          <Link to="/" className="shrink-0 lg:hidden" aria-label="Volver al portal">
-            <MarcaCarrera />
+          <Link
+            to="/"
+            className="mt-10 inline-flex items-center gap-1.5 text-sm font-semibold text-titulo underline-offset-4 hover:text-acento hover:underline"
+          >
+            <IconoAnterior width={16} height={16} aria-hidden="true" /> Volver al portal
           </Link>
-          <PanelAccesibilidad />
-        </header>
-        <main id="contenido" className="flex flex-1 flex-col justify-center px-4 py-10 lg:px-8">
+        </section>
+
+        <div className="w-full">
           <ContextoPlantilla.Provider value="acceso">
             <Outlet />
           </ContextoPlantilla.Provider>
-        </main>
-        <PieSimple />
-      </div>
+        </div>
+      </main>
+
+      <PieSimple enContenedor />
       <ScrollRestoration />
     </div>
   )
