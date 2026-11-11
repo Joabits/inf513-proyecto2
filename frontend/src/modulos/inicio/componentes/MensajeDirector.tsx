@@ -21,7 +21,7 @@ export function MensajeDirector({ portada }: { portada: Portada }) {
         <h2 id="mensaje-director" className="text-sm font-semibold uppercase tracking-widest text-sobre-primario">
           Mensaje del Director
         </h2>
-        <blockquote className="mt-5 max-w-4xl text-lg font-medium leading-relaxed sm:text-xl lg:text-2xl lg:leading-relaxed">
+        <blockquote className="mt-5 max-w-2xl text-lg font-medium leading-relaxed sm:text-xl lg:text-2xl lg:leading-relaxed">
           {portada.director_mensaje}
         </blockquote>
         <p className="mt-6">
