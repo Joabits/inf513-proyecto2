@@ -11,7 +11,10 @@
  * En los componentes se usan SOLO estas clases (nunca colores sueltos):
  *   bg-fondo, bg-superficie, text-texto, text-texto-suave, text-titulo,
  *   bg-primario, text-sobre-primario, text-acento, bg-marino, bg-marino-oscuro,
- *   border-borde, rounded-tema
+ *   border-borde, rounded-tema,
+ *   bg-tarjeta, bg-seccion, bg-banda, bg-pie, bg-chip, text-sobre-chip,
+ *   text-sobre-marino, text-sobre-marino-suave, sombra-suave, sombra-elevada,
+ *   banda + banda-marino / banda-seccion (fondo de lado a lado de la pantalla)
  * Así funcionan los temas, el modo noche y el alto contraste sin tocar cada pantalla.
  */
 @theme inline {
@@ -26,6 +29,14 @@
   --color-marino: var(--c-marino);
   --color-marino-oscuro: var(--c-marino-oscuro);
   --color-borde: var(--c-borde);
+  --color-tarjeta: var(--c-tarjeta);
+  --color-seccion: var(--c-seccion);
+  --color-banda: var(--c-banda);
+  --color-pie: var(--c-pie);
+  --color-chip: var(--c-chip);
+  --color-sobre-chip: var(--c-sobre-chip);
+  --color-sobre-marino: var(--c-sobre-marino);
+  --color-sobre-marino-suave: var(--c-sobre-marino-suave);
   --radius-tema: var(--radio);
   --font-titulos: "Montserrat Variable", system-ui, sans-serif;
   --font-cuerpo: "Montserrat Variable", system-ui, sans-serif;
@@ -44,6 +55,17 @@
   --c-marino: #21366e;
   --c-marino-oscuro: #0f1e45;
   --c-borde: #d9dce3; /* línea neutra de interfaz, no es un color de marca */
+  --c-tarjeta: #ffffff;
+  --c-seccion: #f4f5f7; /* franja alterna para separar secciones */
+  --c-banda: #21366e; /* franja azul: títulos de página, portada */
+  --c-pie: #0f1e45;
+  --c-chip: #21366e; /* fondo de los íconos destacados */
+  --c-sobre-chip: #ffffff;
+  --c-sobre-marino: #ffffff;
+  --c-sobre-marino-suave: #f4f5f7;
+  --c-borde-banda: transparent;
+  --sombra-suave: 0 1px 2px rgb(15 30 69 / 0.06), 0 6px 16px -10px rgb(15 30 69 / 0.18);
+  --sombra-elevada: 0 2px 4px rgb(15 30 69 / 0.06), 0 18px 36px -14px rgb(15 30 69 / 0.32);
   color-scheme: light;
 }
 
@@ -59,6 +81,13 @@
   --c-marino: #21366e;
   --c-marino-oscuro: #0a0a0a;
   --c-borde: #21366e;
+  --c-tarjeta: #21366e;
+  --c-seccion: #0a0a0a;
+  --c-pie: #0a0a0a;
+  /* el azul se pierde sobre el fondo azul: los íconos destacados van en rojo */
+  --c-chip: #da0a15;
+  --sombra-suave: none;
+  --sombra-elevada: 0 18px 36px -14px rgb(10 10 10 / 0.7);
   color-scheme: dark;
 }
 
@@ -73,6 +102,16 @@
   --c-marino: #0a0a0a;
   --c-marino-oscuro: #0a0a0a;
   --c-borde: #0a0a0a;
+  --c-tarjeta: #ffffff;
+  --c-seccion: #ffffff;
+  --c-banda: #0a0a0a;
+  --c-pie: #0a0a0a;
+  --c-chip: #0a0a0a;
+  --c-sobre-chip: #ffffff;
+  --c-sobre-marino: #ffffff;
+  --c-sobre-marino-suave: #ffffff;
+  --sombra-suave: none;
+  --sombra-elevada: none;
 }
 :root[data-contraste="alto"][data-modo="oscuro"] {
   --c-fondo: #0a0a0a;
@@ -82,6 +121,11 @@
   --c-titulo: #ffffff;
   --c-acento: #ffffff;
   --c-borde: #ffffff;
+  --c-tarjeta: #0a0a0a;
+  --c-seccion: #0a0a0a;
+  --c-chip: #ffffff;
+  --c-sobre-chip: #0a0a0a;
+  --c-borde-banda: #ffffff; /* la franja negra sobre fondo negro se marca con líneas */
 }
 
 /* ---------- Temas por público: mismos colores y tipografía, cambia forma y tamaño ---------- */
@@ -152,4 +196,48 @@
   @media (width >= 40rem) {
     padding-inline: 1.5rem;
   }
+}
+
+/*
+ * Franja de color de lado a lado de la pantalla. El contenido sigue en su columna
+ * (alineado con el resto de la página); solo el fondo se estira con un ::before.
+ * Usar en bloques que ocupan todo el ancho de su página, junto con banda-marino o banda-seccion.
+ */
+@utility banda {
+  position: relative;
+  isolation: isolate;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    left: 50%;
+    z-index: -1;
+    width: 100vw;
+    translate: -50% 0;
+    background: var(--fondo-banda, var(--c-seccion));
+    border-block: 1px solid var(--c-borde-banda);
+  }
+}
+
+@utility banda-marino {
+  --fondo-banda: var(--c-banda);
+  color: var(--c-sobre-marino);
+}
+
+@utility banda-seccion {
+  --fondo-banda: var(--c-seccion);
+}
+
+@utility sombra-suave {
+  box-shadow: var(--sombra-suave);
+}
+
+@utility sombra-elevada {
+  box-shadow: var(--sombra-elevada);
+}
+
+/* Adornos geométricos de las franjas (clase adorno): en alto contraste no se pintan, así no tapan las líneas de la franja */
+:root[data-contraste="alto"] .adorno {
+  background: transparent;
 }
