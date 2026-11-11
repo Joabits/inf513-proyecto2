@@ -114,14 +114,14 @@ export function MallaCurricular() {
             ))}
           </dl>
           {plan.titulaciones && (
-            <div className="rounded-tema bg-banda p-6 text-sobre-marino">
-              <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider">
-                <IconoMedalla width={18} height={18} aria-hidden="true" /> Titulaciones intermedias
+            <div className="rounded-tema border border-borde bg-tarjeta p-6 sombra-suave">
+              <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-titulo">
+                <IconoMedalla width={18} height={18} aria-hidden="true" className="text-acento" /> Titulaciones intermedias
               </h2>
-              <ul className="mt-4 space-y-3 text-sm text-sobre-marino-suave">
+              <ul className="mt-4 space-y-3 text-sm text-texto">
                 {plan.titulaciones.split('\n').map((linea) => (
                   <li key={linea} className="flex gap-2.5">
-                    <IconoCorrecto width={18} height={18} aria-hidden="true" className="shrink-0 text-sobre-marino" />
+                    <IconoCorrecto width={18} height={18} aria-hidden="true" className="shrink-0 text-acento" />
                     {linea}
                   </li>
                 ))}
@@ -180,11 +180,11 @@ export function MallaCurricular() {
             const optativas = semestre.materias.every((m) => m.optativa)
             return (
               <section key={semestre.numero} aria-labelledby={`semestre-${semestre.numero}`} className="lg:w-44 lg:shrink-0">
-                <div className="mb-3 rounded-tema border-b-4 border-primario bg-banda px-3 py-2.5 text-sobre-marino">
-                  <h2 id={`semestre-${semestre.numero}`} className="text-base">
+                <div className="mb-3 border-b-2 border-primario pb-2">
+                  <h2 id={`semestre-${semestre.numero}`} className="text-base text-titulo">
                     {nombreSemestre(semestre.numero)}
                   </h2>
-                  <p className="text-xs text-sobre-marino-suave">
+                  <p className="text-xs text-texto-suave">
                     {optativas ? 'Graduación' : `${semestre.materias.length} materias · ${semestre.totales.creditos} créditos`}
                   </p>
                 </div>

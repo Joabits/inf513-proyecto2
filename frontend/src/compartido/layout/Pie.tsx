@@ -38,7 +38,7 @@ export function ContadorVisitas() {
 
 /**
  * Pie del portal con el logo, el contacto, los enlaces y el contador de visitas.
- * Usa el mismo fondo que la página (claro u oscuro según el modo); una línea fina lo separa.
+ * Usa el mismo fondo que la página (claro u oscuro según el modo), sin líneas divisorias.
  * Los datos de contacto, las redes y los enlaces se editan en el panel (CU-28).
  */
 export function Pie() {
@@ -49,7 +49,7 @@ export function Pie() {
   const enlaces = configuracion?.enlaces ?? []
 
   return (
-    <footer className="mt-auto border-t border-borde bg-fondo text-texto">
+    <footer className="mt-auto bg-fondo text-texto">
       <div className="contenedor grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr] lg:gap-16">
         <div className="sm:col-span-2 lg:col-span-1">
           <LogoFcee version={modoActivo === 'oscuro' ? 'negativo' : 'positivo'} className="h-14 sm:h-16" />
@@ -128,11 +128,9 @@ export function Pie() {
         )}
       </div>
 
-      <div className="border-t border-borde">
-        <div className="contenedor flex flex-col gap-2 py-5 text-xs text-texto-suave sm:flex-row sm:items-center sm:justify-between">
-          <p>© {ANIO} Carrera de Administración de Empresas · FCEE · UAGRM</p>
-          <ContadorVisitas />
-        </div>
+      <div className="contenedor flex flex-col gap-2 pb-8 text-xs text-texto-suave sm:flex-row sm:items-center sm:justify-between">
+        <p>© {ANIO} Carrera de Administración de Empresas · FCEE · UAGRM</p>
+        <ContadorVisitas />
       </div>
     </footer>
   )
@@ -141,7 +139,7 @@ export function Pie() {
 /** Pie corto del panel y de la pantalla de ingreso: derechos y contador de visitas. */
 export function PieSimple() {
   return (
-    <footer className="mt-auto border-t border-borde">
+    <footer className="mt-auto">
       <div className="flex flex-col gap-2 px-4 py-4 text-xs text-texto-suave sm:flex-row sm:items-center sm:justify-between lg:px-8">
         <p>© {ANIO} Carrera de Administración de Empresas · FCEE · UAGRM</p>
         <ContadorVisitas />
