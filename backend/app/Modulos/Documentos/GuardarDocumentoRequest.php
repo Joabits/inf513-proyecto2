@@ -22,7 +22,7 @@ class GuardarDocumentoRequest extends FormRequest
         return [
             'titulo' => ['required', 'string', 'max:160'],
             'descripcion' => ['nullable', 'string', 'max:300'],
-            'categoria' => ['required', 'string', 'max:60'],
+            'categoria_id' => ['required', 'integer', 'exists:documento_categorias,id'],
             'publicado' => ['required', 'boolean'],
             'archivo' => [
                 $creando ? 'required' : 'nullable',
@@ -36,12 +36,13 @@ class GuardarDocumentoRequest extends FormRequest
 
     public function attributes(): array
     {
-        return ['titulo' => 'título', 'descripcion' => 'descripción', 'categoria' => 'categoría'];
+        return ['titulo' => 'título', 'descripcion' => 'descripción', 'categoria_id' => 'categoría'];
     }
 
     public function messages(): array
     {
         return [
+            'categoria_id.required' => 'Elija una categoría.',
             'archivo.required' => 'Elija el archivo del documento.',
             'archivo.mimes' => 'El archivo debe ser PDF o Excel (.xlsx).',
             'archivo.extensions' => 'El archivo debe ser PDF o Excel (.xlsx).',
@@ -54,7 +55,6 @@ class GuardarDocumentoRequest extends FormRequest
     {
         $this->merge([
             'titulo' => trim((string) $this->input('titulo')),
-            'categoria' => trim((string) $this->input('categoria')),
             'descripcion' => trim((string) $this->input('descripcion')) ?: null,
         ]);
     }

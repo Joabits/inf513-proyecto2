@@ -17,18 +17,28 @@ class DocumentosController extends Controller
         return DocumentoResource::collection($this->servicio->listar());
     }
 
+    public function categorias()
+    {
+        return CategoriaResource::collection($this->servicio->categorias());
+    }
+
+    public function crearCategoria(CrearCategoriaRequest $request)
+    {
+        return new CategoriaResource($this->servicio->crearCategoria($request->validated('nombre'), $request->user()));
+    }
+
     public function crear(GuardarDocumentoRequest $request)
     {
         $documento = $this->servicio->crear($request->safe()->except('archivo'), $request->file('archivo'), $request->user());
 
-        return new DocumentoResource($documento->loadCount('versiones'));
+        return new DocumentoResource($documento);
     }
 
     public function actualizar(GuardarDocumentoRequest $request, Documento $documento)
     {
         $documento = $this->servicio->actualizar($documento, $request->safe()->except('archivo'), $request->file('archivo'), $request->user());
 
-        return new DocumentoResource($documento->loadCount('versiones'));
+        return new DocumentoResource($documento);
     }
 
     public function eliminar(Request $request, Documento $documento)
@@ -40,7 +50,7 @@ class DocumentosController extends Controller
 
     public function versiones(Documento $documento)
     {
-        return DocumentoVersionResource::collection($documento->versiones);
+        return DocumentoVersionResource::collection($documento->versiones()->with('autor')->get());
     }
 
     /** Descarga pública: un documento oculto responde como si no existiera. */

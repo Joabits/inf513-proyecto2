@@ -13,16 +13,26 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // "clave" es el nombre sin mayúsculas ni tildes: impide crear «reglamentos» si ya existe «Reglamentos»
+        Schema::create('documento_categorias', function (Blueprint $table) {
+            $table->id();
+            $table->string('nombre', 60);
+            $table->string('clave', 60)->unique();
+            $table->timestamps();
+        });
+
         Schema::create('documentos', function (Blueprint $table) {
             $table->id();
             $table->string('titulo', 160);
             $table->string('descripcion', 300)->nullable();
-            $table->string('categoria', 60)->index();
+            $table->foreignId('categoria_id')->constrained('documento_categorias')->restrictOnDelete();
             $table->string('archivo');
             $table->string('nombre_original');
             $table->string('tipo', 4);
+            $table->string('mime', 100);
             $table->unsignedInteger('tamano');
             $table->boolean('publicado')->default(true);
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
         });
 
@@ -32,7 +42,9 @@ return new class extends Migration
             $table->string('archivo');
             $table->string('nombre_original');
             $table->string('tipo', 4);
+            $table->string('mime', 100);
             $table->unsignedInteger('tamano');
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
         });
     }
@@ -41,5 +53,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('documento_versiones');
         Schema::dropIfExists('documentos');
+        Schema::dropIfExists('documento_categorias');
     }
 };

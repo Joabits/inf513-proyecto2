@@ -7,6 +7,8 @@ Route::get('/documentos/{documento}/descargar', [DocumentosController::class, 'd
 
 Route::middleware('auth:sanctum')->prefix('gestion/documentos')->group(function () {
     Route::get('/', [DocumentosController::class, 'listar'])->middleware('permiso:documentos.ver');
+    Route::get('/categorias', [DocumentosController::class, 'categorias'])->middleware('permiso:documentos.ver');
+    Route::post('/categorias', [DocumentosController::class, 'crearCategoria'])->middleware('permiso:documentos.crear');
     Route::post('/', [DocumentosController::class, 'crear'])->middleware('permiso:documentos.crear');
     // Con archivo, el formulario llega por POST con _method=PUT: PHP no lee archivos en un PUT
     Route::put('/{documento}', [DocumentosController::class, 'actualizar'])->middleware('permiso:documentos.editar');
