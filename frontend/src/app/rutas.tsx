@@ -11,6 +11,7 @@ import { rutasGestionConfiguracion } from '@/modulos/configuracion'
 import { rutasContacto } from '@/modulos/contacto'
 import { rutasGestionDocumentos } from '@/modulos/documentos'
 import { rutasGestionInicio, rutasInicio } from '@/modulos/inicio'
+import { rutasGestionInstitucional, rutasInstitucional } from '@/modulos/institucional'
 import { rutasGestionUsuarios } from '@/modulos/usuarios'
 
 /*
@@ -27,6 +28,7 @@ export const router = createBrowserRouter(
       children: [
         ...rutasInicio,
         ...rutasContacto,
+        ...rutasInstitucional,
         // Cualquier ruta del menú cuyo módulo aún no existe
         { path: '*', element: <EnConstruccion /> },
       ],
@@ -40,6 +42,7 @@ export const router = createBrowserRouter(
         ...rutasGestionDocumentos,
         ...rutasGestionUsuarios,
         ...rutasGestionConfiguracion,
+        ...rutasGestionInstitucional,
         // Cualquier opción del panel cuyo módulo aún no existe
         { path: 'gestion/*', element: <EnConstruccion /> },
       ],
