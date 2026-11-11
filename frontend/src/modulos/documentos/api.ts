@@ -1,0 +1,24 @@
+import { cliente, RUTA_BASE } from '@/compartido/api/cliente'
+import type { Documento, VersionDocumento } from './tipos'
+
+const GESTION = '/gestion/documentos'
+
+export const listarDocumentos = () => cliente.get<{ data: Documento[] }>(GESTION).then((r) => r.data.data)
+
+export const crearDocumento = (datos: FormData) => cliente.post<{ data: Documento }>(GESTION, datos).then((r) => r.data.data)
+
+/** Va por POST con _method=PUT porque PHP no lee archivos enviados en un PUT. */
+export const actualizarDocumento = (id: number, datos: FormData) => {
+  datos.append('_method', 'PUT')
+  return cliente.post<{ data: Documento }>(`${GESTION}/${id}`, datos).then((r) => r.data.data)
+}
+
+export const eliminarDocumento = (id: number) => cliente.delete(`${GESTION}/${id}`)
+
+export const listarVersiones = (id: number) =>
+  cliente.get<{ data: VersionDocumento[] }>(`${GESTION}/${id}/versiones`).then((r) => r.data.data)
+
+/** Enlaces directos: el navegador abre el PDF o descarga el Excel con la cookie de sesión. */
+export const urlDocumento = (id: number) => `${RUTA_BASE}/api${GESTION}/${id}/descargar`
+
+export const urlVersion = (id: number, version: number) => `${RUTA_BASE}/api${GESTION}/${id}/versiones/${version}/descargar`
