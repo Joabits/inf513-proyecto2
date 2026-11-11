@@ -224,4 +224,36 @@ class DocumentosTest extends TestCase
         Storage::disk('local')->assertMissing($archivos);
         $this->assertSame(1, DB::table('bitacora')->where('accion', 'eliminar')->count());
     }
+
+    public function test_publicar_y_ocultar_desde_la_lista_queda_en_la_bitacora(): void
+    {
+        $documento = $this->crear(['publicado' => '0']);
+        $actualizado = $documento->updated_at;
+        $this->travel(1)->hours();
+
+        $this->patchJson("/api/gestion/documentos/{$documento->id}/publicacion", ['publicado' => true])
+            ->assertOk()
+            ->assertJsonPath('data.publicado', true);
+        $this->get("/api/documentos/{$documento->id}/descargar")->assertOk();
+
+        $this->patchJson("/api/gestion/documentos/{$documento->id}/publicacion", ['publicado' => false])->assertOk();
+        $this->get("/api/documentos/{$documento->id}/descargar")->assertNotFound();
+
+        // Repetir el mismo estado no registra nada nuevo
+        $this->patchJson("/api/gestion/documentos/{$documento->id}/publicacion", ['publicado' => false])->assertOk();
+
+        $this->assertSame(['publicar', 'ocultar'], DB::table('bitacora')->whereIn('accion', ['publicar', 'ocultar'])->orderBy('id')->pluck('accion')->all());
+        $this->assertTrue($actualizado->equalTo($documento->refresh()->updated_at));
+    }
+
+    public function test_cambiar_la_publicacion_exige_permiso_de_edicion(): void
+    {
+        $documento = $this->crear();
+
+        $this->actingAs($this->editor(Rol::EDITOR_COMUNICACION))
+            ->patchJson("/api/gestion/documentos/{$documento->id}/publicacion", ['publicado' => false])
+            ->assertForbidden();
+
+        $this->assertTrue($documento->refresh()->publicado);
+    }
 }
