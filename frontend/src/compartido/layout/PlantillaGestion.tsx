@@ -72,12 +72,9 @@ export function PlantillaGestion() {
         Saltar al contenido
       </a>
 
-      <aside
-        id="menu-lateral"
-        inert={menuOculto}
-        className={`hidden shrink-0 overflow-hidden lg:block ${menuOculto ? 'lg:w-0' : 'lg:w-72'}`}
-      >
-        <div className="sticky top-0 h-screen w-72">
+      {/* El aside reserva el ancho y el menú va fijo en la pantalla: no se mueve al bajar la página */}
+      <aside id="menu-lateral" className={`hidden w-72 shrink-0 ${menuOculto ? '' : 'lg:block'}`}>
+        <div className="fixed inset-y-0 left-0 w-72">
           <BarraGestion
             grupos={grupos}
             accion={
