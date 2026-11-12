@@ -114,8 +114,9 @@ export function Investigacion() {
                 </span>
                 <h3 className="mt-4 text-lg font-bold leading-snug text-titulo">{linea.nombre}</h3>
                 <p className="mt-2 flex-1 text-sm leading-relaxed text-texto">{linea.descripcion}</p>
-                <div className="mt-5 border-t border-borde pt-4 text-sm">
-                  {linea.proyectos > 0 ? (
+                {/* Sin proyectos la tarjeta queda limpia: repetir «sin proyectos» en cada línea solo es ruido */}
+                {linea.proyectos > 0 && (
+                  <div className="mt-5 border-t border-borde pt-4 text-sm">
                     <button
                       type="button"
                       onClick={() => verProyectosDe(linea.id)}
@@ -124,10 +125,8 @@ export function Investigacion() {
                       Ver {linea.proyectos} {linea.proyectos === 1 ? 'proyecto' : 'proyectos'}
                       <IconoFlecha width={16} height={16} aria-hidden="true" />
                     </button>
-                  ) : (
-                    <span className="text-texto-suave">Aún sin proyectos publicados</span>
-                  )}
-                </div>
+                  </div>
+                )}
               </li>
             ))}
           </ol>
