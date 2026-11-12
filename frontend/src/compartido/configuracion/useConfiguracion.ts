@@ -20,3 +20,6 @@ export function useConfiguracion() {
 export const enlaceTelefono = (telefono: string) => `tel:${telefono.replace(/[^\d+]/g, '')}`
 
 export const enlaceWhatsapp = (numero: string) => `https://wa.me/${numero}`
+
+/** "59170000000" -> "+591 70000000". Con otro código de país se muestra tal cual, con el signo +. */
+export const formatoWhatsapp = (numero: string) => (numero.startsWith('591') ? `+591 ${numero.slice(3)}` : `+${numero}`)

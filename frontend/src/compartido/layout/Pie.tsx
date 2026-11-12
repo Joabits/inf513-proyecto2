@@ -1,6 +1,6 @@
 import { EnlaceConfigurable } from '@/compartido/configuracion/EnlaceConfigurable'
 import { NOMBRE_RED } from '@/compartido/configuracion/tipos'
-import { enlaceTelefono, enlaceWhatsapp, useConfiguracion } from '@/compartido/configuracion/useConfiguracion'
+import { enlaceTelefono, enlaceWhatsapp, formatoWhatsapp, useConfiguracion } from '@/compartido/configuracion/useConfiguracion'
 import { LogoFcee } from '@/compartido/marca/LogoFcee'
 import { useTema } from '@/compartido/tema/contexto'
 import { useContadorVisitas } from '@/compartido/visitas/useContadorVisitas'
@@ -67,7 +67,7 @@ export function Pie() {
                 <p>
                   WhatsApp:{' '}
                   <a href={enlaceWhatsapp(contacto.whatsapp)} target="_blank" rel="noopener noreferrer" className={ENLACE}>
-                    +{contacto.whatsapp}
+                    {formatoWhatsapp(contacto.whatsapp)}
                   </a>
                 </p>
               )}

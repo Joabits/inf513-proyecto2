@@ -8,6 +8,7 @@ import { PaginaError } from '@/compartido/paginas/PaginaError'
 import { PanelGestion } from '@/compartido/paginas/PanelGestion'
 import { rutasAutenticacion } from '@/modulos/autenticacion'
 import { rutasGestionConfiguracion } from '@/modulos/configuracion'
+import { rutasContacto } from '@/modulos/contacto'
 import { rutasGestionDocumentos } from '@/modulos/documentos'
 import { rutasGestionInicio, rutasInicio } from '@/modulos/inicio'
 import { rutasGestionUsuarios } from '@/modulos/usuarios'
@@ -25,6 +26,7 @@ export const router = createBrowserRouter(
       errorElement: <PaginaError />,
       children: [
         ...rutasInicio,
+        ...rutasContacto,
         // Cualquier ruta del menú cuyo módulo aún no existe
         { path: '*', element: <EnConstruccion /> },
       ],
