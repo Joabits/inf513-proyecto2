@@ -240,9 +240,9 @@ export function Investigacion() {
         <div className="flex max-w-2xl items-start gap-4">
           {contenido?.instituto && <ChipIcono icono={IconoInstitucion} className="hidden sm:grid" />}
           <div>
-            <h2 className="text-2xl text-titulo">¿Quiere participar en investigación?</h2>
+            <h2 className="text-2xl text-titulo">¿Tiene consultas sobre investigación?</h2>
             <p className="mt-2 text-texto-suave">
-              {contenido?.instituto ? `${contenido.instituto} ` : ''}Escríbanos para sumarse a un semillero o proponer un proyecto.
+              {contenido?.instituto ? `${contenido.instituto} ` : ''}Para más información, escríbanos.
             </p>
           </div>
         </div>
