@@ -26,8 +26,8 @@ function PersonaDestacada({ persona }: { persona: Persona }) {
 /** Tarjeta de directorio: foto centrada, nombre y cargo debajo. */
 function TarjetaPersona({ persona }: { persona: Persona }) {
   return (
-    // Ancho fijo por columna y fila centrada: con 5 personas la última fila no queda sola a la izquierda
-    <li className="flex w-full flex-col items-center rounded-tema border border-borde-tarjeta bg-tarjeta px-5 py-7 text-center sombra-suave min-[480px]:w-[calc(50%-0.625rem)] lg:w-[calc(33.333%-0.84rem)] xl:w-[calc(25%-0.94rem)]">
+    // Hasta 3 columnas y la última fila centrada: con 5 personas quedan 3 + 2, no 4 + 1
+    <li className="flex w-full flex-col items-center rounded-tema border border-borde-tarjeta bg-tarjeta px-5 py-7 text-center sombra-suave min-[480px]:w-[calc(50%-0.625rem)] lg:w-[calc(33.333%-0.84rem)]">
       <FotoPersona nombre={persona.nombre} foto={persona.foto} tamano="lg" />
       <p className="mt-4 font-bold leading-snug text-titulo">{persona.nombre}</p>
       <p className="mt-1 text-sm leading-snug text-texto-suave">{persona.cargo}</p>
