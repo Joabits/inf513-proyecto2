@@ -32,7 +32,7 @@ class DocentesTest extends TestCase
 
     private function datos(array $cambios = []): array
     {
-        return ['nombre' => 'Lic. Ana Pérez', 'cargo' => 'Docente de Marketing', 'grupo' => 'docente', 'visible' => '1', ...$cambios];
+        return ['nombre' => 'Lic. Ana Pérez', 'cargo' => 'Docente de Marketing', 'grupo' => 'docente', 'visible' => '1', 'destacado' => '0', ...$cambios];
     }
 
     public function test_el_seeder_carga_autoridades_y_administrativos_del_documento(): void
@@ -41,6 +41,15 @@ class DocentesTest extends TestCase
         $this->assertSame(5, Persona::where('grupo', 'administrativo')->count());
         $this->assertSame(0, Persona::where('grupo', 'docente')->count());
         $this->assertSame('Lic. Freddy Fuentes Soliz', Persona::where('cargo', 'Director de Carrera')->value('nombre'));
+    }
+
+    public function test_el_rector_y_la_vicerrectora_se_cargan_ocultos_y_el_director_destacado(): void
+    {
+        $ocultos = Persona::where('visible', false)->pluck('cargo')->all();
+        sort($ocultos);
+
+        $this->assertSame(['Rector U.A.G.R.M.', 'Vicerrectora U.A.G.R.M.'], $ocultos);
+        $this->assertSame(['Director de Carrera'], Persona::where('destacado', true)->pluck('cargo')->all());
     }
 
     public function test_el_seeder_no_borra_lo_editado(): void
@@ -59,13 +68,36 @@ class DocentesTest extends TestCase
 
     public function test_el_visitante_solo_ve_a_las_personas_visibles_en_orden(): void
     {
-        Persona::where('nombre', 'Dr. Reinerio Vargas Banegas')->update(['visible' => false]);
+        $datos = $this->getJson('/api/docentes')->assertOk()->json('data');
+        $nombres = collect($datos)->pluck('nombre');
 
-        $nombres = collect($this->getJson('/api/docentes')->assertOk()->json('data'))->pluck('nombre');
-
-        $this->assertCount(9, $nombres);
+        $this->assertCount(8, $nombres);
         $this->assertNotContains('Dr. Reinerio Vargas Banegas', $nombres);
-        $this->assertSame('Ing. Juana Borja Saavedra', $nombres->first());
+        $this->assertNotContains('Ing. Juana Borja Saavedra', $nombres);
+        $this->assertSame('Lic. Ricardo Terrazas Soto', $nombres->first());
+
+        // Publicar al Rector desde el panel lo hace aparecer, sin tocar código
+        Persona::where('cargo', 'Rector U.A.G.R.M.')->update(['visible' => true]);
+
+        $this->assertContains('Dr. Reinerio Vargas Banegas', collect($this->getJson('/api/docentes')->json('data'))->pluck('nombre'));
+    }
+
+    public function test_la_api_marca_a_la_persona_destacada(): void
+    {
+        $destacadas = collect($this->getJson('/api/docentes')->json('data'))->where('destacado', true);
+
+        $this->assertCount(1, $destacadas);
+        $this->assertSame('Lic. Freddy Fuentes Soliz', $destacadas->first()['nombre']);
+    }
+
+    public function test_el_editor_puede_destacar_a_otra_persona(): void
+    {
+        $persona = Persona::where('cargo', 'Decano F.C.E.E.')->first();
+
+        $this->actingAs($this->editor())
+            ->putJson("/api/gestion/docentes/{$persona->id}", ['nombre' => $persona->nombre, 'cargo' => $persona->cargo, 'grupo' => 'autoridad', 'visible' => true, 'destacado' => true])
+            ->assertOk()
+            ->assertJsonPath('data.destacado', true);
     }
 
     public function test_gestionar_exige_sesion_y_permiso(): void
@@ -103,7 +135,7 @@ class DocentesTest extends TestCase
         $this->actingAs($this->editor());
         $persona = Persona::where('cargo', 'Director de Carrera')->first();
         $ruta = "/api/gestion/docentes/{$persona->id}";
-        $base = ['nombre' => $persona->nombre, 'cargo' => $persona->cargo, 'grupo' => 'autoridad', 'visible' => '1', '_method' => 'PUT'];
+        $base = ['nombre' => $persona->nombre, 'cargo' => $persona->cargo, 'grupo' => 'autoridad', 'visible' => '1', 'destacado' => '0', '_method' => 'PUT'];
 
         $this->post($ruta, [...$base, 'foto' => UploadedFile::fake()->image('a.jpg', 400, 500)], ['Accept' => 'application/json'])
             ->assertOk()
@@ -123,7 +155,7 @@ class DocentesTest extends TestCase
         $persona = Persona::where('cargo', 'Secretaria de Dirección')->first();
 
         $this->actingAs($this->editor())
-            ->putJson("/api/gestion/docentes/{$persona->id}", ['nombre' => $persona->nombre, 'cargo' => $persona->cargo, 'grupo' => 'autoridad', 'visible' => true])
+            ->putJson("/api/gestion/docentes/{$persona->id}", ['nombre' => $persona->nombre, 'cargo' => $persona->cargo, 'grupo' => 'autoridad', 'visible' => true, 'destacado' => false])
             ->assertOk();
 
         $this->assertSame(5, $persona->refresh()->orden);
