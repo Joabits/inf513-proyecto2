@@ -43,6 +43,8 @@ import {
   MessageCircle,
   MoveHorizontal,
   Newspaper,
+  PanelLeftClose,
+  PanelLeftOpen,
   Pencil,
   Phone,
   Plus,
@@ -137,3 +139,5 @@ export const IconoConstruccion = icono(Construction)
 export const IconoCorrecto = icono(CircleCheck)
 export const IconoDeslizar = icono(MoveHorizontal)
 export const IconoAlerta = icono(TriangleAlert)
+export const IconoOcultarMenu = icono(PanelLeftClose)
+export const IconoMostrarMenu = icono(PanelLeftOpen)

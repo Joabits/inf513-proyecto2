@@ -5,17 +5,37 @@ import { useMenu } from '@/compartido/menu/useMenu'
 import { useSesion } from '@/compartido/sesion/useSesion'
 import { PanelAccesibilidad } from '@/compartido/tema/PanelAccesibilidad'
 import { EstadoCarga } from '@/compartido/ui/EstadoCarga'
-import { IconoCerrar, IconoExterno, IconoMenu } from '@/compartido/ui/Iconos'
+import { IconoCerrar, IconoExterno, IconoMenu, IconoMostrarMenu, IconoOcultarMenu } from '@/compartido/ui/Iconos'
 import { BarraGestion } from './BarraGestion'
 import { MenuPerfil } from './MenuPerfil'
 import { ContextoPlantilla } from './contextoPlantilla'
 import { PieSimple } from './Pie'
+
+const CLAVE_MENU_OCULTO = 'cae-menu-panel-oculto'
+
+function leerMenuOculto() {
+  try {
+    return localStorage.getItem(CLAVE_MENU_OCULTO) === '1'
+  } catch {
+    return false
+  }
+}
 
 /** Vista del personal: barra lateral fija en PC y desplegable en celular y tablet. */
 export function PlantillaGestion() {
   const { data: usuario, isLoading } = useSesion()
   const { data: menu } = useMenu()
   const [abierto, setAbierto] = useState(false)
+  // En PC el menú lateral se puede ocultar; la preferencia queda guardada en este navegador
+  const [menuOculto, setMenuOculto] = useState(leerMenuOculto)
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(CLAVE_MENU_OCULTO, menuOculto ? '1' : '0')
+    } catch {
+      /* navegación privada: se usa sin guardar */
+    }
+  }, [menuOculto])
 
   // Bloquea el scroll de la página y cierra con Escape mientras el menú está abierto
   useEffect(() => {
@@ -44,8 +64,12 @@ export function PlantillaGestion() {
         Saltar al contenido
       </a>
 
-      <aside className="hidden w-72 shrink-0 lg:block">
-        <div className="sticky top-0 h-screen">
+      <aside
+        id="menu-lateral"
+        inert={menuOculto}
+        className={`hidden shrink-0 overflow-hidden motion-safe:transition-[width] motion-safe:duration-300 lg:block ${menuOculto ? 'lg:w-0' : 'lg:w-72'}`}
+      >
+        <div className="sticky top-0 h-screen w-72">
           <BarraGestion grupos={grupos} />
         </div>
       </aside>
@@ -68,7 +92,7 @@ export function PlantillaGestion() {
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 bg-fondo px-4 lg:justify-end lg:px-8">
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 bg-fondo px-4 lg:px-8">
           <button
             type="button"
             aria-label="Abrir menú de gestión"
@@ -77,10 +101,22 @@ export function PlantillaGestion() {
           >
             <IconoMenu />
           </button>
-          <Link to="/gestion" className="lg:hidden" aria-label="Ir al panel de gestión">
+          <button
+            type="button"
+            aria-controls="menu-lateral"
+            aria-expanded={!menuOculto}
+            aria-label={menuOculto ? 'Mostrar el menú lateral' : 'Ocultar el menú lateral'}
+            title={menuOculto ? 'Mostrar el menú lateral' : 'Ocultar el menú lateral'}
+            onClick={() => setMenuOculto(!menuOculto)}
+            className="hidden h-10 w-10 shrink-0 place-items-center rounded-full text-titulo hover:bg-superficie lg:grid"
+          >
+            {menuOculto ? <IconoMostrarMenu aria-hidden="true" /> : <IconoOcultarMenu aria-hidden="true" />}
+          </button>
+          {/* En celular siempre; en PC solo con el menú lateral oculto (si no, ya está arriba del menú) */}
+          <Link to="/gestion" className={menuOculto ? '' : 'lg:hidden'} aria-label="Ir al panel de gestión">
             <MarcaCarrera />
           </Link>
-          <div className="ml-auto flex items-center gap-2 lg:ml-0">
+          <div className="ml-auto flex items-center gap-2">
             <Link
               to="/"
               target="_blank"
