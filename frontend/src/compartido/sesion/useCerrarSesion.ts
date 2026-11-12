@@ -1,22 +1,14 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useNavigate } from 'react-router'
-import { cliente } from '@/compartido/api/cliente'
+import { useMutation } from '@tanstack/react-query'
+import { cliente, RUTA_BASE } from '@/compartido/api/cliente'
 
-/** Vive en compartido porque lo usan los menús de la cabecera. */
+/**
+ * Vive en compartido porque lo usan los menús de la cabecera y del panel.
+ * Al salir se carga la portada desde cero: se borra todo lo que el panel guardó en memoria
+ * y la plantilla del panel no alcanza a mandar al formulario de ingreso (antes pasaba por una carrera de tiempos).
+ */
 export function useCerrarSesion() {
-  const consultas = useQueryClient()
-  const navegar = useNavigate()
-
   return useMutation({
     mutationFn: () => cliente.post('/logout'),
-    onSuccess: () => {
-      // Primero se sale de la página, para que RutaProtegida no mande al formulario de ingreso
-      navegar('/')
-
-      return Promise.all([
-        consultas.invalidateQueries({ queryKey: ['sesion'] }),
-        consultas.invalidateQueries({ queryKey: ['menu'] }),
-      ])
-    },
+    onSuccess: () => window.location.assign(`${RUTA_BASE}/`),
   })
 }

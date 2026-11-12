@@ -4,6 +4,8 @@ import { aplicarErrores } from '@/compartido/api/errores'
 import { Boton } from '@/compartido/ui/Boton'
 import { Campo, CLASE_ENTRADA } from '@/compartido/ui/Campo'
 import { Interruptor } from '@/compartido/ui/Interruptor'
+import { opcionesDe } from '@/compartido/ui/opciones'
+import { SelectorCampo } from '@/compartido/ui/Selector'
 import { actualizarProyecto, crearProyecto } from '../api'
 import { ANIO_ACTUAL, esquemaProyecto, MAXIMO_RESUMEN, PRIMERA_GESTION, ULTIMA_GESTION, type DatosProyecto } from '../investigacion.esquema'
 import { ESTADOS, TIPOS, type Linea, type Proyecto } from '../tipos'
@@ -44,6 +46,14 @@ export function FormProyecto({ proyecto, lineas, alTerminar }: { proyecto?: Proy
     ...register(campo),
   })
 
+  const selector = (campo: 'tipo' | 'linea_id' | 'estado') => ({
+    control,
+    name: campo,
+    id: `${prefijo}-${campo}`,
+    'aria-describedby': `${prefijo}-${campo}-info`,
+    'aria-invalid': !!errors[campo],
+  })
+
   return (
     <form onSubmit={handleSubmit(enviar)} noValidate className="space-y-5">
       <Campo id={`${prefijo}-titulo`} etiqueta="Título" error={errors.titulo?.message}>
@@ -52,23 +62,13 @@ export function FormProyecto({ proyecto, lineas, alTerminar }: { proyecto?: Proy
 
       <div className="grid gap-5 sm:grid-cols-2">
         <Campo id={`${prefijo}-tipo`} etiqueta="Tipo" error={errors.tipo?.message}>
-          <select {...entrada('tipo')}>
-            {Object.entries(TIPOS).map(([valor, nombre]) => (
-              <option key={valor} value={valor}>
-                {nombre}
-              </option>
-            ))}
-          </select>
+          <SelectorCampo {...selector('tipo')} opciones={opcionesDe(TIPOS)} />
         </Campo>
         <Campo id={`${prefijo}-linea_id`} etiqueta="Línea de investigación" error={errors.linea_id?.message}>
-          <select {...entrada('linea_id')}>
-            <option value="">Sin línea asignada</option>
-            {lineas.map((linea) => (
-              <option key={linea.id} value={linea.id}>
-                {linea.nombre}
-              </option>
-            ))}
-          </select>
+          <SelectorCampo
+            {...selector('linea_id')}
+            opciones={[{ valor: '', etiqueta: 'Sin línea asignada' }, ...lineas.map((linea) => ({ valor: String(linea.id), etiqueta: linea.nombre }))]}
+          />
         </Campo>
       </div>
 
@@ -90,13 +90,7 @@ export function FormProyecto({ proyecto, lineas, alTerminar }: { proyecto?: Proy
           />
         </Campo>
         <Campo id={`${prefijo}-estado`} etiqueta="Estado" error={errors.estado?.message}>
-          <select {...entrada('estado')}>
-            {Object.entries(ESTADOS).map(([valor, nombre]) => (
-              <option key={valor} value={valor}>
-                {nombre}
-              </option>
-            ))}
-          </select>
+          <SelectorCampo {...selector('estado')} opciones={opcionesDe(ESTADOS)} />
         </Campo>
       </div>
 

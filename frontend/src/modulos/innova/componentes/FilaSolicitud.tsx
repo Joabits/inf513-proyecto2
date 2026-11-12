@@ -6,6 +6,8 @@ import { usePermiso } from '@/compartido/sesion/usePermiso'
 import { Boton } from '@/compartido/ui/Boton'
 import { Campo, CLASE_ENTRADA } from '@/compartido/ui/Campo'
 import { IconoAbajo, IconoCorreo, IconoListo, IconoTelefono } from '@/compartido/ui/Iconos'
+import { opcionesDe } from '@/compartido/ui/opciones'
+import { SelectorCampo } from '@/compartido/ui/Selector'
 import { formatoFecha } from '../formato'
 import { esquemaAtencion, type DatosAtencion } from '../innova.esquema'
 import { ESTADOS, type EstadoSolicitud, type SolicitudInnova } from '../tipos'
@@ -32,6 +34,7 @@ function FormAtencion({ solicitud }: { solicitud: SolicitudInnova }) {
     handleSubmit,
     reset,
     setError,
+    control,
     formState: { errors, isDirty },
   } = useForm<DatosAtencion>({
     resolver: zodResolver(esquemaAtencion),
@@ -48,19 +51,14 @@ function FormAtencion({ solicitud }: { solicitud: SolicitudInnova }) {
     <form onSubmit={handleSubmit(enviar)} noValidate className="space-y-4 pt-5">
       <div className="grid gap-4 sm:grid-cols-[14rem_1fr]">
         <Campo id={`${prefijo}-estado`} etiqueta="Estado" error={errors.estado?.message}>
-          <select
+          <SelectorCampo
+            control={control}
+            name="estado"
             id={`${prefijo}-estado`}
             aria-describedby={`${prefijo}-estado-info`}
             aria-invalid={!!errors.estado}
-            className={CLASE_ENTRADA}
-            {...register('estado')}
-          >
-            {Object.entries(ESTADOS).map(([valor, nombre]) => (
-              <option key={valor} value={valor}>
-                {nombre}
-              </option>
-            ))}
-          </select>
+            opciones={opcionesDe(ESTADOS)}
+          />
         </Campo>
         <Campo
           id={`${prefijo}-respuesta`}

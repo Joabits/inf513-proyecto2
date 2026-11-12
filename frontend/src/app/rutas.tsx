@@ -15,7 +15,7 @@ import { rutasGestionInnova, rutasInnova } from '@/modulos/innova'
 import { rutasGestionInvestigacion } from '@/modulos/investigacion'
 import { rutasMallaCurricular } from '@/modulos/malla-curricular'
 import { rutasGestionInstitucional, rutasInstitucional } from '@/modulos/institucional'
-import { rutasGestionUsuarios } from '@/modulos/usuarios'
+import { rutasGestionUsuarios, rutasPerfil } from '@/modulos/usuarios'
 
 /*
  * Cada módulo exporta sus rutas desde src/modulos/<modulo>/index.ts
@@ -46,6 +46,7 @@ export const router = createBrowserRouter(
         ...rutasGestionInicio,
         ...rutasGestionDocumentos,
         ...rutasGestionUsuarios,
+        ...rutasPerfil,
         ...rutasGestionConfiguracion,
         ...rutasGestionInstitucional,
         ...rutasGestionInnova,

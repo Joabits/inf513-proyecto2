@@ -4,6 +4,7 @@ import { Boton } from '@/compartido/ui/Boton'
 import { CLASE_ENTRADA } from '@/compartido/ui/Campo'
 import { EstadoCarga, MensajeError } from '@/compartido/ui/EstadoCarga'
 import { IconoAgregar, IconoBuscar } from '@/compartido/ui/Iconos'
+import { Selector } from '@/compartido/ui/Selector'
 import { TituloPagina } from '@/compartido/ui/TituloPagina'
 import { FilaDocumento } from '../componentes/FilaDocumento'
 import { FormDocumento } from '../componentes/FormDocumento'
@@ -86,17 +87,13 @@ export function GestionDocumentos() {
                 className={`${CLASE_ENTRADA} pl-10`}
               />
             </label>
-            <label className="sm:w-60">
-              <span className="sr-only">Filtrar por categoría</span>
-              <select value={categoria} onChange={(e) => setCategoria(e.target.value)} className={CLASE_ENTRADA}>
-                <option value="">Todas las categorías</option>
-                {categorias.map(({ id, nombre }) => (
-                  <option key={id} value={id}>
-                    {nombre}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <Selector
+              aria-label="Filtrar por categoría"
+              className="sm:w-60"
+              valor={categoria}
+              alCambiar={setCategoria}
+              opciones={[{ valor: '', etiqueta: 'Todas las categorías' }, ...categorias.map(({ id, nombre }) => ({ valor: String(id), etiqueta: nombre }))]}
+            />
           </div>
 
           <p className="mt-6 text-sm text-texto-suave" aria-live="polite">

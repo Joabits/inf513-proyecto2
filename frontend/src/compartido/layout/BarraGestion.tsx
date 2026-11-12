@@ -1,54 +1,105 @@
+import { useRef, useState, type ReactNode } from 'react'
 import { Link, NavLink } from 'react-router'
 import { MarcaCarrera } from '@/compartido/marca/LogoCarrera'
 import { iconoDeRuta } from '@/compartido/menu/iconosRuta'
 import type { OpcionMenu } from '@/compartido/menu/tipos'
-import type { UsuarioSesion } from '@/compartido/sesion/tipos'
-import { useCerrarSesion } from '@/compartido/sesion/useCerrarSesion'
-import { IconoExterno, IconoSalir } from '@/compartido/ui/Iconos'
 
-const claseEnlace = ({ isActive }: { isActive: boolean }) =>
-  `flex items-center gap-3 rounded-tema px-3 py-2 text-sm transition-colors ${
-    isActive ? 'bg-primario font-semibold text-sobre-primario' : 'text-texto hover:bg-superficie hover:text-titulo'
-  }`
+/**
+ * Ancho del menú compacto: relleno del menú y de la opción (3rem), ícono (18px) y borde (1px).
+ * Con ese ancho cada ícono queda en el mismo lugar que con el menú completo.
+ */
+export const ANCHO_MENU_COMPACTO = 'w-[calc(3rem+19px)]'
 
-const ACCION =
-  'flex w-full items-center gap-3 rounded-tema px-3 py-2 text-sm text-texto transition-colors hover:bg-superficie hover:text-titulo disabled:opacity-60'
+// La opción de la página actual no lleva fondo, ni al pasar el mouse: se marca con el color del texto y del ícono.
+// text-acento es rojo de día; de noche y en alto contraste cambia para que el texto se lea bien.
+const claseEnlace =
+  (compacto: boolean) =>
+  ({ isActive }: { isActive: boolean }) =>
+    `flex items-center rounded-tema px-3 py-2 text-sm transition-colors ${compacto ? '' : 'gap-3'} ${
+      isActive ? 'font-semibold text-acento' : 'text-texto hover:bg-superficie hover:text-titulo'
+    }`
 
-/** «Director de Carrera» → «DC» */
-const iniciales = (nombre: string) =>
-  nombre
-    .replace(/\(.*?\)/g, '')
-    .split(/\s+/)
-    .filter((palabra) => palabra.length > 2)
-    .slice(0, 2)
-    .map((palabra) => palabra[0].toUpperCase())
-    .join('')
+/**
+ * Fila del logo con un botón a la derecha, de la altura de la barra superior.
+ * En PC va en la barra superior (con el botón para contraer el menú); en celular, arriba del menú desplegable.
+ */
+export function CabeceraMenu({ alNavegar, accion }: { alNavegar?: () => void; accion?: ReactNode }) {
+  return (
+    <div className="flex h-16 shrink-0 items-center justify-between gap-2 pl-5 pr-3 lg:h-18">
+      {/* El logo lleva al inicio del panel: no hace falta una opción «Panel» en el menú */}
+      <Link to="/gestion" onClick={alNavegar} aria-label="Ir al inicio del panel de gestión" className="inline-block">
+        <MarcaCarrera />
+      </Link>
+      {accion}
+    </div>
+  )
+}
 
-/** Barra lateral del panel, con las opciones que permite el rol. Sigue el modo: mismo fondo que la página. */
-export function BarraGestion({ usuario, grupos, alNavegar }: { usuario: UsuarioSesion; grupos: OpcionMenu[]; alNavegar?: () => void }) {
-  const cerrarSesion = useCerrarSesion()
+interface Pista {
+  texto: string
+  x: number
+  y: number
+}
+
+/**
+ * Opciones del panel que permite el rol, por grupos.
+ * compacto: solo los íconos, cada uno en el mismo lugar que con el menú completo. El nombre de la opción
+ * aparece al lado al pasar el mouse o al llegar con el teclado.
+ */
+export function MenuGestion({ grupos, compacto = false, alNavegar }: { grupos: OpcionMenu[]; compacto?: boolean; alNavegar?: () => void }) {
+  const menu = useRef<HTMLElement>(null)
+  const [pista, setPista] = useState<Pista | null>(null)
+
+  // La pista es fixed para que el scroll del menú no la recorte
+  function mostrarPista(enlace: HTMLElement, texto: string) {
+    const opcion = enlace.getBoundingClientRect()
+    const borde = menu.current?.getBoundingClientRect().right ?? opcion.right
+    setPista({ texto, x: borde + 8, y: opcion.top + opcion.height / 2 })
+  }
+  const ocultarPista = () => setPista(null)
 
   return (
-    <div className="flex h-full flex-col border-r border-borde-tarjeta bg-fondo text-texto">
-      <div className="px-5 pb-4 pt-5">
-        {/* El logo lleva al inicio del panel: no hace falta una opción «Panel» en el menú */}
-        <Link to="/gestion" onClick={alNavegar} aria-label="Ir al inicio del panel de gestión" className="inline-block">
-          <MarcaCarrera />
-        </Link>
-      </div>
-
-      <nav aria-label="Menú de gestión" className="flex-1 space-y-6 overflow-y-auto px-3 pb-4">
+    <>
+      <nav
+        ref={menu}
+        aria-label="Menú de gestión"
+        onScroll={ocultarPista}
+        className={`flex-1 space-y-6 overflow-y-auto px-3 pb-6 pt-3 ${compacto ? '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden' : ''}`}
+      >
         {grupos.map((grupo) => (
           <div key={grupo.id}>
-            <p className="mb-1.5 px-3 text-[0.7rem] font-bold uppercase tracking-widest text-texto-suave">{grupo.titulo}</p>
+            {/* Una sola línea. Compacto: no se ve pero guarda su espacio, así los íconos no suben */}
+            <p className={`mb-1.5 truncate px-3 text-[0.7rem] font-bold uppercase tracking-widest text-texto-suave ${compacto ? 'invisible' : ''}`}>
+              {grupo.titulo}
+            </p>
             <ul className="space-y-0.5">
               {grupo.hijos.map((opcion) => {
                 const Icono = iconoDeRuta(opcion.ruta)
+                const verPista = compacto ? (e: { currentTarget: HTMLElement }) => mostrarPista(e.currentTarget, opcion.titulo) : undefined
                 return (
                   <li key={opcion.id}>
-                    <NavLink to={opcion.ruta ?? '/gestion'} onClick={alNavegar} className={claseEnlace}>
-                      {Icono ? <Icono width={18} height={18} aria-hidden="true" className="shrink-0" /> : <span className="w-[18px]" />}
-                      <span className="truncate">{opcion.titulo}</span>
+                    <NavLink
+                      to={opcion.ruta ?? '/gestion'}
+                      onClick={alNavegar}
+                      aria-label={compacto ? opcion.titulo : undefined}
+                      onMouseEnter={verPista}
+                      onFocus={verPista}
+                      onMouseLeave={compacto ? ocultarPista : undefined}
+                      onBlur={compacto ? ocultarPista : undefined}
+                      className={claseEnlace(compacto)}
+                    >
+                      {({ isActive }) => (
+                        <>
+                          {/* El ícono activo va en rojo en todos los modos: de noche es lo que más lo distingue */}
+                          {Icono ? (
+                            <Icono width={18} height={18} aria-hidden="true" className={`shrink-0 ${isActive ? 'text-primario' : ''}`} />
+                          ) : (
+                            <span className="w-[18px] shrink-0" />
+                          )}
+                          {/* Compacto: el nombre queda con ancho 0, así la opción conserva su altura */}
+                          <span className={compacto ? 'w-0 overflow-hidden whitespace-nowrap' : 'truncate'}>{opcion.titulo}</span>
+                        </>
+                      )}
                     </NavLink>
                   </li>
                 )
@@ -58,23 +109,28 @@ export function BarraGestion({ usuario, grupos, alNavegar }: { usuario: UsuarioS
         ))}
       </nav>
 
-      <div className="space-y-1 border-t border-borde p-3">
-        <div className="flex items-center gap-3 px-3 py-2">
-          <span aria-hidden="true" className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primario text-xs font-bold text-sobre-primario">
-            {iniciales(usuario.nombre)}
-          </span>
-          <p className="min-w-0 text-sm">
-            <span className="block truncate font-semibold text-titulo">{usuario.nombre}</span>
-            <span className="block truncate text-xs text-texto-suave">{usuario.rol?.nombre}</span>
-          </p>
-        </div>
-        <Link to="/" target="_blank" className={ACCION}>
-          <IconoExterno width={16} height={16} aria-hidden="true" /> Ver el portal
-        </Link>
-        <button type="button" className={ACCION} disabled={cerrarSesion.isPending} onClick={() => cerrarSesion.mutate()}>
-          <IconoSalir width={16} height={16} aria-hidden="true" /> Cerrar sesión
-        </button>
-      </div>
+      {compacto && pista && (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none fixed z-50 -translate-y-1/2 whitespace-nowrap rounded-tema bg-texto px-2.5 py-1.5 text-xs font-semibold text-fondo sombra-elevada"
+          style={{ left: pista.x, top: pista.y }}
+        >
+          {pista.texto}
+        </span>
+      )}
+    </>
+  )
+}
+
+/**
+ * Menú desplegable del celular y la tablet: el logo con un botón para cerrarlo y todas las opciones.
+ * La cuenta (Mi perfil, cerrar sesión) está en el menú de perfil de la barra superior.
+ */
+export function BarraGestion({ grupos, alNavegar, accion }: { grupos: OpcionMenu[]; alNavegar?: () => void; accion?: ReactNode }) {
+  return (
+    <div className="flex h-full flex-col border-r border-borde-tarjeta bg-fondo text-texto">
+      <CabeceraMenu alNavegar={alNavegar} accion={accion} />
+      <MenuGestion grupos={grupos} alNavegar={alNavegar} />
     </div>
   )
 }

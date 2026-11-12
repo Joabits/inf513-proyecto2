@@ -8,7 +8,7 @@ export function EntradaClave(props: ComponentProps<'input'> & { id: string }) {
 
   return (
     <div className="relative">
-      <input {...props} type={visible ? 'text' : 'password'} autoComplete="new-password" className={`${CLASE_ENTRADA} pr-12`} />
+      <input autoComplete="new-password" {...props} type={visible ? 'text' : 'password'} className={`${CLASE_ENTRADA} pr-12`} />
       <button
         type="button"
         onClick={() => setVisible((v) => !v)}

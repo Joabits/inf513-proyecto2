@@ -1,13 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { isAxiosError } from 'axios'
 import { useState } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
+import { useController, useForm, useWatch } from 'react-hook-form'
 import type { ErroresValidacion } from '@/compartido/api/cliente'
 import { aplicarErrores } from '@/compartido/api/errores'
 import { usePermiso } from '@/compartido/sesion/usePermiso'
 import { Boton } from '@/compartido/ui/Boton'
 import { Campo, CLASE_ENTRADA } from '@/compartido/ui/Campo'
 import { Interruptor } from '@/compartido/ui/Interruptor'
+import { Selector } from '@/compartido/ui/Selector'
 import { actualizarDocumento, crearDocumento } from '../api'
 import { esquemaDocumento, problemaDeArchivo, type DatosDocumento } from '../documentos.esquema'
 import type { Documento } from '../tipos'
@@ -47,8 +48,9 @@ export function FormDocumento({ documento, alTerminar }: { documento?: Documento
   })
   const descripcion = useWatch({ control, name: 'descripcion' })
   // Controlado: así una categoría recién creada queda elegida apenas aparece en la lista
-  const categoriaElegida = useWatch({ control, name: 'categoria_id' })
-  const campoCategoria = register('categoria_id')
+  const {
+    field: { ref: refCategoria, value: categoriaElegida, onChange: cambiarCategoria, onBlur: salirCategoria },
+  } = useController({ control, name: 'categoria_id' })
 
   function elegir(nuevo: File | undefined) {
     if (!nuevo) return
@@ -105,30 +107,27 @@ export function FormDocumento({ documento, alTerminar }: { documento?: Documento
       </Campo>
 
       <Campo id={`${prefijo}-categoria`} etiqueta="Categoría" error={errors.categoria_id?.message}>
-        <select
+        <Selector
           id={`${prefijo}-categoria`}
           aria-describedby={`${prefijo}-categoria-info`}
           aria-invalid={!!errors.categoria_id}
-          className={CLASE_ENTRADA}
-          {...campoCategoria}
-          value={categoriaElegida}
-          onChange={(e) => {
-            if (e.target.value === OPCION_NUEVA) {
+          ref={refCategoria}
+          valor={categoriaElegida}
+          alSalir={salirCategoria}
+          textoVacio="Seleccione una categoría"
+          opciones={[
+            ...categorias.map((categoria) => ({ valor: String(categoria.id), etiqueta: categoria.nombre })),
+            ...(puedeCrearCategoria ? [{ valor: OPCION_NUEVA, etiqueta: '+ Nueva categoría…' }] : []),
+          ]}
+          alCambiar={(valor) => {
+            if (valor === OPCION_NUEVA) {
               setCreandoCategoria(true)
               setValue('categoria_id', '')
               return
             }
-            void campoCategoria.onChange(e)
+            cambiarCategoria(valor)
           }}
-        >
-          <option value="">Seleccione una categoría</option>
-          {categorias.map((categoria) => (
-            <option key={categoria.id} value={categoria.id}>
-              {categoria.nombre}
-            </option>
-          ))}
-          {puedeCrearCategoria && <option value={OPCION_NUEVA}>+ Nueva categoría…</option>}
-        </select>
+        />
         {creandoCategoria && (
           <NuevaCategoria
             id={`${prefijo}-categoria-nueva`}

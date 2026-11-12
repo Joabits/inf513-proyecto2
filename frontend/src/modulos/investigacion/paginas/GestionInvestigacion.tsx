@@ -5,7 +5,9 @@ import { Boton } from '@/compartido/ui/Boton'
 import { CLASE_ENTRADA } from '@/compartido/ui/Campo'
 import { EstadoCarga, MensajeError } from '@/compartido/ui/EstadoCarga'
 import { IconoAgregar, IconoBuscar } from '@/compartido/ui/Iconos'
+import { opcionesDe } from '@/compartido/ui/opciones'
 import { Pestanas } from '@/compartido/ui/Pestanas'
+import { Selector } from '@/compartido/ui/Selector'
 import { TituloPagina } from '@/compartido/ui/TituloPagina'
 import { FilaProyecto } from '../componentes/FilaProyecto'
 import { FormComplementos } from '../componentes/FormComplementos'
@@ -82,29 +84,24 @@ function Proyectos({ datos }: { datos: Datos }) {
                 className={`${CLASE_ENTRADA} pl-10`}
               />
             </label>
-            <label className="lg:w-64">
-              <span className="sr-only">Filtrar por línea</span>
-              <select value={linea} onChange={(e) => setLinea(e.target.value)} className={CLASE_ENTRADA}>
-                <option value="">Todas las líneas</option>
-                {lineas.map((l) => (
-                  <option key={l.id} value={l.id}>
-                    {l.nombre}
-                  </option>
-                ))}
-                <option value="ninguna">Sin línea asignada</option>
-              </select>
-            </label>
-            <label className="lg:w-56">
-              <span className="sr-only">Filtrar por tipo</span>
-              <select value={tipo} onChange={(e) => setTipo(e.target.value)} className={CLASE_ENTRADA}>
-                <option value="">Todos los tipos</option>
-                {Object.entries(TIPOS).map(([valor, nombre]) => (
-                  <option key={valor} value={valor}>
-                    {nombre}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <Selector
+              aria-label="Filtrar por línea"
+              className="lg:w-64"
+              valor={linea}
+              alCambiar={setLinea}
+              opciones={[
+                { valor: '', etiqueta: 'Todas las líneas' },
+                ...lineas.map((l) => ({ valor: String(l.id), etiqueta: l.nombre })),
+                { valor: 'ninguna', etiqueta: 'Sin línea asignada' },
+              ]}
+            />
+            <Selector
+              aria-label="Filtrar por tipo"
+              className="lg:w-56"
+              valor={tipo}
+              alCambiar={setTipo}
+              opciones={[{ valor: '', etiqueta: 'Todos los tipos' }, ...opcionesDe(TIPOS)]}
+            />
           </div>
 
           <p className="mt-6 text-sm text-texto-suave" aria-live="polite">

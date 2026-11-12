@@ -45,6 +45,24 @@ export const esquemaClave = z
   .object({ password: clave, password_confirmation: z.string().min(1, 'Repita la contraseña.') })
   .refine(confirmar, MENSAJE_CONFIRMAR)
 
+/** «Mi perfil»: nombre y correo. Si cambia el correo, también la contraseña actual (se pide al enviar). */
+export const esquemaPerfil = z.object({ nombre: datosCuenta.nombre, email: datosCuenta.email, clave_actual: z.string() })
+
+/** «Mi perfil»: la contraseña actual y la nueva, distinta de la actual. */
+export const esquemaMiClave = z
+  .object({
+    clave_actual: z.string().min(1, 'Escriba su contraseña actual.'),
+    password: clave,
+    password_confirmation: z.string().min(1, 'Repita la contraseña.'),
+  })
+  .refine(confirmar, MENSAJE_CONFIRMAR)
+  .refine((datos) => datos.password !== datos.clave_actual, {
+    message: 'La contraseña nueva debe ser distinta de la actual.',
+    path: ['password'],
+  })
+
 export type DatosUsuario = z.infer<typeof esquemaUsuario>
 export type DatosNuevoUsuario = z.infer<typeof esquemaNuevoUsuario>
 export type DatosClave = z.infer<typeof esquemaClave>
+export type DatosPerfil = z.infer<typeof esquemaPerfil>
+export type DatosMiClave = z.infer<typeof esquemaMiClave>

@@ -19,6 +19,9 @@ Reglas:
 2. Colores solo con las clases del tema (`bg-fondo`, `text-texto`, `bg-primario`, `text-acento`,
    `text-titulo`, `bg-marino`, `border-borde`, `rounded-tema`...). Nunca `bg-red-600` ni `#DE1D2A` sueltos.
 3. Para registrar el módulo, agregar sus rutas en `src/app/rutas.tsx`.
+4. Listas desplegables y fechas: usar `<Selector>` y `<SelectorFecha>` de `compartido/ui`
+   (con react-hook-form, `<SelectorCampo>` y `<SelectorFechaCampo>`). No usar `<select>` ni
+   `<input type="date">`: cada navegador los dibuja a su manera y no siguen el tema.
 
 Ejemplo completo de un módulo: `~/tecno-web/ejemplo-arquitecturas/2-recomendada`.
 

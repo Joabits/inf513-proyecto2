@@ -3,6 +3,7 @@ import { useForm, useWatch } from 'react-hook-form'
 import { aplicarErrores } from '@/compartido/api/errores'
 import { BarraGuardar } from '@/compartido/ui/BarraGuardar'
 import { Campo, CLASE_ENTRADA } from '@/compartido/ui/Campo'
+import { SelectorFechaCampo } from '@/compartido/ui/SelectorFecha'
 import { actualizarContenido } from '../api'
 import { esquemaContenido, LIMITES, type DatosContenido } from '../institucional.esquema'
 import type { ContenidoInstitucional } from '../tipos'
@@ -64,7 +65,15 @@ export function FormContenidoInstitucional({ contenido }: { contenido: Contenido
         {texto('presentacion', 'Presentación', 4, 'Texto principal de «La Carrera». ' + AYUDA_PARRAFOS)}
         <div className="grid gap-5 sm:grid-cols-3">
           <Campo id="fecha_creacion" etiqueta="Fecha de creación" opcional error={errors.fecha_creacion?.message}>
-            <input type="date" {...entrada('fecha_creacion')} />
+            <SelectorFechaCampo
+              control={control}
+              name="fecha_creacion"
+              id="fecha_creacion"
+              aria-describedby="fecha_creacion-info"
+              aria-invalid={!!errors.fecha_creacion}
+              opcional
+              hastaHoy
+            />
           </Campo>
           <Campo id="resolucion" etiqueta="Resolución" opcional error={errors.resolucion?.message}>
             <input placeholder="Resolución I.C.U. N.º 051/2006" {...entrada('resolucion')} />

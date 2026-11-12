@@ -4,6 +4,7 @@ import { Boton } from '@/compartido/ui/Boton'
 import { CLASE_ENTRADA } from '@/compartido/ui/Campo'
 import { EstadoCarga, MensajeError } from '@/compartido/ui/EstadoCarga'
 import { IconoAgregar, IconoBuscar } from '@/compartido/ui/Iconos'
+import { Selector } from '@/compartido/ui/Selector'
 import { TituloPagina } from '@/compartido/ui/TituloPagina'
 import { FilaUsuario } from '../componentes/FilaUsuario'
 import { FormNuevoUsuario } from '../componentes/FormUsuario'
@@ -91,25 +92,24 @@ export function GestionUsuarios() {
                 className={`${CLASE_ENTRADA} pl-10`}
               />
             </label>
-            <label className="sm:w-56">
-              <span className="sr-only">Filtrar por rol</span>
-              <select value={rol} onChange={(e) => setRol(e.target.value)} className={CLASE_ENTRADA}>
-                <option value="">Todos los roles</option>
-                {roles.map((r) => (
-                  <option key={r.id} value={r.id}>
-                    {r.nombre}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="sm:w-44">
-              <span className="sr-only">Filtrar por estado</span>
-              <select value={estado} onChange={(e) => setEstado(e.target.value as Estado)} className={CLASE_ENTRADA}>
-                <option value="">Todas</option>
-                <option value="activas">Activas</option>
-                <option value="desactivadas">Desactivadas</option>
-              </select>
-            </label>
+            <Selector
+              aria-label="Filtrar por rol"
+              className="sm:w-56"
+              valor={rol}
+              alCambiar={setRol}
+              opciones={[{ valor: '', etiqueta: 'Todos los roles' }, ...roles.map((r) => ({ valor: String(r.id), etiqueta: r.nombre }))]}
+            />
+            <Selector
+              aria-label="Filtrar por estado"
+              className="sm:w-44"
+              valor={estado}
+              alCambiar={(valor) => setEstado(valor as Estado)}
+              opciones={[
+                { valor: '', etiqueta: 'Todas' },
+                { valor: 'activas', etiqueta: 'Activas' },
+                { valor: 'desactivadas', etiqueta: 'Desactivadas' },
+              ]}
+            />
           </div>
 
           <p className="mt-6 text-sm text-texto-suave" aria-live="polite">
