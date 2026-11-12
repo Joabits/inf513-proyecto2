@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { Link, NavLink } from 'react-router'
 import { MarcaCarrera } from '@/compartido/marca/LogoCarrera'
 import { iconoDeRuta } from '@/compartido/menu/iconosRuta'
@@ -11,18 +12,21 @@ const claseEnlace = ({ isActive }: { isActive: boolean }) =>
 /**
  * Barra lateral del panel, con las opciones que permite el rol. Sigue el modo: mismo fondo que la página.
  * La cuenta (Mi perfil, cerrar sesión) está en el menú de perfil de la barra superior.
+ * accion: botón a la derecha del logo (ocultar el menú en PC, cerrarlo en celular).
  */
-export function BarraGestion({ grupos, alNavegar }: { grupos: OpcionMenu[]; alNavegar?: () => void }) {
+export function BarraGestion({ grupos, alNavegar, accion }: { grupos: OpcionMenu[]; alNavegar?: () => void; accion?: ReactNode }) {
   return (
     <div className="flex h-full flex-col border-r border-borde-tarjeta bg-fondo text-texto">
-      <div className="px-5 pb-4 pt-5">
+      {/* Misma altura que la barra superior: el logo y los botones quedan en una sola línea */}
+      <div className="flex h-16 shrink-0 items-center justify-between gap-2 pl-5 pr-3 lg:h-18">
         {/* El logo lleva al inicio del panel: no hace falta una opción «Panel» en el menú */}
         <Link to="/gestion" onClick={alNavegar} aria-label="Ir al inicio del panel de gestión" className="inline-block">
           <MarcaCarrera />
         </Link>
+        {accion}
       </div>
 
-      <nav aria-label="Menú de gestión" className="flex-1 space-y-6 overflow-y-auto px-3 pb-6">
+      <nav aria-label="Menú de gestión" className="flex-1 space-y-6 overflow-y-auto px-3 pb-6 pt-3">
         {grupos.map((grupo) => (
           <div key={grupo.id}>
             <p className="mb-1.5 px-3 text-[0.7rem] font-bold uppercase tracking-widest text-texto-suave">{grupo.titulo}</p>

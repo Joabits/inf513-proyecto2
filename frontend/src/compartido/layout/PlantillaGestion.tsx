@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, Navigate, Outlet, ScrollRestoration } from 'react-router'
 import { MarcaCarrera } from '@/compartido/marca/LogoCarrera'
 import { useMenu } from '@/compartido/menu/useMenu'
@@ -28,6 +28,14 @@ export function PlantillaGestion() {
   const [abierto, setAbierto] = useState(false)
   // En PC el menú lateral se puede ocultar; la preferencia queda guardada en este navegador
   const [menuOculto, setMenuOculto] = useState(leerMenuOculto)
+  const botonOcultar = useRef<HTMLButtonElement>(null)
+  const botonMostrar = useRef<HTMLButtonElement>(null)
+
+  /** El foco pasa al botón que queda a la vista: así se puede volver con el teclado. */
+  function cambiarMenu(ocultar: boolean) {
+    setMenuOculto(ocultar)
+    requestAnimationFrame(() => (ocultar ? botonMostrar : botonOcultar).current?.focus())
+  }
 
   useEffect(() => {
     try {
@@ -70,7 +78,23 @@ export function PlantillaGestion() {
         className={`hidden shrink-0 overflow-hidden motion-safe:transition-[width] motion-safe:duration-300 lg:block ${menuOculto ? 'lg:w-0' : 'lg:w-72'}`}
       >
         <div className="sticky top-0 h-screen w-72">
-          <BarraGestion grupos={grupos} />
+          <BarraGestion
+            grupos={grupos}
+            accion={
+              <button
+                ref={botonOcultar}
+                type="button"
+                aria-controls="menu-lateral"
+                aria-expanded="true"
+                aria-label="Ocultar el menú lateral"
+                title="Ocultar el menú lateral"
+                onClick={() => cambiarMenu(true)}
+                className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-titulo hover:bg-superficie"
+              >
+                <IconoOcultarMenu aria-hidden="true" />
+              </button>
+            }
+          />
         </div>
       </aside>
 
@@ -78,21 +102,21 @@ export function PlantillaGestion() {
         <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Menú de gestión">
           <button type="button" aria-label="Cerrar menú" onClick={() => setAbierto(false)} className="absolute inset-0 bg-black/40" />
           <div className="absolute inset-y-0 left-0 w-[85%] max-w-xs">
-            <BarraGestion grupos={grupos} alNavegar={() => setAbierto(false)} />
-            <button
-              type="button"
-              aria-label="Cerrar menú"
-              onClick={() => setAbierto(false)}
-              className="absolute right-3 top-5 grid h-10 w-10 place-items-center rounded-full text-titulo hover:bg-superficie"
-            >
-              <IconoCerrar />
-            </button>
+            <BarraGestion
+              grupos={grupos}
+              alNavegar={() => setAbierto(false)}
+              accion={
+                <button type="button" aria-label="Cerrar menú" onClick={() => setAbierto(false)} className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-titulo hover:bg-superficie">
+                  <IconoCerrar />
+                </button>
+              }
+            />
           </div>
         </div>
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 bg-fondo px-4 lg:px-8">
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 bg-fondo px-4 lg:h-18 lg:px-8">
           <button
             type="button"
             aria-label="Abrir menú de gestión"
@@ -101,17 +125,21 @@ export function PlantillaGestion() {
           >
             <IconoMenu />
           </button>
-          <button
-            type="button"
-            aria-controls="menu-lateral"
-            aria-expanded={!menuOculto}
-            aria-label={menuOculto ? 'Mostrar el menú lateral' : 'Ocultar el menú lateral'}
-            title={menuOculto ? 'Mostrar el menú lateral' : 'Ocultar el menú lateral'}
-            onClick={() => setMenuOculto(!menuOculto)}
-            className="hidden h-10 w-10 shrink-0 place-items-center rounded-full text-titulo hover:bg-superficie lg:grid"
-          >
-            {menuOculto ? <IconoMostrarMenu aria-hidden="true" /> : <IconoOcultarMenu aria-hidden="true" />}
-          </button>
+          {/* Con el menú lateral oculto, el botón para volver a mostrarlo queda donde estaba el menú */}
+          {menuOculto && (
+            <button
+              ref={botonMostrar}
+              type="button"
+              aria-controls="menu-lateral"
+              aria-expanded="false"
+              aria-label="Mostrar el menú lateral"
+              title="Mostrar el menú lateral"
+              onClick={() => cambiarMenu(false)}
+              className="hidden h-10 w-10 shrink-0 place-items-center rounded-full text-titulo hover:bg-superficie lg:grid"
+            >
+              <IconoMostrarMenu aria-hidden="true" />
+            </button>
+          )}
           {/* En celular siempre; en PC solo con el menú lateral oculto (si no, ya está arriba del menú) */}
           <Link to="/gestion" className={menuOculto ? '' : 'lg:hidden'} aria-label="Ir al panel de gestión">
             <MarcaCarrera />
