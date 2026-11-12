@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             InnovaSeeder::class,
             InvestigacionSeeder::class,
             MallaCurricularSeeder::class,
+            PersonalCarreraSeeder::class,
             // Cada módulo agrega aquí su seeder (p. ej. InstitucionalSeeder::class)
         ]);
 

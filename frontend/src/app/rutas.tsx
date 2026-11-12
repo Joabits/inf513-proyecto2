@@ -9,6 +9,7 @@ import { PanelGestion } from '@/compartido/paginas/PanelGestion'
 import { rutasAutenticacion } from '@/modulos/autenticacion'
 import { rutasGestionConfiguracion } from '@/modulos/configuracion'
 import { rutasContacto } from '@/modulos/contacto'
+import { rutasDocentes, rutasGestionDocentes } from '@/modulos/docentes'
 import { rutasGestionDocumentos } from '@/modulos/documentos'
 import { rutasGestionInicio, rutasInicio } from '@/modulos/inicio'
 import { rutasGestionInnova, rutasInnova } from '@/modulos/innova'
@@ -32,6 +33,7 @@ export const router = createBrowserRouter(
         ...rutasInicio,
         ...rutasContacto,
         ...rutasInstitucional,
+        ...rutasDocentes,
         ...rutasInnova,
         ...rutasMallaCurricular,
         // Cualquier ruta del menú cuyo módulo aún no existe
@@ -44,6 +46,7 @@ export const router = createBrowserRouter(
       children: [
         { path: 'gestion', element: <PanelGestion /> },
         ...rutasGestionInicio,
+        ...rutasGestionDocentes,
         ...rutasGestionDocumentos,
         ...rutasGestionUsuarios,
         ...rutasPerfil,
