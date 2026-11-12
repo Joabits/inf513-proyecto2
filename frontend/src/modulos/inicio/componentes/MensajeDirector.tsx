@@ -1,33 +1,35 @@
+import { IconoCita } from '@/compartido/ui/Iconos'
 import type { Portada } from '../tipos'
 
-/** Si todavía no hay fotografía, el mensaje ocupa todo el ancho. */
+/** Mensaje sobre el fondo de la página. Si todavía no hay fotografía, va centrado. */
 export function MensajeDirector({ portada }: { portada: Portada }) {
-  return (
-    <section
-      aria-labelledby="mensaje-director"
-      className="mt-14 grid gap-8 rounded-tema border border-borde bg-marino p-6 text-sobre-primario sm:p-10 md:mt-20 md:grid-cols-[minmax(0,16rem)_1fr] md:items-center lg:gap-14 lg:p-14"
-    >
-      {portada.director_foto && (
-        <img
-          src={portada.director_foto}
-          alt={`Fotografía de ${portada.director_nombre}`}
-          loading="lazy"
-          className="aspect-[4/5] w-full max-w-64 rounded-tema object-cover"
-        />
-      )}
+  const conFoto = !!portada.director_foto
 
-      <div className={portada.director_foto ? '' : 'md:col-span-2'}>
-        <span className="mb-4 block h-1 w-12 rounded-full bg-primario" aria-hidden="true" />
-        <h2 id="mensaje-director" className="text-sm font-semibold uppercase tracking-widest text-sobre-primario">
-          Mensaje del Director
-        </h2>
-        <blockquote className="mt-5 max-w-2xl text-lg font-medium leading-relaxed sm:text-xl lg:text-2xl lg:leading-relaxed">
-          {portada.director_mensaje}
-        </blockquote>
-        <p className="mt-6">
-          <span className="block font-bold">{portada.director_nombre}</span>
-          <span className="text-sm">{portada.director_cargo}</span>
-        </p>
+  return (
+    <section aria-labelledby="mensaje-director" className="py-8 md:py-12">
+      <div className={conFoto ? 'grid gap-8 md:grid-cols-[minmax(0,16rem)_1fr] md:items-center lg:gap-14' : 'mx-auto max-w-3xl text-center'}>
+        {portada.director_foto && (
+          <img
+            src={portada.director_foto}
+            alt={`Fotografía de ${portada.director_nombre}`}
+            loading="lazy"
+            className="aspect-[4/5] w-full max-w-64 rounded-tema object-cover sombra-elevada"
+          />
+        )}
+
+        <figure>
+          <IconoCita width={44} height={44} aria-hidden="true" className={`text-acento ${conFoto ? '' : 'mx-auto'}`} />
+          <h2 id="mensaje-director" className="mt-4 text-sm font-bold uppercase tracking-widest text-acento">
+            Mensaje del Director
+          </h2>
+          <blockquote className="mt-5 text-lg font-medium leading-relaxed text-titulo sm:text-xl lg:text-2xl lg:leading-relaxed">
+            {portada.director_mensaje}
+          </blockquote>
+          <figcaption className="mt-7">
+            <span className="block font-bold text-titulo">{portada.director_nombre}</span>
+            <span className="text-sm text-texto-suave">{portada.director_cargo}</span>
+          </figcaption>
+        </figure>
       </div>
     </section>
   )

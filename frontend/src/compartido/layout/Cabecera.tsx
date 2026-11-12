@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'
-import { LogoFcee } from '@/compartido/marca/LogoFcee'
+import { MarcaCarrera } from '@/compartido/marca/LogoCarrera'
 import { useMenu } from '@/compartido/menu/useMenu'
 import { useSesion } from '@/compartido/sesion/useSesion'
-import { useTema } from '@/compartido/tema/contexto'
 import { PanelAccesibilidad } from '@/compartido/tema/PanelAccesibilidad'
 import { IconoBuscar, IconoCerrar, IconoMenu } from '@/compartido/ui/Iconos'
 import { Buscador } from './Buscador'
@@ -22,15 +21,13 @@ const ANCHO_ESCRITORIO = 1024
  *
  * La cabecera MIDE si el menú cabe en la fila. Si no cabe (pantalla chica, tema Niños
  * o letra agrandada), lo oculta y muestra el botón ☰ con el menú lateral.
- * Al bajar por la página aparece una sombra suave en lugar de una línea.
+ * Fondo sólido del modo, igual que la página: sin sombra ni desenfoque al bajar.
  */
 export function Cabecera() {
   const { data: menu } = useMenu()
   const { data: usuario } = useSesion()
-  const { modoActivo } = useTema()
   const [menuAbierto, setMenuAbierto] = useState(false)
   const [buscarAbierto, setBuscarAbierto] = useState(false)
-  const [conSombra, setConSombra] = useState(false)
   const [menuCabe, setMenuCabe] = useState(() => window.innerWidth >= 1280)
   const cerrarMenu = useCallback(() => setMenuAbierto(false), [])
 
@@ -65,23 +62,11 @@ export function Cabecera() {
     return () => observador.disconnect()
   }, [])
 
-  useEffect(() => {
-    const revisar = () => setConSombra(window.scrollY > 4)
-    revisar()
-    window.addEventListener('scroll', revisar, { passive: true })
-    return () => window.removeEventListener('scroll', revisar)
-  }, [])
-
   return (
-    <header
-      className={`sticky top-0 z-40 bg-fondo/90 backdrop-blur-md transition-shadow duration-300 ${
-        conSombra ? 'shadow-[0_8px_24px_-12px_rgb(15_30_69/0.35)]' : ''
-      }`}
-    >
+    <header className="sticky top-0 z-40 bg-fondo">
       <div ref={fila} className="contenedor flex h-16 items-center gap-4 lg:h-18">
         <Link ref={logo} to="/" className="shrink-0" aria-label="Inicio: Carrera de Administración de Empresas">
-          {/* Alto suficiente para que se lea el texto del logo oficial */}
-          <LogoFcee version={modoActivo === 'oscuro' ? 'negativo' : 'positivo'} className="h-11 min-[375px]:h-12 lg:h-14" />
+          <MarcaCarrera />
         </Link>
 
         {/* Cuando no cabe, el menú sigue en la página (invisible e inerte) solo para poder medirlo */}

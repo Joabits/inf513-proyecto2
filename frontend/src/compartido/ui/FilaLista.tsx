@@ -22,7 +22,7 @@ export function FilaLista(props: {
   const { numero, total, nombre, alSubir, alBajar, alQuitar, noQuitar = false, children } = props
 
   return (
-    <li className="flex gap-3 rounded-tema border border-borde bg-fondo p-4">
+    <li className="flex gap-3 rounded-tema border border-borde-tarjeta bg-tarjeta p-4 sombra-suave">
       <span className="mt-7 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-superficie text-sm font-bold text-titulo" aria-hidden="true">
         {numero}
       </span>

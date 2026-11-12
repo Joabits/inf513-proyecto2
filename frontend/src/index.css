@@ -11,7 +11,8 @@
  * En los componentes se usan SOLO estas clases (nunca colores sueltos):
  *   bg-fondo, bg-superficie, text-texto, text-texto-suave, text-titulo,
  *   bg-primario, text-sobre-primario, text-acento, bg-marino, bg-marino-oscuro,
- *   border-borde, rounded-tema
+ *   border-borde, border-borde-tarjeta (tarjetas: solo se ve en alto contraste), rounded-tema,
+ *   bg-tarjeta, bg-chip, text-sobre-chip, sombra-suave, sombra-elevada
  * Así funcionan los temas, el modo noche y el alto contraste sin tocar cada pantalla.
  */
 @theme inline {
@@ -26,6 +27,10 @@
   --color-marino: var(--c-marino);
   --color-marino-oscuro: var(--c-marino-oscuro);
   --color-borde: var(--c-borde);
+  --color-borde-tarjeta: var(--c-borde-tarjeta);
+  --color-tarjeta: var(--c-tarjeta);
+  --color-chip: var(--c-chip);
+  --color-sobre-chip: var(--c-sobre-chip);
   --radius-tema: var(--radio);
   --font-titulos: "Montserrat Variable", system-ui, sans-serif;
   --font-cuerpo: "Montserrat Variable", system-ui, sans-serif;
@@ -44,6 +49,14 @@
   --c-marino: #21366e;
   --c-marino-oscuro: #0f1e45;
   --c-borde: #d9dce3; /* línea neutra de interfaz, no es un color de marca */
+  --c-borde-tarjeta: transparent; /* tarjetas sin línea (diseño limpio); en alto contraste sí la llevan */
+  --c-barra: #d9dce3; /* barras de desplazamiento */
+  --c-barra-activa: #21366e;
+  --c-tarjeta: #ffffff;
+  --c-chip: #21366e; /* fondo de los íconos destacados */
+  --c-sobre-chip: #ffffff;
+  --sombra-suave: 0 1px 2px rgb(15 30 69 / 0.06), 0 6px 16px -10px rgb(15 30 69 / 0.18);
+  --sombra-elevada: 0 2px 4px rgb(15 30 69 / 0.06), 0 18px 36px -14px rgb(15 30 69 / 0.32);
   color-scheme: light;
 }
 
@@ -59,6 +72,14 @@
   --c-marino: #21366e;
   --c-marino-oscuro: #0a0a0a;
   --c-borde: #21366e;
+  /* igual que de día: la tarjeta tiene el mismo fondo que la página y se marca con su borde */
+  --c-tarjeta: #0f1e45;
+  --c-barra: #21366e;
+  --c-barra-activa: #f4f5f7;
+  --c-chip: #21366e;
+  /* sombra muy suave también de noche: negra semitransparente, se nota sobre el azul oscuro */
+  --sombra-suave: 0 1px 2px rgb(10 10 10 / 0.3), 0 8px 22px -10px rgb(10 10 10 / 0.75);
+  --sombra-elevada: 0 18px 36px -14px rgb(10 10 10 / 0.7);
   color-scheme: dark;
 }
 
@@ -73,6 +94,14 @@
   --c-marino: #0a0a0a;
   --c-marino-oscuro: #0a0a0a;
   --c-borde: #0a0a0a;
+  --c-tarjeta: #ffffff;
+  --c-chip: #0a0a0a;
+  --c-sobre-chip: #ffffff;
+  --c-borde-tarjeta: #0a0a0a;
+  --c-barra: #0a0a0a;
+  --c-barra-activa: #0a0a0a;
+  --sombra-suave: none;
+  --sombra-elevada: none;
 }
 :root[data-contraste="alto"][data-modo="oscuro"] {
   --c-fondo: #0a0a0a;
@@ -82,22 +111,28 @@
   --c-titulo: #ffffff;
   --c-acento: #ffffff;
   --c-borde: #ffffff;
+  --c-tarjeta: #0a0a0a;
+  --c-chip: #ffffff;
+  --c-sobre-chip: #0a0a0a;
+  --c-borde-tarjeta: #ffffff;
+  --c-barra: #ffffff;
+  --c-barra-activa: #ffffff;
 }
 
 /* ---------- Temas por público: mismos colores y tipografía, cambia forma y tamaño ---------- */
 :root,
 :root[data-tema="adultos"] {
-  --radio: 0.375rem;
+  --radio: 0.75rem;
   --tam-tema: 1;
   --peso-titulos: 700;
 }
 :root[data-tema="jovenes"] {
-  --radio: 1rem;
+  --radio: 1.25rem;
   --tam-tema: 1;
   --peso-titulos: 800;
 }
 :root[data-tema="ninos"] {
-  --radio: 1.5rem;
+  --radio: 1.75rem;
   --tam-tema: 1.125;
   --peso-titulos: 900;
 }
@@ -106,6 +141,42 @@
  * Estilos base dentro de @layer base: así las clases de Tailwind de cada componente
  * (por ejemplo focus:outline-none o font-bold) siempre pueden reemplazarlos.
  */
+/*
+ * Barras de desplazamiento finas y redondeadas, sin flechas ni fondo (página, malla, menús).
+ * Chrome, Edge y Safari usan ::-webkit-scrollbar; Firefox, las propiedades estándar.
+ */
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--c-barra) transparent;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 9999px;
+  background-color: var(--c-barra);
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--c-barra-activa);
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+}
+
 @layer base {
   /* Tamaño de letra = tema x preferencia del usuario (--tam-usuario lo pone TemaProveedor) */
   html {
@@ -152,4 +223,12 @@
   @media (width >= 40rem) {
     padding-inline: 1.5rem;
   }
+}
+
+@utility sombra-suave {
+  box-shadow: var(--sombra-suave);
+}
+
+@utility sombra-elevada {
+  box-shadow: var(--sombra-elevada);
 }

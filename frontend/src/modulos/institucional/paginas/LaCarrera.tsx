@@ -1,11 +1,26 @@
 import { Link } from 'react-router'
 import { Boton } from '@/compartido/ui/Boton'
+import { ChipIcono } from '@/compartido/ui/ChipIcono'
 import { EstadoCarga, MensajeError } from '@/compartido/ui/EstadoCarga'
-import { IconoFlecha } from '@/compartido/ui/Iconos'
+import {
+  type ComponenteIcono,
+  IconoCalendario,
+  IconoEmpresa,
+  IconoFlecha,
+  IconoGraduacion,
+  IconoHistorial,
+  IconoObjetivo,
+  IconoResolucion,
+  IconoVerificado,
+  IconoVision,
+} from '@/compartido/ui/Iconos'
 import { TituloPagina } from '@/compartido/ui/TituloPagina'
 import { LineaTiempo } from '../componentes/LineaTiempo'
 import { fechaLarga, parrafos } from '../formato'
 import { useInstitucional } from '../useInstitucional'
+
+const ANTETITULO = 'text-sm font-bold uppercase tracking-widest text-acento'
+const BOTON = 'inline-flex items-center justify-center gap-2 rounded-tema px-5 py-3 font-semibold transition-colors'
 
 function Parrafos({ texto, className = '' }: { texto: string; className?: string }) {
   return (
@@ -15,6 +30,17 @@ function Parrafos({ texto, className = '' }: { texto: string; className?: string
         <p key={i}>{parrafo}</p>
       ))}
     </div>
+  )
+}
+
+/** Tarjeta con ícono para misión, visión, perfil y campo ocupacional. */
+function TarjetaTexto({ titulo, texto, icono }: { titulo: string; texto: string; icono: ComponenteIcono }) {
+  return (
+    <article className="rounded-tema border border-borde-tarjeta bg-tarjeta p-6 sombra-suave md:p-8">
+      <ChipIcono icono={icono} tamano="lg" />
+      <h2 className="mt-5 text-2xl text-titulo">{titulo}</h2>
+      <Parrafos texto={texto} className="mt-3" />
+    </article>
   )
 }
 
@@ -39,7 +65,7 @@ export function LaCarrera() {
 
   if (!contenido) {
     return (
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-6xl">
         <TituloPagina titulo="La Carrera" />
         <p className="text-texto-suave">La información de la Carrera se publicará pronto.</p>
       </div>
@@ -47,82 +73,80 @@ export function LaCarrera() {
   }
 
   const datos = [
-    contenido.fecha_creacion && { etiqueta: 'Fundada el', valor: fechaLarga(contenido.fecha_creacion) },
-    contenido.resolucion && { etiqueta: 'Reconocida mediante', valor: contenido.resolucion },
-    contenido.acreditacion && { etiqueta: 'Calidad', valor: contenido.acreditacion },
+    contenido.fecha_creacion && { etiqueta: 'Fundada el', valor: fechaLarga(contenido.fecha_creacion), icono: IconoCalendario },
+    contenido.resolucion && { etiqueta: 'Reconocida mediante', valor: contenido.resolucion, icono: IconoResolucion },
+    contenido.acreditacion && { etiqueta: 'Calidad', valor: contenido.acreditacion, icono: IconoVerificado },
   ].filter((dato) => !!dato)
 
   return (
     <div className="mx-auto max-w-6xl">
       <TituloPagina titulo="La Carrera" subtitulo="Administración de Empresas · Facultad de Ciencias Económicas y Empresariales · UAGRM" />
 
-      <section aria-label="Presentación" className="grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:gap-14">
-        <Parrafos texto={contenido.presentacion} className="text-lg md:text-xl" />
+      <section aria-labelledby="titulo-presentacion" className="grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:gap-14">
+        <div>
+          <h2 id="titulo-presentacion" className={ANTETITULO}>
+            Presentación
+          </h2>
+          <Parrafos texto={contenido.presentacion} className="mt-4 text-lg md:text-xl" />
+        </div>
         {datos.length > 0 && (
-          <dl className="grid gap-px self-start overflow-hidden rounded-tema border border-borde bg-borde">
-            {datos.map(({ etiqueta, valor }) => (
-              <div key={etiqueta} className="bg-fondo p-5">
-                <dt className="text-sm text-texto-suave">{etiqueta}</dt>
-                <dd className="mt-1 font-bold text-titulo">{valor}</dd>
+          <dl className="space-y-3 self-start">
+            {datos.map(({ etiqueta, valor, icono }) => (
+              <div key={etiqueta} className="flex items-center gap-4 rounded-tema border border-borde-tarjeta bg-tarjeta p-4 sombra-suave">
+                <ChipIcono icono={icono} />
+                <div className="min-w-0">
+                  <dt className="text-sm text-texto-suave">{etiqueta}</dt>
+                  <dd className="font-bold text-titulo">{valor}</dd>
+                </div>
               </div>
             ))}
           </dl>
         )}
       </section>
 
-      <section aria-label="Misión y visión" className="mt-14 grid gap-6 md:grid-cols-2">
-        {[
-          ['Misión', contenido.mision],
-          ['Visión', contenido.vision],
-        ].map(([titulo, texto]) => (
-          <article key={titulo} className="rounded-tema border-l-4 border-primario bg-superficie p-6 md:p-8">
-            <h2 className="text-2xl text-titulo">{titulo}</h2>
-            <Parrafos texto={texto} className="mt-3" />
-          </article>
-        ))}
+      <section aria-label="Misión y visión" className="mt-14 grid gap-6 md:mt-20 md:grid-cols-2">
+        <TarjetaTexto titulo="Misión" texto={contenido.mision} icono={IconoObjetivo} />
+        <TarjetaTexto titulo="Visión" texto={contenido.vision} icono={IconoVision} />
       </section>
 
-      <section aria-labelledby="titulo-historia" className="mt-16 grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-14">
+      <section aria-labelledby="titulo-historia" className="mt-14 grid gap-10 md:mt-20 lg:grid-cols-[1.4fr_1fr] lg:gap-14">
         <div>
-          <h2 id="titulo-historia" className="text-3xl text-titulo">
+          <p className={ANTETITULO}>Nuestra historia</p>
+          <h2 id="titulo-historia" className="mt-2 text-3xl text-titulo">
             Reseña histórica
           </h2>
           <Parrafos texto={contenido.resena_historica} className="mt-5" />
         </div>
         {hitos.length > 0 && (
-          <div>
-            <h2 className="mb-6 text-sm font-bold uppercase tracking-wider text-titulo">Hitos</h2>
+          <div className="self-start rounded-tema border border-borde-tarjeta bg-tarjeta p-6 sombra-suave md:p-8">
+            <h2 className="mb-7 flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-titulo">
+              <IconoHistorial width={18} height={18} aria-hidden="true" className="text-acento" /> Hitos
+            </h2>
             <LineaTiempo hitos={hitos} />
           </div>
         )}
       </section>
 
-      <section aria-label="Perfil y campo ocupacional" className="mt-16 grid gap-10 border-t border-borde pt-12 md:grid-cols-2">
-        <div>
-          <h2 className="text-2xl text-titulo">Perfil profesional</h2>
-          <Parrafos texto={contenido.perfil_profesional} className="mt-4" />
-        </div>
-        <div>
-          <h2 className="text-2xl text-titulo">Campo ocupacional</h2>
-          <Parrafos texto={contenido.campo_ocupacional} className="mt-4" />
-        </div>
+      <section aria-label="Perfil y campo ocupacional" className="mt-14 grid gap-6 md:mt-20 md:grid-cols-2">
+        <TarjetaTexto titulo="Perfil profesional" texto={contenido.perfil_profesional} icono={IconoGraduacion} />
+        <TarjetaTexto titulo="Campo ocupacional" texto={contenido.campo_ocupacional} icono={IconoEmpresa} />
       </section>
 
-      <section className="mt-16 flex flex-col items-start justify-between gap-5 rounded-tema bg-marino p-6 text-sobre-primario md:flex-row md:items-center md:p-10">
-        <div>
-          <h2 className="text-2xl">¿Quiere estudiar Administración de Empresas?</h2>
-          <p className="mt-1">Revise el plan de estudios 101-4 y escríbanos si tiene dudas.</p>
-        </div>
-        <div className="flex flex-wrap gap-3">
-          <Link
-            to="/malla-curricular"
-            className="inline-flex items-center gap-2 rounded-tema bg-primario px-5 py-3 font-semibold text-sobre-primario transition-colors hover:bg-marino-oscuro"
-          >
-            Ver malla curricular <IconoFlecha width={18} height={18} />
-          </Link>
-          <Link to="/contacto" className="inline-flex rounded-tema border border-sobre-primario px-5 py-3 font-semibold transition-colors hover:bg-marino-oscuro">
-            Contacto
-          </Link>
+      {/* Invitación final: tarjeta sobre el fondo del modo */}
+      <section className="relative mt-16 overflow-hidden rounded-tema border border-borde-tarjeta bg-tarjeta p-6 sombra-suave md:mt-20 md:p-10">
+        <div className="relative flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+          <div className="min-w-0">
+            <h2 className="text-2xl text-titulo md:text-3xl">¿Quiere estudiar Administración de Empresas?</h2>
+            <p className="mt-2 text-texto-suave">Revise el plan de estudios 101-4 y escríbanos si tiene dudas.</p>
+          </div>
+          <div className="flex flex-wrap gap-3 md:shrink-0 md:flex-nowrap">
+            <Link to="/malla-curricular" className={`${BOTON} bg-primario text-sobre-primario hover:bg-marino`}>
+              Ver malla curricular <IconoFlecha width={18} height={18} aria-hidden="true" />
+            </Link>
+            <Link to="/contacto" className={`${BOTON} border border-borde bg-tarjeta text-titulo hover:border-primario hover:text-acento`}>
+              Contacto
+            </Link>
+          </div>
         </div>
       </section>
     </div>

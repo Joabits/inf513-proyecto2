@@ -66,7 +66,7 @@ export function GestionSolicitudes() {
       )}
 
       {solicitudes && solicitudes.length === 0 && (
-        <div className="rounded-tema border border-dashed border-borde px-6 py-12 text-center">
+        <div className="rounded-tema border border-borde-tarjeta bg-tarjeta px-6 py-12 text-center sombra-suave">
           <p className="font-semibold text-titulo">Todavía no hay solicitudes.</p>
           <p className="mt-1 text-texto-suave">Las que envíen los visitantes desde la página de INNOVA aparecerán aquí.</p>
         </div>
@@ -109,7 +109,7 @@ export function GestionSolicitudes() {
           </p>
 
           {visibles.length > 0 ? (
-            <ul className="divide-y divide-borde border-y border-borde">
+            <ul className="space-y-3">
               {visibles.map((solicitud) => (
                 <FilaSolicitud key={solicitud.id} solicitud={solicitud} />
               ))}

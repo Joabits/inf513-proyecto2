@@ -46,7 +46,7 @@ export function FormSolicitud({ servicios, servicioElegido }: { servicios: Servi
 
   if (envio.isSuccess) {
     return (
-      <div role="status" className="rounded-tema border border-borde bg-superficie p-6 text-center sm:p-10">
+      <div role="status" className="rounded-tema border border-borde-tarjeta bg-tarjeta p-6 text-center sombra-suave sm:p-10">
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-primario text-sobre-primario" aria-hidden="true">
           <IconoListo width={28} height={28} />
         </span>
@@ -60,7 +60,7 @@ export function FormSolicitud({ servicios, servicioElegido }: { servicios: Servi
   }
 
   return (
-    <form onSubmit={handleSubmit(enviar)} noValidate className="space-y-5 rounded-tema border border-borde bg-fondo p-5 sm:p-8">
+    <form onSubmit={handleSubmit(enviar)} noValidate className="space-y-5 rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave sm:p-8">
       <div className="grid gap-5 sm:grid-cols-2">
         <Campo id="solicitud-nombre" etiqueta="Nombre completo" error={errors.nombre?.message}>
           <input autoComplete="name" {...entrada('nombre')} />
@@ -114,7 +114,7 @@ export function FormSolicitud({ servicios, servicioElegido }: { servicios: Servi
         </p>
       )}
 
-      <div className="flex justify-end border-t border-borde pt-5">
+      <div className="flex justify-end pt-5">
         <Boton type="submit" disabled={envio.isPending} className="inline-flex items-center gap-2">
           <IconoEnviar width={18} height={18} />
           {envio.isPending ? 'Enviando...' : 'Enviar solicitud'}

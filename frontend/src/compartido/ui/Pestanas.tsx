@@ -24,7 +24,7 @@ export function Pestanas(props: { etiqueta: string; opciones: Pestana[]; activa:
   }
 
   return (
-    <div role="tablist" aria-label={etiqueta} onKeyDown={moverConTeclado} className="flex gap-1 overflow-x-auto overflow-y-hidden border-b border-borde">
+    <div role="tablist" aria-label={etiqueta} onKeyDown={moverConTeclado} className="flex gap-1 overflow-x-auto overflow-y-hidden">
       {opciones.map((o) => (
         <button
           key={o.id}

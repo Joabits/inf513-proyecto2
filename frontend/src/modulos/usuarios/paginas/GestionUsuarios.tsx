@@ -43,7 +43,7 @@ export function GestionUsuarios() {
       </div>
 
       {creando && (
-        <section aria-labelledby="titulo-nueva-cuenta" className="mb-10 rounded-tema border border-borde bg-fondo p-5 md:p-6">
+        <section aria-labelledby="titulo-nueva-cuenta" className="mb-10 rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave md:p-6">
           <h2 id="titulo-nueva-cuenta" className="text-xl text-titulo">
             Nueva cuenta
           </h2>
@@ -53,7 +53,7 @@ export function GestionUsuarios() {
       )}
 
       {roles.length > 0 && (
-        <details className="mb-8 rounded-tema border border-borde bg-superficie px-5 py-4">
+        <details className="mb-8 rounded-tema border border-borde-tarjeta bg-tarjeta px-5 py-4 sombra-suave">
           <summary className="cursor-pointer font-semibold text-titulo">¿Qué puede hacer cada rol?</summary>
           <dl className="mt-4 space-y-3 text-sm">
             {roles.map((r) => (
@@ -119,7 +119,7 @@ export function GestionUsuarios() {
           </p>
 
           {visibles.length > 0 ? (
-            <ul className="divide-y divide-borde border-y border-borde">
+            <ul className="space-y-3">
               {visibles.map((usuario) => (
                 <FilaUsuario key={usuario.id} usuario={usuario} />
               ))}

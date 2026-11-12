@@ -91,7 +91,7 @@ function Acciones({ ocupado, texto, alCancelar, error }: { ocupado: boolean; tex
           {error}
         </p>
       )}
-      <div className="flex flex-wrap justify-end gap-3 border-t border-borde pt-5">
+      <div className="flex flex-wrap justify-end gap-3 pt-5">
         <Boton type="button" variante="borde" onClick={alCancelar}>
           Cancelar
         </Boton>
@@ -145,7 +145,7 @@ export function FormNuevoUsuario({ alTerminar }: { alTerminar: () => void }) {
         </Campo>
       </div>
 
-      <div className="border-t border-borde pt-5">
+      <div className="pt-5">
         <Interruptor
           id="usuario-nuevo-activo"
           etiqueta="Cuenta activa"

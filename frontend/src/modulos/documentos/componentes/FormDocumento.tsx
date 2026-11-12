@@ -160,7 +160,7 @@ export function FormDocumento({ documento, alTerminar }: { documento?: Documento
         />
       </Campo>
 
-      <div className="border-t border-borde pt-5">
+      <div className="pt-5">
         <Interruptor
           id={`${prefijo}-publicado`}
           etiqueta="Publicar en el portal"
@@ -175,7 +175,7 @@ export function FormDocumento({ documento, alTerminar }: { documento?: Documento
         </p>
       )}
 
-      <div className="flex flex-wrap justify-end gap-3 border-t border-borde pt-5">
+      <div className="flex flex-wrap justify-end gap-3 pt-5">
         <Boton type="button" variante="borde" onClick={alTerminar}>
           Cancelar
         </Boton>

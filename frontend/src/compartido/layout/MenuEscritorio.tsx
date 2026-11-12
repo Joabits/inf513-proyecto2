@@ -1,5 +1,6 @@
 import type { Ref } from 'react'
 import { NavLink } from 'react-router'
+import { iconoDeRuta } from '@/compartido/menu/iconosRuta'
 import type { OpcionMenu } from '@/compartido/menu/tipos'
 import { IconoAbajo } from '@/compartido/ui/Iconos'
 
@@ -35,22 +36,26 @@ export const MenuEscritorio = ({ opciones, ref }: { opciones: OpcionMenu[]; ref?
               {op.titulo}
               <IconoAbajo width={13} height={13} className="transition-transform group-hover:rotate-180 group-focus-within:rotate-180" />
             </button>
-            <ul className="invisible absolute left-0 top-full z-40 min-w-60 -translate-y-1 rounded-tema border border-borde bg-fondo p-1.5 opacity-0 shadow-lg transition group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
-              {op.hijos.map((h) => (
-                <li key={h.id}>
-                  <NavLink
-                    to={h.ruta ?? '/'}
-                    onClick={soltarFoco}
-                    className={({ isActive }) =>
-                      `block rounded-tema px-3 py-2 text-sm transition-colors hover:bg-superficie ${
-                        isActive ? 'font-semibold text-acento' : 'text-texto'
-                      }`
-                    }
-                  >
-                    {h.titulo}
-                  </NavLink>
-                </li>
-              ))}
+            <ul className="invisible absolute left-0 top-full z-40 min-w-64 -translate-y-1 rounded-tema border border-borde bg-fondo p-2 opacity-0 sombra-elevada transition group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+              {op.hijos.map((h) => {
+                const Icono = iconoDeRuta(h.ruta)
+                return (
+                  <li key={h.id}>
+                    <NavLink
+                      to={h.ruta ?? '/'}
+                      onClick={soltarFoco}
+                      className={({ isActive }) =>
+                        `flex items-center gap-3 rounded-tema px-3 py-2.5 text-sm transition-colors hover:bg-superficie hover:text-acento ${
+                          isActive ? 'font-semibold text-acento' : 'text-texto'
+                        }`
+                      }
+                    >
+                      {Icono && <Icono width={18} height={18} aria-hidden="true" className="shrink-0 text-acento" />}
+                      {h.titulo}
+                    </NavLink>
+                  </li>
+                )
+              })}
             </ul>
           </li>
         ),

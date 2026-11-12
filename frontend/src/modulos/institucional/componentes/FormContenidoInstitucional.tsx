@@ -9,7 +9,7 @@ import type { ContenidoInstitucional } from '../tipos'
 import { useGuardarInstitucional } from '../useInstitucional'
 
 // La leyenda flota para quedar dentro del recuadro y no cortar su borde superior
-const SECCION = 'space-y-5 rounded-tema border border-borde bg-fondo p-5 sm:p-6 [&>legend+*]:clear-both'
+const SECCION = 'space-y-5 rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave sm:p-6 [&>legend+*]:clear-both'
 const LEYENDA = 'float-left mb-1 w-full text-lg font-bold text-titulo'
 const AYUDA_PARRAFOS = 'Deje una línea en blanco para separar párrafos.'
 

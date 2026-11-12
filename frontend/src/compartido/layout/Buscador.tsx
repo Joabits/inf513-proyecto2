@@ -40,7 +40,7 @@ export function Buscador({
         onChange={(e) => setTexto(e.target.value)}
         placeholder={placeholder}
         autoFocus={autoFocus}
-        className="h-10 w-full rounded-full border border-borde bg-superficie pl-4 pr-11 text-sm text-texto placeholder:text-texto-suave/70 focus:border-titulo focus:bg-fondo focus:outline-none"
+        className="h-10 w-full rounded-full border border-borde bg-fondo pl-4 pr-11 text-sm text-texto placeholder:text-texto-suave/70 focus:border-titulo focus:outline-none"
       />
       <button
         type="submit"

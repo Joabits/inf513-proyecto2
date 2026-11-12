@@ -30,14 +30,14 @@ export function FormRedes({ redes, editable }: { redes: Configuracion['redes']; 
 
   return (
     <form onSubmit={handleSubmit(enviar)} noValidate>
-      <fieldset disabled={!editable} className="space-y-5 rounded-tema border border-borde bg-fondo p-5 sm:p-6">
+      <fieldset disabled={!editable} className="space-y-5 rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave sm:p-6">
         <div>
           <h2 className="text-lg font-bold text-titulo">Redes sociales</h2>
           <p className="text-sm text-texto-suave">Cuentas oficiales de la Carrera. Aparecen en el pie de página y en la página de contacto.</p>
         </div>
 
         {fields.length === 0 && (
-          <p className="rounded-tema border border-dashed border-borde p-6 text-center text-sm text-texto-suave">
+          <p className="p-6 text-center text-sm text-texto-suave">
             Todavía no hay redes sociales: el portal no muestra ninguna.
           </p>
         )}

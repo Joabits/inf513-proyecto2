@@ -10,7 +10,7 @@ export function Contacto() {
         titulo="Contacto"
         subtitulo="¿Tiene una consulta sobre la Carrera, la titulación o los trámites? Escríbanos o visítenos."
       />
-      <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
+      <div className="grid gap-8 lg:grid-cols-[1fr_1.5fr] lg:gap-10">
         <DatosDeContacto />
         <FormMensaje />
       </div>

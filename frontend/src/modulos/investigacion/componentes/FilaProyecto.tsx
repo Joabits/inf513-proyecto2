@@ -23,7 +23,7 @@ export function FilaProyecto({ proyecto, lineas }: { proyecto: Proyecto; lineas:
   const error = publicacion.error ?? eliminar.error
 
   return (
-    <li className="py-5">
+    <li className="rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave">
       <div className="flex flex-wrap items-center gap-2">
         <span className={`${ETIQUETA} border-borde text-texto-suave`}>{TIPOS[proyecto.tipo]}</span>
         <span className={`${ETIQUETA} ${proyecto.estado === 'en_curso' ? 'border-titulo text-titulo' : 'border-borde text-texto-suave'}`}>
@@ -72,7 +72,7 @@ export function FilaProyecto({ proyecto, lineas }: { proyecto: Proyecto; lineas:
       )}
 
       {editando && (
-        <div id={idPanel} className="mt-4 rounded-tema border border-borde p-5">
+        <div id={idPanel} className="mt-5">
           <FormProyecto proyecto={proyecto} lineas={lineas} alTerminar={() => setEditando(false)} />
         </div>
       )}

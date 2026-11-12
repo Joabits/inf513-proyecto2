@@ -45,7 +45,7 @@ function FormAtencion({ solicitud }: { solicitud: SolicitudInnova }) {
     })
 
   return (
-    <form onSubmit={handleSubmit(enviar)} noValidate className="space-y-4 border-t border-borde pt-5">
+    <form onSubmit={handleSubmit(enviar)} noValidate className="space-y-4 pt-5">
       <div className="grid gap-4 sm:grid-cols-[14rem_1fr]">
         <Campo id={`${prefijo}-estado`} etiqueta="Estado" error={errors.estado?.message}>
           <select
@@ -108,7 +108,7 @@ export function FilaSolicitud({ solicitud }: { solicitud: SolicitudInnova }) {
   const asunto = encodeURIComponent(`Su solicitud a INNOVA${solicitud.servicio ? `: ${solicitud.servicio}` : ''}`)
 
   return (
-    <li className="py-5">
+    <li className="rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave">
       <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -134,7 +134,7 @@ export function FilaSolicitud({ solicitud }: { solicitud: SolicitudInnova }) {
       </div>
 
       {abierta && (
-        <div id={idDetalle} className="mt-4 space-y-5 rounded-tema border border-borde p-5">
+        <div id={idDetalle} className="mt-5 space-y-5">
           <div>
             <h4 className="text-sm font-bold uppercase tracking-wider text-titulo">Lo que necesita</h4>
             <p className="mt-2 whitespace-pre-line text-texto">{solicitud.descripcion}</p>
@@ -163,7 +163,7 @@ export function FilaSolicitud({ solicitud }: { solicitud: SolicitudInnova }) {
           {puedeAtender ? (
             <FormAtencion solicitud={solicitud} />
           ) : (
-            solicitud.respuesta && <p className="whitespace-pre-line border-t border-borde pt-4 text-sm">{solicitud.respuesta}</p>
+            solicitud.respuesta && <p className="whitespace-pre-line pt-4 text-sm">{solicitud.respuesta}</p>
           )}
         </div>
       )}
