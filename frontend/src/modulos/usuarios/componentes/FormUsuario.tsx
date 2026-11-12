@@ -1,9 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm, useWatch, type UseFormRegister } from 'react-hook-form'
+import type { Ref } from 'react'
+import { useController, useForm, type UseFormRegister } from 'react-hook-form'
 import { aplicarErrores } from '@/compartido/api/errores'
 import { Boton } from '@/compartido/ui/Boton'
 import { Campo, CLASE_ENTRADA } from '@/compartido/ui/Campo'
 import { Interruptor } from '@/compartido/ui/Interruptor'
+import { Selector } from '@/compartido/ui/Selector'
 import type { Rol, Usuario } from '../tipos'
 import { useActualizarUsuario, useCrearUsuario, useRoles } from '../useUsuarios'
 import {
@@ -15,16 +17,25 @@ import {
 } from '../usuarios.esquema'
 import { EntradaClave } from './EntradaClave'
 
+/** El campo `rol_id` de cada formulario, ya conectado con useController. */
+interface CampoRol {
+  ref: Ref<HTMLButtonElement>
+  value: string
+  onChange: (valor: string) => void
+  onBlur: () => void
+}
+
 /** Nombre, correo y rol: comunes al crear y al editar. */
 function DatosCuenta(props: {
   prefijo: string
   register: UseFormRegister<DatosUsuario>
   errores: Partial<Record<keyof DatosUsuario, { message?: string }>>
   roles: Rol[]
-  rolElegido: string
+  campoRol: CampoRol
   rolFijo?: string
 }) {
-  const { prefijo, register, errores, roles, rolElegido, rolFijo } = props
+  const { prefijo, register, errores, roles, rolFijo } = props
+  const { ref: refRol, value: rolElegido, onChange: cambiarRol, onBlur: salirRol } = props.campoRol
   const descripcion = roles.find((rol) => String(rol.id) === rolElegido)?.descripcion ?? undefined
 
   return (
@@ -63,20 +74,17 @@ function DatosCuenta(props: {
         </div>
       ) : (
         <Campo id={`${prefijo}-rol`} etiqueta="Rol" ayuda={descripcion} error={errores.rol_id?.message}>
-          <select
+          <Selector
             id={`${prefijo}-rol`}
             aria-describedby={`${prefijo}-rol-info`}
             aria-invalid={!!errores.rol_id}
-            className={CLASE_ENTRADA}
-            {...register('rol_id')}
-          >
-            <option value="">Seleccione un rol</option>
-            {roles.map((rol) => (
-              <option key={rol.id} value={rol.id}>
-                {rol.nombre}
-              </option>
-            ))}
-          </select>
+            ref={refRol}
+            valor={rolElegido}
+            alCambiar={cambiarRol}
+            alSalir={salirRol}
+            textoVacio="Seleccione un rol"
+            opciones={roles.map((rol) => ({ valor: String(rol.id), etiqueta: rol.nombre }))}
+          />
         </Campo>
       )}
     </>
@@ -116,7 +124,7 @@ export function FormNuevoUsuario({ alTerminar }: { alTerminar: () => void }) {
     resolver: zodResolver(esquemaNuevoUsuario),
     defaultValues: { nombre: '', email: '', rol_id: '', password: '', password_confirmation: '', activo: true },
   })
-  const rolElegido = useWatch({ control, name: 'rol_id' })
+  const { field: campoRol } = useController({ control, name: 'rol_id' })
 
   const enviar = (datos: DatosNuevoUsuario) =>
     crear.mutate(datos, { onSuccess: alTerminar, onError: (e) => aplicarErrores(e, setError) })
@@ -128,7 +136,7 @@ export function FormNuevoUsuario({ alTerminar }: { alTerminar: () => void }) {
         register={register}
         errores={errors}
         roles={roles}
-        rolElegido={rolElegido}
+        campoRol={campoRol}
       />
 
       <div className="grid gap-5 sm:grid-cols-2">
@@ -173,7 +181,7 @@ export function FormEditarUsuario({ usuario, alTerminar }: { usuario: Usuario; a
     resolver: zodResolver(esquemaUsuario),
     defaultValues: { nombre: usuario.nombre, email: usuario.email, rol_id: usuario.rol ? String(usuario.rol.id) : '' },
   })
-  const rolElegido = useWatch({ control, name: 'rol_id' })
+  const { field: campoRol } = useController({ control, name: 'rol_id' })
 
   const enviar = (datos: DatosUsuario) =>
     actualizar.mutate(datos, { onSuccess: alTerminar, onError: (e) => aplicarErrores(e, setError) })
@@ -185,7 +193,7 @@ export function FormEditarUsuario({ usuario, alTerminar }: { usuario: Usuario; a
         register={register}
         errores={errors}
         roles={roles}
-        rolElegido={rolElegido}
+        campoRol={campoRol}
         rolFijo={usuario.es_usted ? (usuario.rol?.nombre ?? 'Sin rol') : undefined}
       />
       <Acciones ocupado={actualizar.isPending} texto="Guardar cambios" alCancelar={alTerminar} error={errors.root?.message} />

@@ -6,6 +6,7 @@ import { aplicarErrores } from '@/compartido/api/errores'
 import { Boton } from '@/compartido/ui/Boton'
 import { Campo, CLASE_ENTRADA } from '@/compartido/ui/Campo'
 import { IconoEnviar, IconoListo } from '@/compartido/ui/Iconos'
+import { SelectorCampo } from '@/compartido/ui/Selector'
 import { enviarSolicitud } from '../api'
 import { esquemaSolicitud, MAXIMO_DESCRIPCION, OTRO_SERVICIO, type DatosSolicitud } from '../innova.esquema'
 import type { ServicioInnova } from '../tipos'
@@ -80,15 +81,18 @@ export function FormSolicitud({ servicios, servicioElegido }: { servicios: Servi
       </div>
 
       <Campo id="solicitud-servicio_id" etiqueta="Servicio que necesita" error={errors.servicio_id?.message}>
-        <select {...entrada('servicio_id')}>
-          <option value="">Seleccione un servicio</option>
-          {servicios.map((servicio) => (
-            <option key={servicio.id} value={servicio.id}>
-              {servicio.nombre}
-            </option>
-          ))}
-          <option value={OTRO_SERVICIO}>Otro / no estoy seguro</option>
-        </select>
+        <SelectorCampo
+          control={control}
+          name="servicio_id"
+          id="solicitud-servicio_id"
+          aria-describedby="solicitud-servicio_id-info"
+          aria-invalid={!!errors.servicio_id}
+          textoVacio="Seleccione un servicio"
+          opciones={[
+            ...servicios.map((servicio) => ({ valor: String(servicio.id), etiqueta: servicio.nombre })),
+            { valor: OTRO_SERVICIO, etiqueta: 'Otro / no estoy seguro' },
+          ]}
+        />
       </Campo>
 
       <Campo

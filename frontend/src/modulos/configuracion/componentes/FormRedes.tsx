@@ -7,6 +7,7 @@ import { Boton } from '@/compartido/ui/Boton'
 import { Campo, CLASE_ENTRADA } from '@/compartido/ui/Campo'
 import { FilaLista } from '@/compartido/ui/FilaLista'
 import { IconoAgregar } from '@/compartido/ui/Iconos'
+import { SelectorCampo } from '@/compartido/ui/Selector'
 import { guardarRedes } from '../api'
 import { esquemaRedes, REDES, type DatosRedes } from '../configuracion.esquema'
 import { useGuardarConfiguracion } from '../useGuardarConfiguracion'
@@ -57,19 +58,19 @@ export function FormRedes({ redes, editable }: { redes: Configuracion['redes']; 
               >
                 <div className="grid gap-3 sm:grid-cols-[12rem_1fr]">
                   <Campo id={`redes.${i}.red`} etiqueta="Red" error={error?.red?.message}>
-                    <select
+                    <SelectorCampo
+                      control={control}
+                      name={`redes.${i}.red`}
                       id={`redes.${i}.red`}
                       aria-describedby={`redes.${i}.red-info`}
                       aria-invalid={!!error?.red}
-                      className={CLASE_ENTRADA}
-                      {...register(`redes.${i}.red`)}
-                    >
-                      {REDES.map((red) => (
-                        <option key={red} value={red} disabled={red !== elegidas[i]?.red && elegidas.some((fila) => fila.red === red)}>
-                          {NOMBRE_RED[red]}
-                        </option>
-                      ))}
-                    </select>
+                      opciones={REDES.map((red) => ({
+                        valor: red,
+                        etiqueta: NOMBRE_RED[red],
+                        // Cada red se puede poner una sola vez
+                        deshabilitada: red !== elegidas[i]?.red && elegidas.some((fila) => fila.red === red),
+                      }))}
+                    />
                   </Campo>
                   <Campo id={`redes.${i}.url`} etiqueta="Enlace de la página" error={error?.url?.message}>
                     <input
