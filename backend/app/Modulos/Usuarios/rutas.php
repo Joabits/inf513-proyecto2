@@ -1,5 +1,6 @@
 <?php
 
+use App\Modulos\Usuarios\PerfilController;
 use App\Modulos\Usuarios\UsuariosController;
 use Illuminate\Support\Facades\Route;
 
@@ -12,4 +13,10 @@ Route::middleware('auth:sanctum')->prefix('gestion/usuarios')->group(function ()
     Route::patch('/{usuario}/estado', [UsuariosController::class, 'cambiarEstado'])->middleware('permiso:usuarios.editar');
     Route::put('/{usuario}/clave', [UsuariosController::class, 'cambiarClave'])->middleware('permiso:usuarios.editar');
     Route::delete('/{usuario}', [UsuariosController::class, 'eliminar'])->middleware('permiso:usuarios.eliminar');
+});
+
+// Mi perfil: cada cuenta con sesión (de cualquier rol) cambia su nombre, su correo y su contraseña
+Route::middleware('auth:sanctum')->prefix('perfil')->group(function () {
+    Route::put('/', [PerfilController::class, 'actualizar']);
+    Route::put('/clave', [PerfilController::class, 'cambiarClave']);
 });

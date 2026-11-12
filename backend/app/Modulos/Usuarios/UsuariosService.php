@@ -97,6 +97,38 @@ class UsuariosService
         $this->bitacora->accion($autor, 'cambiar_clave', $usuario, $usuario->email);
     }
 
+    /** «Mi perfil»: la persona cambia su nombre o su correo. Su rol no se toca desde aquí. */
+    public function actualizarPerfil(User $usuario, array $datos): User
+    {
+        $usuario->fill(['name' => $datos['nombre'], 'email' => $datos['email']]);
+
+        if ($usuario->isDirty(['name', 'email'])) {
+            $usuario->save();
+            $this->bitacora->accion($usuario, 'editar_perfil', $usuario, $usuario->email);
+        }
+
+        return $usuario;
+    }
+
+    /**
+     * «Mi perfil»: la persona cambia su propia contraseña. Se cierran sus otras sesiones abiertas
+     * (por ejemplo, en una computadora que olvidó cerrar); la actual sigue.
+     */
+    public function cambiarMiClave(User $usuario, string $clave, ?string $sesionActual): void
+    {
+        $usuario->update(['password' => $clave]);
+
+        if (config('session.driver') === 'database') {
+            DB::table(config('session.table', 'sessions'))
+                ->where('user_id', $usuario->getKey())
+                ->when($sesionActual, fn ($consulta) => $consulta->where('id', '!=', $sesionActual))
+                ->delete();
+        }
+
+        // Nunca se guarda la contraseña en la bitácora: solo que se cambió
+        $this->bitacora->accion($usuario, 'cambiar_clave', $usuario, 'Desde su perfil');
+    }
+
     public function eliminar(User $usuario, User $autor): void
     {
         $this->exigirQueNoSeaUsted($usuario, $autor, 'usuario', 'No puede eliminar su propia cuenta.');
