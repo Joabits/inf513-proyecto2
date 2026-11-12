@@ -1,7 +1,10 @@
 import type { ReactNode } from 'react'
 
-export const CLASE_ENTRADA =
-  'mt-1 w-full rounded-tema border border-borde bg-fondo px-3 py-2 text-texto focus:border-titulo focus:outline-none aria-invalid:border-primario'
+/** Aspecto de un campo: lo comparten las entradas de texto, el selector y el selector de fecha. */
+export const CLASE_CAJA =
+  'w-full rounded-tema border border-borde bg-fondo px-3 py-2 text-texto focus:border-titulo focus:outline-none aria-invalid:border-primario'
+
+export const CLASE_ENTRADA = `mt-1 ${CLASE_CAJA}`
 
 /**
  * Etiqueta, ayuda y error de un campo de formulario:
