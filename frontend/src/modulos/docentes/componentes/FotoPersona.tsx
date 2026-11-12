@@ -2,7 +2,8 @@ import { iniciales } from '../formato'
 
 const TAMANOS = {
   sm: 'h-12 w-12 text-sm',
-  lg: 'h-28 w-28 text-2xl',
+  lg: 'h-28 w-28 text-3xl',
+  xl: 'h-40 w-40 text-5xl sm:h-48 sm:w-48',
 }
 
 /** La foto de la persona o, mientras no la haya, sus iniciales en un círculo. Es decorativa: el nombre va al lado. */
