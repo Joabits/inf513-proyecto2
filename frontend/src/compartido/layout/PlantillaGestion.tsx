@@ -6,7 +6,7 @@ import { useSesion } from '@/compartido/sesion/useSesion'
 import { PanelAccesibilidad } from '@/compartido/tema/PanelAccesibilidad'
 import { EstadoCarga } from '@/compartido/ui/EstadoCarga'
 import { IconoCerrar, IconoExterno, IconoMenu, IconoMostrarMenu, IconoOcultarMenu } from '@/compartido/ui/Iconos'
-import { BarraGestion } from './BarraGestion'
+import { BarraGestion, CabeceraMenu } from './BarraGestion'
 import { MenuPerfil } from './MenuPerfil'
 import { ContextoPlantilla } from './contextoPlantilla'
 import { PieSimple } from './Pie'
@@ -75,7 +75,7 @@ export function PlantillaGestion() {
       <aside
         id="menu-lateral"
         inert={menuOculto}
-        className={`hidden shrink-0 overflow-hidden motion-safe:transition-[width] motion-safe:duration-300 lg:block ${menuOculto ? 'lg:w-0' : 'lg:w-72'}`}
+        className={`hidden shrink-0 overflow-hidden lg:block ${menuOculto ? 'lg:w-0' : 'lg:w-72'}`}
       >
         <div className="sticky top-0 h-screen w-72">
           <BarraGestion
@@ -116,7 +116,7 @@ export function PlantillaGestion() {
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 bg-fondo px-4 lg:h-18 lg:px-8">
+        <header className={`sticky top-0 z-30 flex h-16 items-center gap-3 bg-fondo px-4 lg:h-18 lg:pr-8 ${menuOculto ? 'lg:pl-0' : 'lg:pl-8'}`}>
           <button
             type="button"
             aria-label="Abrir menú de gestión"
@@ -125,23 +125,30 @@ export function PlantillaGestion() {
           >
             <IconoMenu />
           </button>
-          {/* Con el menú lateral oculto, el botón para volver a mostrarlo queda donde estaba el menú */}
+          {/* PC con el menú oculto: la misma fila de arriba del menú, así el logo y el botón no se mueven.
+              El borde transparente iguala el borde derecho de 1px del menú lateral. */}
           {menuOculto && (
-            <button
-              ref={botonMostrar}
-              type="button"
-              aria-controls="menu-lateral"
-              aria-expanded="false"
-              aria-label="Mostrar el menú lateral"
-              title="Mostrar el menú lateral"
-              onClick={() => cambiarMenu(false)}
-              className="hidden h-10 w-10 shrink-0 place-items-center rounded-full text-titulo hover:bg-superficie lg:grid"
-            >
-              <IconoMostrarMenu aria-hidden="true" />
-            </button>
+            <div className="hidden w-72 shrink-0 border-r border-transparent lg:block">
+              <CabeceraMenu
+                accion={
+                  <button
+                    ref={botonMostrar}
+                    type="button"
+                    aria-controls="menu-lateral"
+                    aria-expanded="false"
+                    aria-label="Mostrar el menú lateral"
+                    title="Mostrar el menú lateral"
+                    onClick={() => cambiarMenu(false)}
+                    className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-titulo hover:bg-superficie"
+                  >
+                    <IconoMostrarMenu aria-hidden="true" />
+                  </button>
+                }
+              />
+            </div>
           )}
-          {/* En celular siempre; en PC solo con el menú lateral oculto (si no, ya está arriba del menú) */}
-          <Link to="/gestion" className={menuOculto ? '' : 'lg:hidden'} aria-label="Ir al panel de gestión">
+          {/* Celular y tablet: el logo va en la barra (el menú es desplegable) */}
+          <Link to="/gestion" className="lg:hidden" aria-label="Ir al panel de gestión">
             <MarcaCarrera />
           </Link>
           <div className="ml-auto flex items-center gap-2">
