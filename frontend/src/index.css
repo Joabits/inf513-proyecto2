@@ -12,7 +12,7 @@
  *   bg-fondo, bg-superficie, text-texto, text-texto-suave, text-titulo,
  *   bg-primario, text-sobre-primario, text-acento, bg-marino, bg-marino-oscuro,
  *   border-borde, border-borde-tarjeta (tarjetas: solo se ve en alto contraste), rounded-tema,
- *   bg-tarjeta, bg-chip, text-sobre-chip, sombra-suave, sombra-elevada, sombra-lateral
+ *   bg-tarjeta, bg-chip, text-sobre-chip, sombra-suave, sombra-elevada
  * Así funcionan los temas, el modo noche y el alto contraste sin tocar cada pantalla.
  */
 @theme inline {
@@ -57,7 +57,6 @@
   --c-sobre-chip: #ffffff;
   --sombra-suave: 0 1px 2px rgb(15 30 69 / 0.06), 0 6px 16px -10px rgb(15 30 69 / 0.18);
   --sombra-elevada: 0 2px 4px rgb(15 30 69 / 0.06), 0 18px 36px -14px rgb(15 30 69 / 0.32);
-  --sombra-lateral: 6px 0 24px -18px rgb(15 30 69 / 0.45);
   color-scheme: light;
 }
 
@@ -81,7 +80,6 @@
   /* sombra muy suave también de noche: negra semitransparente, se nota sobre el azul oscuro */
   --sombra-suave: 0 1px 2px rgb(10 10 10 / 0.3), 0 8px 22px -10px rgb(10 10 10 / 0.75);
   --sombra-elevada: 0 18px 36px -14px rgb(10 10 10 / 0.7);
-  --sombra-lateral: 6px 0 24px -16px rgb(10 10 10 / 0.85);
   color-scheme: dark;
 }
 
@@ -104,7 +102,6 @@
   --c-barra-activa: #0a0a0a;
   --sombra-suave: none;
   --sombra-elevada: none;
-  --sombra-lateral: none;
 }
 :root[data-contraste="alto"][data-modo="oscuro"] {
   --c-fondo: #0a0a0a;
@@ -234,8 +231,4 @@
 
 @utility sombra-elevada {
   box-shadow: var(--sombra-elevada);
-}
-
-@utility sombra-lateral {
-  box-shadow: var(--sombra-lateral);
 }

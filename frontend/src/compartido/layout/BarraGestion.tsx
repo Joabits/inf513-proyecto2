@@ -29,7 +29,7 @@ export function BarraGestion({ usuario, grupos, alNavegar }: { usuario: UsuarioS
   const cerrarSesion = useCerrarSesion()
 
   return (
-    <div className="flex h-full flex-col border-r border-borde-tarjeta bg-fondo text-texto sombra-lateral">
+    <div className="flex h-full flex-col border-r border-borde-tarjeta bg-fondo text-texto">
       <div className="px-5 pb-4 pt-5">
         {/* El logo lleva al inicio del panel: no hace falta una opción «Panel» en el menú */}
         <Link to="/gestion" onClick={alNavegar} aria-label="Ir al inicio del panel de gestión" className="inline-block">
