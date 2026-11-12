@@ -6,6 +6,8 @@ const ACCION = 'grid h-9 w-9 place-items-center rounded-tema text-texto-suave tr
 /**
  * Elemento de una lista editable con sus acciones de orden y eliminación.
  * Quitar no pide confirmación: nada se borra hasta pulsar "Guardar cambios".
+ * Con `noQuitar` el botón se desactiva (por ejemplo, si otros datos dependen del elemento):
+ * el motivo debe mostrarse dentro de la fila.
  */
 export function FilaLista(props: {
   numero: number
@@ -14,9 +16,10 @@ export function FilaLista(props: {
   alSubir: () => void
   alBajar: () => void
   alQuitar: () => void
+  noQuitar?: boolean
   children: ReactNode
 }) {
-  const { numero, total, nombre, alSubir, alBajar, alQuitar, children } = props
+  const { numero, total, nombre, alSubir, alBajar, alQuitar, noQuitar = false, children } = props
 
   return (
     <li className="flex gap-3 rounded-tema border border-borde bg-fondo p-4">
@@ -31,7 +34,13 @@ export function FilaLista(props: {
         <button type="button" className={ACCION} onClick={alBajar} disabled={numero === total} aria-label={`Bajar ${nombre}`}>
           <IconoBajar width={18} height={18} />
         </button>
-        <button type="button" className={`${ACCION} hover:text-acento`} onClick={alQuitar} aria-label={`Quitar ${nombre}`}>
+        <button
+          type="button"
+          className={`${ACCION} hover:text-acento`}
+          onClick={alQuitar}
+          disabled={noQuitar}
+          aria-label={noQuitar ? `No se puede quitar ${nombre}` : `Quitar ${nombre}`}
+        >
           <IconoEliminar width={18} height={18} />
         </button>
       </div>
