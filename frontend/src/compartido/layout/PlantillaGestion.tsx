@@ -7,6 +7,7 @@ import { PanelAccesibilidad } from '@/compartido/tema/PanelAccesibilidad'
 import { EstadoCarga } from '@/compartido/ui/EstadoCarga'
 import { IconoCerrar, IconoExterno, IconoMenu } from '@/compartido/ui/Iconos'
 import { BarraGestion } from './BarraGestion'
+import { MenuPerfil } from './MenuPerfil'
 import { ContextoPlantilla } from './contextoPlantilla'
 import { PieSimple } from './Pie'
 
@@ -45,7 +46,7 @@ export function PlantillaGestion() {
 
       <aside className="hidden w-72 shrink-0 lg:block">
         <div className="sticky top-0 h-screen">
-          <BarraGestion usuario={usuario} grupos={grupos} />
+          <BarraGestion grupos={grupos} />
         </div>
       </aside>
 
@@ -53,7 +54,7 @@ export function PlantillaGestion() {
         <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Menú de gestión">
           <button type="button" aria-label="Cerrar menú" onClick={() => setAbierto(false)} className="absolute inset-0 bg-black/40" />
           <div className="absolute inset-y-0 left-0 w-[85%] max-w-xs">
-            <BarraGestion usuario={usuario} grupos={grupos} alNavegar={() => setAbierto(false)} />
+            <BarraGestion grupos={grupos} alNavegar={() => setAbierto(false)} />
             <button
               type="button"
               aria-label="Cerrar menú"
@@ -88,6 +89,7 @@ export function PlantillaGestion() {
               <IconoExterno width={15} height={15} aria-hidden="true" /> Ver el portal
             </Link>
             <PanelAccesibilidad />
+            <MenuPerfil usuario={usuario} />
           </div>
         </header>
 

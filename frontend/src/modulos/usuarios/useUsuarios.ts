@@ -1,5 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { actualizarUsuario, cambiarClave, cambiarEstado, crearUsuario, eliminarUsuario, listarRoles, listarUsuarios } from './api'
+import {
+  actualizarPerfil,
+  actualizarUsuario,
+  cambiarClave,
+  cambiarEstado,
+  cambiarMiClave,
+  crearUsuario,
+  eliminarUsuario,
+  listarRoles,
+  listarUsuarios,
+} from './api'
 import type { Usuario } from './tipos'
 import type { DatosClave, DatosUsuario } from './usuarios.esquema'
 
@@ -60,4 +70,19 @@ export function useEliminarUsuario() {
     mutationFn: eliminarUsuario,
     onSuccess: (_respuesta, id) => consultas.setQueryData<Usuario[]>(CLAVE_USUARIOS, (lista) => lista?.filter((u) => u.id !== id)),
   })
+}
+
+/** «Mi perfil»: al guardar se vuelve a pedir la sesión (nombre y correo del menú de perfil) y la lista de cuentas. */
+export function useActualizarPerfil() {
+  const consultas = useQueryClient()
+
+  return useMutation({
+    mutationFn: actualizarPerfil,
+    onSuccess: () =>
+      Promise.all([consultas.invalidateQueries({ queryKey: ['sesion'] }), consultas.invalidateQueries({ queryKey: CLAVE_USUARIOS })]),
+  })
+}
+
+export function useCambiarMiClave() {
+  return useMutation({ mutationFn: cambiarMiClave })
 }

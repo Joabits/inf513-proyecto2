@@ -1,6 +1,6 @@
 import { cliente } from '@/compartido/api/cliente'
 import type { Rol, Usuario } from './tipos'
-import type { DatosClave, DatosNuevoUsuario, DatosUsuario } from './usuarios.esquema'
+import type { DatosClave, DatosMiClave, DatosNuevoUsuario, DatosPerfil, DatosUsuario } from './usuarios.esquema'
 
 const GESTION = '/gestion/usuarios'
 
@@ -19,3 +19,9 @@ export const cambiarEstado = (id: number, activo: boolean) =>
 export const cambiarClave = (id: number, datos: DatosClave) => cliente.put(`${GESTION}/${id}/clave`, datos)
 
 export const eliminarUsuario = (id: number) => cliente.delete(`${GESTION}/${id}`)
+
+// «Mi perfil»: la propia cuenta, para cualquier rol
+export const actualizarPerfil = (datos: DatosPerfil) =>
+  cliente.put<{ data: { nombre: string; email: string } }>('/perfil', datos).then((r) => r.data.data)
+
+export const cambiarMiClave = (datos: DatosMiClave) => cliente.put('/perfil/clave', datos)

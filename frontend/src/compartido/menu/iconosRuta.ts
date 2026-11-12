@@ -56,6 +56,7 @@ const POR_SECCION: Record<string, ComponenteIcono> = {
   bitacora: IconoHistorial,
   configuracion: IconoAjustes,
   graduado: IconoUsuario,
+  perfil: IconoUsuario,
 }
 
 /** Grupos del menú de gestión (por su título en la BD). */

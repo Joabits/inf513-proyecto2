@@ -1,1 +1,1 @@
-export { rutasGestionUsuarios } from './rutas'
+export { rutasGestionUsuarios, rutasPerfil } from './rutas'

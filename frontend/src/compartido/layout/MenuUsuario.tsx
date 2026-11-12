@@ -43,6 +43,13 @@ export function MenuUsuario({ usuario }: { usuario: UsuarioSesion }) {
           >
             <IconoPanel width={16} height={16} /> Ir al panel
           </Link>
+          <Link
+            to="/gestion/perfil"
+            onClick={cerrar}
+            className="flex items-center justify-center gap-2 rounded-tema border border-borde px-4 py-2 text-sm font-semibold text-texto transition-colors hover:border-acento hover:text-acento"
+          >
+            <IconoUsuario width={16} height={16} /> Mi perfil
+          </Link>
           <Boton variante="borde" disabled={cerrarSesion.isPending} onClick={() => cerrarSesion.mutate()} className="flex w-full items-center justify-center gap-2 text-sm">
             <IconoSalir width={16} height={16} /> Cerrar sesión
           </Boton>
