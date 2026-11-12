@@ -1,9 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { cambiarPublicacion, eliminarProyecto, guardarComplementos, guardarLineas, obtenerGestion } from './api'
+import { cambiarPublicacion, eliminarProyecto, guardarComplementos, guardarLineas, obtenerGestion, obtenerPublica } from './api'
 import type { DatosProyecto } from './investigacion.esquema'
 import type { GestionInvestigacion, Proyecto } from './tipos'
 
 const CLAVE = ['investigacion-gestion']
+
+export function useInvestigacionPublica() {
+  return useQuery({ queryKey: ['investigacion-publica'], queryFn: obtenerPublica })
+}
 
 export function useGestionInvestigacion() {
   return useQuery({ queryKey: CLAVE, queryFn: obtenerGestion })
