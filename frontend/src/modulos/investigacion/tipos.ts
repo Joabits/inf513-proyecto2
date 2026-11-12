@@ -61,3 +61,9 @@ export interface GestionInvestigacion extends Complementos {
   proyectos: Proyecto[]
   lineas: Linea[]
 }
+
+/** Igual que InvestigacionController::publica(): solo proyectos publicados */
+export interface InvestigacionPublica extends Complementos {
+  proyectos: Proyecto[]
+  lineas: Linea[]
+}
