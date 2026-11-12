@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             DocumentoCategoriaSeeder::class,
             ConfiguracionSeeder::class,
             InstitucionalSeeder::class,
+            InnovaSeeder::class,
             // Cada módulo agrega aquí su seeder (p. ej. InstitucionalSeeder::class)
         ]);
 
