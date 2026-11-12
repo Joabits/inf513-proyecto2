@@ -41,6 +41,7 @@ export function FormPersona(props: { persona?: Persona; grupoInicial?: Grupo; al
       cargo: persona?.cargo ?? '',
       grupo: persona?.grupo ?? grupoInicial,
       visible: persona?.visible ?? true,
+      destacado: persona?.destacado ?? false,
     },
   })
 
@@ -71,6 +72,7 @@ export function FormPersona(props: { persona?: Persona; grupoInicial?: Grupo; al
     formulario.append('cargo', datos.cargo)
     formulario.append('grupo', datos.grupo)
     formulario.append('visible', datos.visible ? '1' : '0')
+    formulario.append('destacado', datos.destacado ? '1' : '0')
     if (foto) formulario.append('foto', foto)
     if (quitarFoto) formulario.append('quitar_foto', '1')
 
@@ -164,12 +166,18 @@ export function FormPersona(props: { persona?: Persona; grupoInicial?: Grupo; al
         />
       </Campo>
 
-      <div className="border-t border-borde pt-5">
+      <div className="space-y-5 border-t border-borde pt-5">
         <Interruptor
           id={`${prefijo}-visible`}
           etiqueta="Mostrar en el portal"
           ayuda="Si lo desactiva, la persona queda guardada pero los visitantes no la ven."
           {...register('visible')}
+        />
+        <Interruptor
+          id={`${prefijo}-destacado`}
+          etiqueta="Destacar al inicio de la página"
+          ayuda="Aparece en grande antes que los demás grupos. Úselo solo para quien encabeza la Carrera."
+          {...register('destacado')}
         />
       </div>
 

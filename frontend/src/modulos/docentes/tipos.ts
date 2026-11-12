@@ -15,4 +15,6 @@ export interface Persona {
   grupo: Grupo
   foto: string | null
   visible: boolean
+  /** Se muestra grande al inicio de la página pública */
+  destacado: boolean
 }

@@ -9,6 +9,7 @@ export const esquemaPersona = z.object({
   cargo: texto('el cargo', 160),
   grupo: z.enum(Object.keys(GRUPOS) as [Grupo, ...Grupo[]], 'Elija el grupo de la lista.'),
   visible: z.boolean(),
+  destacado: z.boolean(),
 })
 
 export type DatosPersona = z.infer<typeof esquemaPersona>

@@ -34,6 +34,7 @@ export function FilaPersona(props: {
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <h4 className="font-cuerpo text-base font-bold text-titulo">{persona.nombre}</h4>
+            {persona.destacado && <span className="rounded-full bg-chip px-2 py-0.5 text-xs font-semibold text-sobre-chip">Destacado</span>}
             {!persona.visible && (
               <span className="rounded-full border border-borde px-2 py-0.5 text-xs font-semibold text-texto-suave">Oculto</span>
             )}
