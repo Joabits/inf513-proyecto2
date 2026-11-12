@@ -16,6 +16,7 @@ class PersonaResource extends JsonResource
             'grupo' => $this->grupo,
             'foto' => $this->foto ? Storage::disk('public')->url($this->foto) : null,
             'visible' => $this->visible,
+            'destacado' => $this->destacado,
         ];
     }
 }

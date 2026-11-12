@@ -15,6 +15,7 @@ class GuardarPersonaRequest extends FormRequest
             'cargo' => ['required', 'string', 'max:160'],
             'grupo' => ['required', 'string', Rule::in(array_keys(Persona::GRUPOS))],
             'visible' => ['required', 'boolean'],
+            'destacado' => ['required', 'boolean'],
             'foto' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096', 'dimensions:min_width=300,min_height=300'],
             'quitar_foto' => ['nullable', 'boolean'],
         ];

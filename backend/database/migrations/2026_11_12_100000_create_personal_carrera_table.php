@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('foto')->nullable();
             $table->unsignedSmallInteger('orden')->default(0);
             $table->boolean('visible')->default(true);
+            // Se muestra grande al inicio de la página (pensado para quien encabeza la Carrera)
+            $table->boolean('destacado')->default(false);
             $table->timestamps();
         });
     }

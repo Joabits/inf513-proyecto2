@@ -15,10 +15,10 @@ class Persona extends Model
         'docente' => 'Personal docente',
     ];
 
-    protected $fillable = ['nombre', 'cargo', 'grupo', 'foto', 'orden', 'visible'];
+    protected $fillable = ['nombre', 'cargo', 'grupo', 'foto', 'orden', 'visible', 'destacado'];
 
     protected function casts(): array
     {
-        return ['visible' => 'boolean', 'orden' => 'integer'];
+        return ['visible' => 'boolean', 'destacado' => 'boolean', 'orden' => 'integer'];
     }
 }
