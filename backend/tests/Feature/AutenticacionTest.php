@@ -136,6 +136,23 @@ class AutenticacionTest extends TestCase
         }
     }
 
+    public function test_bloquea_la_ip_que_prueba_muchas_cuentas(): void
+    {
+        $this->usuario();
+
+        // 20 correos distintos desde la misma IP: ninguno llega a 5 intentos, pero la IP sí llega a 20
+        foreach (range(1, 20) as $intento) {
+            $this->ingresar('otra-clave', "cuenta{$intento}@cae.test")->assertUnprocessable();
+        }
+
+        // Ni con la clave correcta de una cuenta que todavía no se había probado
+        $this->ingresar()
+            ->assertTooManyRequests()
+            ->assertJsonPath('errors.email.0', fn (string $mensaje) => str_starts_with($mensaje, 'Demasiados intentos'));
+
+        $this->assertGuest();
+    }
+
     public function test_rechaza_peticiones_de_origenes_no_autorizados(): void
     {
         $this->usuario();

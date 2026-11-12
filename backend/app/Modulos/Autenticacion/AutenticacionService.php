@@ -13,6 +13,12 @@ class AutenticacionService
     /** Intentos permitidos por minuto para cada combinación de correo e IP. */
     private const MAX_INTENTOS = 5;
 
+    /**
+     * Intentos por minuto desde una misma IP sumando todos los correos: frena a quien prueba
+     * muchas cuentas distintas (el límite anterior solo cuenta los intentos de cada correo).
+     */
+    private const MAX_INTENTOS_POR_IP = 20;
+
     public function __construct(private Bitacora $bitacora) {}
 
     /**
@@ -22,11 +28,17 @@ class AutenticacionService
     public function iniciarSesion(string $correo, string $clave, ?string $ip): void
     {
         $llave = 'login:'.$correo.'|'.$ip;
+        $llaveIp = 'login-ip:'.$ip;
 
         // Se cuenta antes de comprobar la clave: así las peticiones simultáneas no evaden el límite
-        if (RateLimiter::increment($llave) > self::MAX_INTENTOS) {
+        $intentosCorreo = RateLimiter::increment($llave);
+        $intentosIp = RateLimiter::increment($llaveIp);
+
+        if ($intentosCorreo > self::MAX_INTENTOS || $intentosIp > self::MAX_INTENTOS_POR_IP) {
+            $espera = max(RateLimiter::availableIn($llave), RateLimiter::availableIn($llaveIp));
+
             throw ValidationException::withMessages([
-                'email' => __('auth.throttle', ['seconds' => RateLimiter::availableIn($llave)]),
+                'email' => __('auth.throttle', ['seconds' => $espera]),
             ])->status(429);
         }
 
@@ -38,6 +50,7 @@ class AutenticacionService
             throw ValidationException::withMessages(['email' => __('auth.failed')]);
         }
 
+        // Solo se reinicia el contador del correo: el de la IP sigue contando aunque se acierte
         RateLimiter::clear($llave);
         $this->bitacora->ingreso($sesion->user());
     }

@@ -71,9 +71,12 @@ npm install
 npm run dev                    # http://localhost:5173  (reenvía /api a Laravel)
 ```
 
-Usuarios de prueba que crea el seeder: `director@cae.test`, `institucional@cae.test`,
-`comunicacion@cae.test` y `usuario@cae.test`. Su contraseña está en
+Usuarios de prueba que crea el seeder (solo con `APP_ENV=local`): `director@cae.test`,
+`institucional@cae.test`, `comunicacion@cae.test` y `usuario@cae.test`. Su contraseña está en
 `backend/database/seeders/UsuarioPruebaSeeder.php`.
+
+El portal no muestra enlaces para ingresar: el personal entra escribiendo `/gestion` en la barra de direcciones
+(en desarrollo, http://localhost:5173/gestion).
 
 Pruebas del backend: `cd backend && php artisan test`.
 
@@ -84,6 +87,22 @@ cd frontend && npm run build   # genera backend/public/spa con rutas /inf513/gru
 ```
 
 Laravel sirve la aplicación React en cualquier ruta que no sea `/api`.
+
+## En el servidor
+
+En el `.env` del servidor: `APP_ENV=production` y `APP_DEBUG=false`. Así el seeder **no** crea los usuarios
+de prueba, cuya contraseña está en este repositorio público. La primera vez:
+
+```bash
+cd backend
+php artisan migrate --seed --force
+php artisan storage:link                # para que se vean las imágenes subidas desde el panel
+php artisan usuarios:crear-director     # pide nombre, correo y contraseña (no se muestra al escribirla)
+```
+
+El Director entra escribiendo `/gestion` al final de la dirección del portal y crea las demás cuentas
+desde el panel (Usuarios). Cada intento de ingreso queda en la bitácora; se bloquean 5 intentos por minuto
+para un mismo correo y 20 por minuto desde una misma IP.
 
 ## Cómo trabajar en equipo
 
