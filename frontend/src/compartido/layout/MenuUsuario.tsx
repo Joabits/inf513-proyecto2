@@ -2,17 +2,20 @@ import { useCallback, useRef, useState } from 'react'
 import { NavLink } from 'react-router'
 import type { OpcionMenu } from '@/compartido/menu/tipos'
 import type { UsuarioSesion } from '@/compartido/sesion/tipos'
-import { IconoAbajo, IconoUsuario } from '@/compartido/ui/Iconos'
+import { useCerrarSesion } from '@/compartido/sesion/useCerrarSesion'
+import { Boton } from '@/compartido/ui/Boton'
+import { IconoAbajo, IconoSalir, IconoUsuario } from '@/compartido/ui/Iconos'
 import { useClicFuera } from '@/compartido/ui/useClicFuera'
 
 /**
- * Botón del usuario con sesión iniciada: muestra su nombre, su rol y el menú de gestión
- * que le permite la matriz de acceso. El módulo de autenticación (CU-11) agrega aquí "Cerrar sesión".
+ * Botón del usuario con sesión iniciada: muestra su nombre, su rol, el menú de gestión
+ * que le permite la matriz de acceso y la opción de cerrar sesión.
  */
 export function MenuUsuario({ usuario, gestion }: { usuario: UsuarioSesion; gestion: OpcionMenu[] }) {
   const [abierto, setAbierto] = useState(false)
   const caja = useRef<HTMLDivElement>(null)
   const cerrar = useCallback(() => setAbierto(false), [])
+  const cerrarSesion = useCerrarSesion()
   useClicFuera(caja, abierto, cerrar)
 
   return (
@@ -63,6 +66,13 @@ export function MenuUsuario({ usuario, gestion }: { usuario: UsuarioSesion; gest
               ))}
             </div>
           )}
+
+          <div className="mt-4 border-t border-borde pt-4">
+            <Boton variante="borde" disabled={cerrarSesion.isPending} onClick={() => cerrarSesion.mutate()} className="flex w-full items-center justify-center gap-2 text-sm">
+              <IconoSalir width={16} height={16} />
+              Cerrar sesión
+            </Boton>
+          </div>
         </div>
       )}
     </div>

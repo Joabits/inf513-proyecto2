@@ -1,8 +1,10 @@
 import { createBrowserRouter } from 'react-router'
 import { RUTA_BASE } from '@/compartido/api/cliente'
 import { Plantilla } from '@/compartido/layout/Plantilla'
+import { PlantillaAcceso } from '@/compartido/layout/PlantillaAcceso'
 import { EnConstruccion } from '@/compartido/paginas/EnConstruccion'
 import { PaginaError } from '@/compartido/paginas/PaginaError'
+import { rutasAutenticacion } from '@/modulos/autenticacion'
 import { rutasInicio } from '@/modulos/inicio'
 
 /*
@@ -21,6 +23,11 @@ export const router = createBrowserRouter(
         // Cualquier ruta del menú cuyo módulo aún no existe
         { path: '*', element: <EnConstruccion /> },
       ],
+    },
+    {
+      element: <PlantillaAcceso />,
+      errorElement: <PaginaError />,
+      children: rutasAutenticacion,
     },
   ],
   { basename: RUTA_BASE || '/' },

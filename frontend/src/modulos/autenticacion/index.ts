@@ -1,0 +1,1 @@
+export { rutasAutenticacion } from './rutas'

@@ -1,9 +1,11 @@
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { Link, NavLink } from 'react-router'
+import { NavLink } from 'react-router'
 import type { OpcionMenu } from '@/compartido/menu/tipos'
-import { IconoAbajo, IconoCerrar, IconoUsuario } from '@/compartido/ui/Iconos'
+import { IconoAbajo, IconoCerrar, IconoSalir } from '@/compartido/ui/Iconos'
 import type { UsuarioSesion } from '@/compartido/sesion/tipos'
+import { useCerrarSesion } from '@/compartido/sesion/useCerrarSesion'
+import { Boton } from '@/compartido/ui/Boton'
 import { Buscador } from './Buscador'
 
 function Lista({ opciones, alNavegar }: { opciones: OpcionMenu[]; alNavegar: () => void }) {
@@ -53,6 +55,7 @@ export function MenuMovil(props: {
   usuario: UsuarioSesion | null | undefined
 }) {
   const { abierto, alCerrar } = props
+  const cerrarSesion = useCerrarSesion()
 
   // Bloquea el scroll de la página y cierra con Escape mientras está abierto
   useEffect(() => {
@@ -91,22 +94,26 @@ export function MenuMovil(props: {
           )}
         </div>
 
-        <div className="border-t border-borde p-4">
-          {props.usuario ? (
+        {props.usuario && (
+          <div className="border-t border-borde p-4">
             <p className="text-sm">
               <span className="font-semibold">{props.usuario.nombre}</span>
               <span className="block text-texto-suave">{props.usuario.rol?.nombre}</span>
             </p>
-          ) : (
-            <Link
-              to="/ingresar"
-              onClick={alCerrar}
-              className="flex items-center justify-center gap-2 rounded-tema bg-primario px-4 py-2.5 font-semibold text-sobre-primario"
+            <Boton
+              variante="borde"
+              disabled={cerrarSesion.isPending}
+              onClick={() => {
+                cerrarSesion.mutate()
+                alCerrar()
+              }}
+              className="mt-3 flex w-full items-center justify-center gap-2 text-sm"
             >
-              <IconoUsuario width={18} height={18} /> Ingresar
-            </Link>
-          )}
-        </div>
+              <IconoSalir width={16} height={16} />
+              Cerrar sesión
+            </Boton>
+          </div>
+        )}
       </nav>
     </div>,
     document.body,
