@@ -3,7 +3,7 @@ import { IconoBajar, IconoEliminar, IconoSubir } from '@/compartido/ui/Iconos'
 import { eliminarBanner, ordenarBanners } from '../api'
 import type { Banner } from '../tipos'
 import { useGuardarInicio } from '../useInicio'
-import { BotonConfirmar } from './BotonConfirmar'
+import { BotonConfirmar } from '@/compartido/ui/BotonConfirmar'
 import { SubirBanner } from './SubirBanner'
 
 const MAXIMO_BANNERS = 5

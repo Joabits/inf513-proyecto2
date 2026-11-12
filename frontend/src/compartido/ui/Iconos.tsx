@@ -8,6 +8,8 @@ import {
   ChevronRight,
   Contrast,
   ExternalLink,
+  FileUp,
+  History,
   ImagePlus,
   LayoutDashboard,
   Lock,
@@ -15,6 +17,7 @@ import {
   LogOut,
   Mail,
   Menu,
+  Pencil,
   Plus,
   Search,
   Trash2,
@@ -47,3 +50,6 @@ export const IconoExterno = icono(ExternalLink)
 export const IconoImagen = icono(ImagePlus)
 export const IconoListo = icono(Check)
 export const IconoPanel = icono(LayoutDashboard)
+export const IconoSubirArchivo = icono(FileUp)
+export const IconoEditar = icono(Pencil)
+export const IconoHistorial = icono(History)

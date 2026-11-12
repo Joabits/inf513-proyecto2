@@ -7,6 +7,7 @@ import { EnConstruccion } from '@/compartido/paginas/EnConstruccion'
 import { PaginaError } from '@/compartido/paginas/PaginaError'
 import { PanelGestion } from '@/compartido/paginas/PanelGestion'
 import { rutasAutenticacion } from '@/modulos/autenticacion'
+import { rutasGestionDocumentos } from '@/modulos/documentos'
 import { rutasGestionInicio, rutasInicio } from '@/modulos/inicio'
 
 /*
@@ -32,6 +33,7 @@ export const router = createBrowserRouter(
       children: [
         { path: 'gestion', element: <PanelGestion /> },
         ...rutasGestionInicio,
+        ...rutasGestionDocumentos,
         // Cualquier opción del panel cuyo módulo aún no existe
         { path: 'gestion/*', element: <EnConstruccion /> },
       ],

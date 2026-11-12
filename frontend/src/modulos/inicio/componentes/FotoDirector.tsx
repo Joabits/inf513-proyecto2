@@ -2,7 +2,7 @@ import { mensajeDeError } from '@/compartido/api/errores'
 import { IconoEliminar, IconoImagen, IconoUsuario } from '@/compartido/ui/Iconos'
 import { quitarFotoDirector, subirFotoDirector } from '../api'
 import { useGuardarInicio } from '../useInicio'
-import { BotonConfirmar } from './BotonConfirmar'
+import { BotonConfirmar } from '@/compartido/ui/BotonConfirmar'
 
 /** La foto se guarda al elegirla: no depende del botón "Guardar cambios" del formulario. */
 export function FotoDirector({ foto, nombre }: { foto: string | null; nombre: string }) {

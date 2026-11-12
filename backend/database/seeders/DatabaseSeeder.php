@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             MenuSeeder::class,
             UsuarioPruebaSeeder::class,
             InicioSeeder::class,
+            DocumentoCategoriaSeeder::class,
             // Cada módulo agrega aquí su seeder (p. ej. InstitucionalSeeder::class)
         ]);
 
