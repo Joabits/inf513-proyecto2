@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { isAxiosError } from 'axios'
 import { useForm } from 'react-hook-form'
-import { Navigate, useLocation } from 'react-router'
+import { Navigate } from 'react-router'
 import type { ErroresValidacion } from '@/compartido/api/cliente'
 import { useSesion } from '@/compartido/sesion/useSesion'
 import { Boton } from '@/compartido/ui/Boton'
@@ -22,7 +22,6 @@ function mensajeDeError(error: unknown) {
 
 export function Ingresar() {
   const { data: usuario } = useSesion()
-  const { state } = useLocation()
   const ingreso = useIniciarSesion()
   const {
     register,
@@ -32,8 +31,8 @@ export function Ingresar() {
     formState: { errors },
   } = useForm<Credenciales>({ resolver: zodResolver(esquemaCredenciales) })
 
-  // Al iniciar sesión, useSesion trae al usuario y esta misma condición lo lleva a su página
-  if (usuario) return <Navigate to={state?.desde ?? '/'} replace />
+  // Al iniciar sesión, useSesion trae al usuario y esta misma condición lo lleva al panel
+  if (usuario) return <Navigate to="/gestion" replace />
 
   const enviar = (datos: Credenciales) =>
     ingreso.mutate(datos, {

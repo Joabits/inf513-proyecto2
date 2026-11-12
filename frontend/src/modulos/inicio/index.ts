@@ -1,1 +1,1 @@
-export { rutasInicio } from './rutas'
+export { rutasGestionInicio, rutasInicio } from './rutas'

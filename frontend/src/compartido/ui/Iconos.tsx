@@ -1,4 +1,26 @@
-import { ArrowRight, ChevronDown, Contrast, Lock, LogIn, LogOut, Mail, Menu, Search, User, X } from 'lucide-react'
+import {
+  ArrowDown,
+  ArrowRight,
+  ArrowUp,
+  Check,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Contrast,
+  ExternalLink,
+  ImagePlus,
+  LayoutDashboard,
+  Lock,
+  LogIn,
+  LogOut,
+  Mail,
+  Menu,
+  Plus,
+  Search,
+  Trash2,
+  User,
+  X,
+} from 'lucide-react'
 import type { LucideIcon, LucideProps } from 'lucide-react'
 
 /** Íconos de Lucide: toda la aplicación los importa desde aquí. Heredan el color del texto. */
@@ -15,3 +37,13 @@ export const IconoCorreo = icono(Mail)
 export const IconoClave = icono(Lock)
 export const IconoIngresar = icono(LogIn)
 export const IconoSalir = icono(LogOut)
+export const IconoAnterior = icono(ChevronLeft)
+export const IconoSiguiente = icono(ChevronRight)
+export const IconoAgregar = icono(Plus)
+export const IconoEliminar = icono(Trash2)
+export const IconoSubir = icono(ArrowUp)
+export const IconoBajar = icono(ArrowDown)
+export const IconoExterno = icono(ExternalLink)
+export const IconoImagen = icono(ImagePlus)
+export const IconoListo = icono(Check)
+export const IconoPanel = icono(LayoutDashboard)
