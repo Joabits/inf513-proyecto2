@@ -4,9 +4,11 @@ import { MarcaCarrera } from '@/compartido/marca/LogoCarrera'
 import { iconoDeRuta } from '@/compartido/menu/iconosRuta'
 import type { OpcionMenu } from '@/compartido/menu/tipos'
 
+// La opción de la página actual no lleva fondo, ni al pasar el mouse: se marca con el color del texto y del ícono.
+// text-acento es rojo de día; de noche y en alto contraste cambia para que el texto se lea bien.
 const claseEnlace = ({ isActive }: { isActive: boolean }) =>
   `flex items-center gap-3 rounded-tema px-3 py-2 text-sm transition-colors ${
-    isActive ? 'bg-primario font-semibold text-sobre-primario' : 'text-texto hover:bg-superficie hover:text-titulo'
+    isActive ? 'font-semibold text-acento' : 'text-texto hover:bg-superficie hover:text-titulo'
   }`
 
 /**
@@ -46,8 +48,17 @@ export function BarraGestion({ grupos, alNavegar, accion }: { grupos: OpcionMenu
                 return (
                   <li key={opcion.id}>
                     <NavLink to={opcion.ruta ?? '/gestion'} onClick={alNavegar} className={claseEnlace}>
-                      {Icono ? <Icono width={18} height={18} aria-hidden="true" className="shrink-0" /> : <span className="w-[18px]" />}
-                      <span className="truncate">{opcion.titulo}</span>
+                      {({ isActive }) => (
+                        <>
+                          {/* El ícono activo va en rojo en todos los modos: de noche es lo que más lo distingue */}
+                          {Icono ? (
+                            <Icono width={18} height={18} aria-hidden="true" className={`shrink-0 ${isActive ? 'text-primario' : ''}`} />
+                          ) : (
+                            <span className="w-[18px]" />
+                          )}
+                          <span className="truncate">{opcion.titulo}</span>
+                        </>
+                      )}
                     </NavLink>
                   </li>
                 )
