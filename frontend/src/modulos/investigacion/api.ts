@@ -1,8 +1,11 @@
 import { cliente } from '@/compartido/api/cliente'
 import type { DatosComplementos, DatosLineas, DatosProyecto } from './investigacion.esquema'
-import type { Complementos, GestionInvestigacion, Linea, Proyecto } from './tipos'
+import type { Complementos, GestionInvestigacion, InvestigacionPublica, Linea, Proyecto } from './tipos'
 
 const GESTION = '/gestion/investigacion'
+
+/** Lo que ve el visitante (CU-03): líneas, proyectos publicados, semilleros y textos. */
+export const obtenerPublica = () => cliente.get<InvestigacionPublica>('/investigacion').then((r) => r.data)
 
 export const obtenerGestion = () => cliente.get<GestionInvestigacion>(GESTION).then((r) => r.data)
 

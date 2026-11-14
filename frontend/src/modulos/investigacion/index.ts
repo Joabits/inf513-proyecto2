@@ -1,1 +1,1 @@
-export { rutasGestionInvestigacion } from './rutas'
+export { rutasGestionInvestigacion, rutasInvestigacion } from './rutas'
