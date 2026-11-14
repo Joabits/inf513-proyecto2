@@ -8,7 +8,15 @@ import { IconoBuscar, IconoCerrar } from '@/compartido/ui/Iconos'
 import { TituloPagina } from '@/compartido/ui/TituloPagina'
 import { ResultadoBusqueda } from '../componentes/ResultadoBusqueda'
 import { terminosDe } from '../resaltar'
+import type { GrupoBusqueda } from '../tipos'
 import { MAXIMO, MINIMO, useBusqueda } from '../useBusqueda'
+
+/** «14 resultados» en Todos; «12 resultados en Materias» con una pestaña elegida. */
+function contador(total: number, grupo?: GrupoBusqueda) {
+  const cantidad = grupo?.total ?? total
+  const texto = `${cantidad} ${cantidad === 1 ? 'resultado' : 'resultados'}`
+  return grupo ? `${texto} en ${grupo.etiqueta}` : texto
+}
 
 const PESTANA =
   'rounded-full border px-4 py-1.5 text-sm font-semibold transition-colors aria-pressed:border-titulo aria-pressed:bg-titulo aria-pressed:text-fondo'
@@ -104,7 +112,7 @@ export function Busqueda() {
             ) : (
               <>
                 <p className={`text-sm text-texto-suave transition-opacity ${isFetching ? 'opacity-60' : ''}`}>
-                  {data.total} {data.total === 1 ? 'resultado' : 'resultados'} para «{data.consulta}»
+                  {contador(data.total, data.grupos.find((g) => g.tipo === tipo))} para «{data.consulta}»
                 </p>
 
                 <div role="group" aria-label="Filtrar por tipo" className="mt-4 flex flex-wrap gap-2">
@@ -134,7 +142,8 @@ export function Busqueda() {
                             {grupo.etiqueta}
                           </h2>
                         )}
-                        <ul className="divide-y divide-borde">
+                        {/* Línea arriba, entre y debajo de los resultados: igual con uno solo que con varios */}
+                        <ul className="divide-y divide-borde border-y border-borde">
                           {grupo.resultados.map((resultado) => (
                             <ResultadoBusqueda
                               key={`${resultado.ruta}-${resultado.titulo}`}
