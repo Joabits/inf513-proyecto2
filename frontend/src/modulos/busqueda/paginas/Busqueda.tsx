@@ -136,14 +136,14 @@ export function Busqueda() {
                   {data.grupos
                     .filter((grupo) => grupo.resultados.length > 0)
                     .map((grupo) => (
-                      <section key={grupo.tipo} aria-labelledby={`grupo-${grupo.tipo}`} className="mt-8">
+                      <section key={grupo.tipo} aria-labelledby={`grupo-${grupo.tipo}`} className="mt-5">
                         {!tipo && (
                           <h2 id={`grupo-${grupo.tipo}`} className="text-xl text-titulo">
                             {grupo.etiqueta}
                           </h2>
                         )}
                         {/* Línea arriba, entre y debajo de los resultados: igual con uno solo que con varios */}
-                        <ul className="divide-y divide-borde border-y border-borde">
+                        <ul className="mt-2 divide-y divide-borde border-y border-borde">
                           {grupo.resultados.map((resultado) => (
                             <ResultadoBusqueda
                               key={`${resultado.ruta}-${resultado.titulo}`}
