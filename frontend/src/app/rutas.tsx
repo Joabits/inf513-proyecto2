@@ -8,7 +8,7 @@ import { PaginaError } from '@/compartido/paginas/PaginaError'
 import { PanelGestion } from '@/compartido/paginas/PanelGestion'
 import { rutasAutenticacion } from '@/modulos/autenticacion'
 import { rutasGestionConfiguracion } from '@/modulos/configuracion'
-import { rutasContacto } from '@/modulos/contacto'
+import { rutasContacto, rutasGestionContacto } from '@/modulos/contacto'
 import { rutasGestionDocumentos } from '@/modulos/documentos'
 import { rutasGestionInicio, rutasInicio } from '@/modulos/inicio'
 import { rutasGestionInnova, rutasInnova } from '@/modulos/innova'
@@ -49,6 +49,7 @@ export const router = createBrowserRouter(
         ...rutasGestionNoticias,
         ...rutasGestionDocumentos,
         ...rutasGestionUsuarios,
+        ...rutasGestionContacto,
         ...rutasPerfil,
         ...rutasGestionConfiguracion,
         ...rutasGestionInstitucional,
