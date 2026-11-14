@@ -9,6 +9,7 @@ import { PanelGestion } from '@/compartido/paginas/PanelGestion'
 import { rutasAutenticacion } from '@/modulos/autenticacion'
 import { rutasGestionConfiguracion } from '@/modulos/configuracion'
 import { rutasContacto } from '@/modulos/contacto'
+import { rutasBusqueda } from '@/modulos/busqueda'
 import { rutasGestionDocumentos } from '@/modulos/documentos'
 import { rutasGestionInicio, rutasInicio } from '@/modulos/inicio'
 import { rutasGestionInnova, rutasInnova } from '@/modulos/innova'
@@ -31,6 +32,7 @@ export const router = createBrowserRouter(
       errorElement: <PaginaError />,
       children: [
         ...rutasInicio,
+        ...rutasBusqueda,
         ...rutasContacto,
         ...rutasDocentes,
         ...rutasInstitucional,
