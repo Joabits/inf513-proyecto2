@@ -18,6 +18,7 @@ import { rutasMallaCurricular } from '@/modulos/malla-curricular'
 import { rutasDocentes, rutasGestionDocentes } from '@/modulos/docentes'
 import { rutasGestionInstitucional, rutasInstitucional } from '@/modulos/institucional'
 import { rutasGestionUsuarios, rutasPerfil } from '@/modulos/usuarios'
+import { rutasGestionRevista, rutasRevista } from '@/modulos/revista'
 
 /*
  * Cada módulo exporta sus rutas desde src/modulos/<modulo>/index.ts
@@ -39,6 +40,7 @@ export const router = createBrowserRouter(
         ...rutasInvestigacion,
         ...rutasInnova,
         ...rutasMallaCurricular,
+        ...rutasRevista,
         // Cualquier ruta del menú cuyo módulo aún no existe
         { path: '*', element: <EnConstruccion /> },
       ],
@@ -57,6 +59,7 @@ export const router = createBrowserRouter(
         ...rutasGestionInstitucional,
         ...rutasGestionInnova,
         ...rutasGestionInvestigacion,
+        ...rutasGestionRevista,
         // Cualquier opción del panel cuyo módulo aún no existe
         { path: 'gestion/*', element: <EnConstruccion /> },
       ],
