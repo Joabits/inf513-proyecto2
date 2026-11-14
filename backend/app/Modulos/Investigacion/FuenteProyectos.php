@@ -49,7 +49,7 @@ class FuenteProyectos implements FuenteBusqueda
         return [
             'titulo' => $fila->titulo,
             'resumen' => Texto::fragmento($fila->resumen, $terminos),
-            'meta' => Proyecto::TIPOS[$fila->tipo].' · Gestión '.$fila->gestion,
+            'meta' => implode(' · ', array_filter([Proyecto::TIPOS[$fila->tipo], 'Gestión '.$fila->gestion, $fila->linea_nombre])),
             'ruta' => '/investigacion?q='.rawurlencode($fila->titulo).'#proyectos',
             'externo' => false,
         ];

@@ -43,7 +43,8 @@ class FuenteDocumentos implements FuenteBusqueda
         return [
             'titulo' => $fila->titulo,
             'resumen' => Texto::fragmento($fila->descripcion, $terminos),
-            'meta' => $fila->categoria_nombre.' · '.strtoupper($fila->tipo),
+            // La fecha es la de la última actualización, la misma que muestra el panel
+            'meta' => $fila->categoria_nombre.' · '.strtoupper($fila->tipo).' · '.$fila->updated_at->locale('es')->isoFormat('D MMM YYYY'),
             'ruta' => "/api/documentos/{$fila->id}/descargar",
             'externo' => true,
         ];

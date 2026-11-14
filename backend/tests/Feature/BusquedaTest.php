@@ -158,6 +158,9 @@ class BusquedaTest extends TestCase
 
         $proyecto = $this->grupo($this->buscar('clima organizacional'), 'proyecto')['resultados'][0];
         $this->assertStringStartsWith('/investigacion?q=', $proyecto['ruta']);
+        $this->assertStringContainsString('Gestión 2026', $proyecto['meta']);
+        $this->assertStringContainsString(now()->locale('es')->isoFormat('YYYY'), $doc['meta']);
+        $this->assertStringStartsWith('Reglamentos · PDF · ', $doc['meta']);
         $this->assertFalse($proyecto['externo']);
     }
 
@@ -184,5 +187,15 @@ class BusquedaTest extends TestCase
         $this->assertStringContainsString('acreditación', $resumen);
         $this->assertMatchesRegularExpression('/^… ?[A-ZÁÉÍÓÚa-záéíóúñ]/u', $resumen);
         $this->assertStringEndsWith('…', $resumen);
+    }
+
+    public function test_el_proyecto_muestra_su_linea_de_investigacion(): void
+    {
+        $linea = \App\Modulos\Investigacion\Linea::orderBy('orden')->first();
+        $this->proyecto('Estudio de mercado regional')->update(['linea_id' => $linea->id]);
+
+        $meta = $this->grupo($this->buscar('mercado regional'), 'proyecto')['resultados'][0]['meta'];
+
+        $this->assertStringContainsString($linea->nombre, $meta);
     }
 }
