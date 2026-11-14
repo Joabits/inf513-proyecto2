@@ -67,7 +67,8 @@ class FuenteInstitucional implements FuenteBusqueda
         return [
             'titulo' => self::SECCIONES[$columna],
             'resumen' => Texto::fragmento($fila->{$columna}, $terminos),
-            'meta' => 'La Carrera',
+            // El grupo ya dice «La Carrera»: no se repite
+            'meta' => null,
             'ruta' => '/carrera',
             'externo' => false,
         ];

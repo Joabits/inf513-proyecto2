@@ -40,7 +40,7 @@ class FuenteSemilleros implements FuenteBusqueda
         return [
             'titulo' => $fila->nombre,
             'resumen' => Texto::fragmento($fila->descripcion, $terminos),
-            'meta' => 'Semillero de investigación',
+            'meta' => null,
             'ruta' => '/investigacion#semilleros',
             'externo' => false,
         ];

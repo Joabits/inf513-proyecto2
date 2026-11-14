@@ -40,7 +40,7 @@ class FuenteLineas implements FuenteBusqueda
         return [
             'titulo' => $fila->nombre,
             'resumen' => Texto::fragmento($fila->descripcion, $terminos),
-            'meta' => 'Línea de investigación',
+            'meta' => null,
             'ruta' => "/investigacion?linea={$fila->id}#proyectos",
             'externo' => false,
         ];
