@@ -24,6 +24,15 @@ class DocumentosService
         return Documento::with(self::RELACIONES)->withCount('versiones')->latest('updated_at')->latest('id')->get();
     }
 
+    public function listarPublicos(): Collection
+    {
+        return Documento::with(self::RELACIONES)
+            ->where('publicado', true)
+            ->latest('updated_at')
+            ->latest('id')
+            ->get();
+    }
+
     public function categorias(): Collection
     {
         return Categoria::orderBy('nombre')->get();
