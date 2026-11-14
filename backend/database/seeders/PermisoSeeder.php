@@ -32,6 +32,7 @@ class PermisoSeeder extends Seeder
         'eventos' => ['Eventos académicos', self::CRUD],
         'galeria' => ['Galería multimedia', self::CRUD],
         'mensajes' => ['Mensajes de contacto', ['ver', 'editar', 'eliminar']],
+        'contacto' => ['Atención de mensajes de contacto', ['ver', 'editar']],
         'usuarios' => ['Usuarios', self::CRUD],
         'graduados' => ['Graduados', ['ver', 'exportar']],
         'bitacora' => ['Bitácora', ['ver']],
@@ -47,7 +48,7 @@ class PermisoSeeder extends Seeder
             'inicio', 'institucional', 'docentes', 'info_academica', 'documentos',
             'investigacion', 'revista', 'vinculacion', 'empresa_junior', 'solicitudes_innova',
         ],
-        Rol::EDITOR_COMUNICACION => ['noticias', 'eventos', 'galeria', 'mensajes'],
+        Rol::EDITOR_COMUNICACION => ['noticias', 'eventos', 'galeria', 'mensajes', 'contacto'],
         Rol::USUARIO => ['mi_graduado'],
     ];
 
