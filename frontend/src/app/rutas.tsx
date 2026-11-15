@@ -10,6 +10,7 @@ import { rutasAutenticacion } from '@/modulos/autenticacion'
 import { rutasGestionConfiguracion } from '@/modulos/configuracion'
 import { rutasContacto } from '@/modulos/contacto'
 import { rutasGestionDocumentos } from '@/modulos/documentos'
+import { rutasGaleria, rutasGestionGaleria } from '@/modulos/galeria'
 import { rutasGestionInicio, rutasInicio } from '@/modulos/inicio'
 import { rutasGestionInnova, rutasInnova } from '@/modulos/innova'
 import { rutasGestionInvestigacion } from '@/modulos/investigacion'
@@ -34,6 +35,7 @@ export const router = createBrowserRouter(
         ...rutasInstitucional,
         ...rutasInnova,
         ...rutasMallaCurricular,
+        ...rutasGaleria,
         // Cualquier ruta del menú cuyo módulo aún no existe
         { path: '*', element: <EnConstruccion /> },
       ],
@@ -51,6 +53,7 @@ export const router = createBrowserRouter(
         ...rutasGestionInstitucional,
         ...rutasGestionInnova,
         ...rutasGestionInvestigacion,
+        ...rutasGestionGaleria,
         // Cualquier opción del panel cuyo módulo aún no existe
         { path: 'gestion/*', element: <EnConstruccion /> },
       ],
