@@ -24,11 +24,16 @@ class BitacoraService
         'accesos' => ['etiqueta' => 'Accesos técnicos', 'tipos' => ['acceso'], 'visible' => false],
     ];
 
-    /** Acciones que merecen atención al revisar: borran, cambian quién puede qué o sacan información del sistema. */
+    /**
+     * Lo que se pide ver con el filtro «Solo lo importante»: lo que destruye datos o cambia quién puede hacer qué.
+     * La lista es corta a propósito: si casi todo es importante, nada lo es. Lo demás se ve igual, sin filtro.
+     * En «Ingresos y salidas» lo importante son los intentos fallidos de ingreso.
+     */
     public const ACCIONES_IMPORTANTES = [
-        'eliminar', 'crear_usuario', 'eliminar_usuario', 'desactivar_usuario', 'cambiar_rol',
-        'asignar_permiso', 'quitar_permiso', 'cambiar_clave', 'exportar',
+        'eliminar', 'eliminar_usuario', 'desactivar_usuario', 'cambiar_rol', 'asignar_permiso', 'quitar_permiso',
     ];
+
+    public const IMPORTANCIAS = ['importantes'];
 
     /** Sección del panel a la que pertenece una ruta de la API, del prefijo más específico al más general. */
     private const SECCIONES = [
@@ -90,11 +95,6 @@ class BitacoraService
         return null;
     }
 
-    public static function esImportante(Registro $registro): bool
-    {
-        return $registro->tipo === 'ingreso_fallido' || in_array($registro->accion, self::ACCIONES_IMPORTANTES, true);
-    }
-
     private function consulta(array $filtros): Builder
     {
         $grupo = $filtros['grupo'] ?? 'auditoria';
@@ -114,6 +114,11 @@ class BitacoraService
         }
         if (isset($filtros['accion'])) {
             $consulta->where('bitacora.accion', $filtros['accion']);
+        }
+        if (($filtros['importancia'] ?? null) === 'importantes') {
+            $consulta->where(fn (Builder $q) => $q
+                ->whereIn('bitacora.accion', self::ACCIONES_IMPORTANTES)
+                ->orWhere('bitacora.tipo', 'ingreso_fallido'));
         }
         if (isset($filtros['desde'])) {
             $consulta->where('bitacora.created_at', '>=', $filtros['desde'].' 00:00:00');

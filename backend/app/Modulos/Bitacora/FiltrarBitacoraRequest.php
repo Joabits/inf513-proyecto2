@@ -13,6 +13,7 @@ class FiltrarBitacoraRequest extends FormRequest
             'grupo' => ['nullable', 'string', Rule::in(array_keys(BitacoraService::GRUPOS))],
             'usuario' => ['nullable', 'string', 'max:255'],
             'accion' => ['nullable', 'string', 'max:40'],
+            'importancia' => ['nullable', 'string', Rule::in(BitacoraService::IMPORTANCIAS)],
             'texto' => ['nullable', 'string', 'max:100'],
             'desde' => ['nullable', 'date_format:Y-m-d'],
             'hasta' => ['nullable', 'date_format:Y-m-d', 'after_or_equal:desde'],

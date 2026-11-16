@@ -260,22 +260,39 @@ class BitacoraTest extends TestCase
         $this->assertNull(BitacoraService::seccionDe('api/innovacion-falsa'), 'un prefijo solo cuenta si es un segmento completo');
     }
 
-    public function test_marca_como_importante_lo_delicado(): void
+    public function test_el_filtro_de_importancia_deja_solo_lo_que_borra_o_cambia_permisos(): void
     {
         $director = $this->director();
         $this->fila(['accion' => 'eliminar', 'recurso' => 'Proyecto #1']);
         $this->fila(['accion' => 'editar', 'recurso' => 'Proyecto #2']);
+        $this->fila(['accion' => 'exportar', 'recurso' => 'Bitácora']);
+        $this->fila(['accion' => 'cambiar_clave', 'recurso' => 'User #4']);
         $this->fila(['tipo' => 'auditoria', 'accion' => 'cambiar_rol', 'recurso' => 'Usuario #4']);
+        $this->fila(['tipo' => 'auditoria', 'accion' => 'quitar_permiso', 'recurso' => 'Rol Usuario']);
 
-        $porAccion = collect($this->consultar($director, ['texto' => 'Proyecto'])->json('data'))->keyBy('accion');
-        $this->assertTrue($porAccion['eliminar']['importante']);
-        $this->assertFalse($porAccion['editar']['importante']);
+        $acciones = fn (array $filtros) => collect($this->consultar($director, $filtros)->json('data'))->pluck('accion')->sort()->values()->all();
 
-        $rol = collect($this->consultar($director, ['accion' => 'cambiar_rol'])->json('data'))->first();
-        $this->assertTrue($rol['importante']);
+        $this->assertSame(['cambiar_rol', 'eliminar', 'quitar_permiso'], $acciones(['importancia' => 'importantes']),
+            'exportar y cambiar contraseñas se ven, pero no se marcan como importantes');
+        $this->assertContains('editar', $acciones([]), 'sin el filtro se ve todo');
+        $this->assertContains('exportar', $acciones([]));
+    }
 
+    public function test_en_ingresos_y_salidas_lo_importante_son_los_intentos_fallidos(): void
+    {
+        $director = $this->director();
+        $this->fila(['tipo' => 'ingreso_ok']);
         $this->fila(['tipo' => 'ingreso_fallido', 'detalle' => 'Correo: x@y.com']);
-        $this->assertTrue($this->consultar($director, ['grupo' => 'sesiones'])->json('data.0.importante'), 'un ingreso fallido es importante');
+        $this->fila(['tipo' => 'salida']);
+
+        $tipos = collect($this->consultar($director, ['grupo' => 'sesiones', 'importancia' => 'importantes'])->json('data'))->pluck('tipo')->all();
+
+        $this->assertSame(['ingreso_fallido'], $tipos);
+    }
+
+    public function test_rechaza_una_importancia_desconocida(): void
+    {
+        $this->consultar($this->director(), ['importancia' => 'urgentes'])->assertUnprocessable()->assertJsonValidationErrors('importancia');
     }
 
     public function test_exporta_csv_con_los_filtros_y_la_exportacion_queda_registrada(): void
