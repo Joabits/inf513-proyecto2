@@ -307,6 +307,9 @@ class BitacoraTest extends TestCase
 
         $csv = $respuesta->streamedContent();
         $this->assertStringStartsWith("\xEF\xBB\xBF", $csv);
+        $this->assertStringStartsWith('N.º,Fecha,Tipo', ltrim($csv, "\xEF\xBB\xBF"), 'el número de registro es la primera columna');
+        $idPublicar = DB::table('bitacora')->where('accion', 'publicar')->value('id');
+        $this->assertMatchesRegularExpression('/^'.$idPublicar.',/m', $csv, 'cada fila lleva su id para cruzarla con la tabla');
         $this->assertStringContainsString('Reglamento de Titulación', $csv);
         $this->assertStringNotContainsString('Proyecto #8', $csv, 'respeta el filtro');
 

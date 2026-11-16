@@ -103,8 +103,6 @@ export function FilaRegistro({ registro }: { registro: Registro }) {
                     </dd>
                   </>
                 )}
-                <dt className="font-semibold text-titulo">Registro</dt>
-                <dd className="text-texto-suave">N.º {registro.id}</dd>
               </dl>
             </details>
           </td>
