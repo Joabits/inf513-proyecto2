@@ -34,7 +34,7 @@ class PermisoSeeder extends Seeder
         'mensajes' => ['Mensajes de contacto', ['ver', 'editar', 'eliminar']],
         'usuarios' => ['Usuarios', self::CRUD],
         'graduados' => ['Graduados', ['ver', 'exportar']],
-        'bitacora' => ['Bitácora', ['ver']],
+        'bitacora' => ['Bitácora', ['ver', 'exportar']],
         'estadisticas' => ['Estadísticas', ['ver']],
         'configuracion' => ['Datos de contacto y enlaces', ['ver', 'editar']],
         'mi_graduado' => ['Mis datos de graduado', ['ver', 'editar']],
