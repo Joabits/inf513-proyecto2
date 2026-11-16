@@ -27,9 +27,10 @@ class InicioService
 
     public function actualizarPortada(array $datos, User $usuario): void
     {
-        (Portada::first() ?? new Portada)->fill($datos)->save();
+        $portada = Portada::first() ?? new Portada;
+        $portada->fill($datos)->save();
 
-        $this->bitacora->accion($usuario, 'editar', 'Página de inicio: presentación y mensaje');
+        $this->bitacora->accion($usuario, 'editar', 'Página de inicio: presentación y mensaje', cambios: Bitacora::diferencias($portada));
     }
 
     public function guardarCifras(array $cifras, User $usuario): void
