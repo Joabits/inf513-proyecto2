@@ -37,6 +37,13 @@ const COLUMNAS: Record<Grupo, string> = {
   denegados: 'grid-cols-1 @md:grid-cols-3',
 }
 
+/** Qué deja ver exactamente el filtro de tipo de actividad: quien audita debe saber qué quedó oculto. Igual que BitacoraService::ACCIONES_IMPORTANTES. */
+const QUE_MUESTRA: Record<Grupo, string> = {
+  auditoria: 'Solo se muestran eliminaciones, cuentas desactivadas y cambios de rol y de permisos.',
+  sesiones: 'Solo se muestran los intentos de inicio de sesión que fallaron.',
+  denegados: '',
+}
+
 const BUSCAR: Record<Grupo, string> = {
   auditoria: 'Buscar persona o elemento',
   sesiones: 'Buscar persona o correo',
@@ -137,12 +144,12 @@ export function ConsultarBitacora() {
             )}
             {filtros.grupo !== 'denegados' && (
               <Selector
-                aria-label="Filtrar por importancia"
+                aria-label="Filtrar por tipo de actividad"
                 valor={filtros.importancia}
                 alCambiar={(importancia) => cambiar({ importancia: importancia as FiltrosBitacora['importancia'] })}
                 opciones={[
                   { valor: '', etiqueta: filtros.grupo === 'sesiones' ? 'Todos los ingresos' : 'Toda la actividad' },
-                  { valor: 'importantes', etiqueta: filtros.grupo === 'sesiones' ? 'Solo los fallidos' : 'Solo lo importante' },
+                  { valor: 'importantes', etiqueta: filtros.grupo === 'sesiones' ? 'Solo intentos fallidos' : 'Borrados y permisos' },
                 ]}
               />
             )}
@@ -155,6 +162,7 @@ export function ConsultarBitacora() {
           <p className="text-sm text-texto-suave" aria-live="polite">
             {meta && (meta.total === 0 ? 'Sin registros' : `${meta.from}–${meta.to} de ${meta.total.toLocaleString('es-BO')} registros`)}
             {isFetching && !isPending && ' · actualizando...'}
+            {filtros.importancia && QUE_MUESTRA[filtros.grupo] && <span className="block font-semibold text-titulo">{QUE_MUESTRA[filtros.grupo]}</span>}
           </p>
           {hayFiltros && (
             <button type="button" onClick={limpiar} className="text-sm font-semibold text-primario hover:underline">
