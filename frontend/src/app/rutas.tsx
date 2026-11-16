@@ -19,6 +19,7 @@ import { rutasDocentes, rutasGestionDocentes } from '@/modulos/docentes'
 import { rutasGestionInstitucional, rutasInstitucional } from '@/modulos/institucional'
 import { rutasGestionUsuarios, rutasPerfil } from '@/modulos/usuarios'
 import { rutasGestionRevista, rutasRevista } from '@/modulos/revista'
+import { rutasGestionBitacora } from '@/modulos/bitacora'
 
 /*
  * Cada módulo exporta sus rutas desde src/modulos/<modulo>/index.ts
@@ -60,6 +61,7 @@ export const router = createBrowserRouter(
         ...rutasGestionInnova,
         ...rutasGestionInvestigacion,
         ...rutasGestionRevista,
+        ...rutasGestionBitacora,
         // Cualquier opción del panel cuyo módulo aún no existe
         { path: 'gestion/*', element: <EnConstruccion /> },
       ],
