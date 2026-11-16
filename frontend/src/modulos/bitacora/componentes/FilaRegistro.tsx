@@ -18,7 +18,8 @@ export function FilaRegistro({ registro }: { registro: Registro }) {
   return (
     <>
       <tr className={`border-t border-borde-tarjeta align-top ${abierta ? 'bg-fondo' : 'hover:bg-fondo'}`}>
-        <td className="whitespace-nowrap py-2.5 pl-4 pr-3 text-sm text-texto-suave md:pl-5">
+        {/* La barra de acento une la fila con su detalle: se ve dónde empieza y dónde termina lo abierto */}
+        <td className={`whitespace-nowrap border-l-4 py-2.5 pl-3 pr-3 text-sm text-texto-suave md:pl-4 ${abierta ? 'border-primario' : 'border-transparent'}`}>
           <time dateTime={registro.fecha} title={formatoFechaHora(registro.fecha)}>
             {tiempoRelativo(registro.fecha)}
           </time>
@@ -63,7 +64,7 @@ export function FilaRegistro({ registro }: { registro: Registro }) {
 
       {abierta && (
         <tr id={idDetalle} className="bg-fondo">
-          <td colSpan={4} className="px-4 pb-4 pt-1 text-sm md:px-5">
+          <td colSpan={4} className="border-l-4 border-primario px-3 pb-4 pt-1 text-sm md:px-4">
             <p className="mb-3 text-texto-suave">
               {formatoFechaHora(registro.fecha)}
               {registro.cuenta_eliminada && ' · la cuenta de esta persona ya no existe'}

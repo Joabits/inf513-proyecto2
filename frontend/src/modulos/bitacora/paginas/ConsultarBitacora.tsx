@@ -94,35 +94,42 @@ export function ConsultarBitacora() {
       <section id={`panel-${filtros.grupo}`} role="tabpanel" aria-labelledby={`pestana-${filtros.grupo}`} className="pt-5">
         <p className="mb-4 text-sm text-texto-suave">{AYUDA[filtros.grupo]}</p>
 
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <label className="relative sm:col-span-2">
-            <span className="sr-only">Buscar en la bitácora</span>
-            <IconoBuscar className="pointer-events-none absolute left-3 top-1/2 mt-0.5 -translate-y-1/2 text-texto-suave" width={18} height={18} />
-            <input
-              type="search"
-              value={texto}
-              onChange={(e) => setTexto(e.target.value)}
-              maxLength={100}
-              placeholder={BUSCAR[filtros.grupo]}
-              className={`${CLASE_ENTRADA} pl-10`}
-            />
-          </label>
-          <Selector
-            aria-label="Filtrar por persona"
-            valor={filtros.usuario}
-            alCambiar={(usuario) => cambiar({ usuario })}
-            opciones={[{ valor: '', etiqueta: 'Todas las personas' }, ...(opciones?.usuarios ?? []).map((u) => ({ valor: u, etiqueta: u }))]}
+        <label className="relative block">
+          <span className="sr-only">Buscar en la bitácora</span>
+          <IconoBuscar className="pointer-events-none absolute left-3 top-1/2 mt-0.5 -translate-y-1/2 text-texto-suave" width={18} height={18} />
+          <input
+            type="search"
+            value={texto}
+            onChange={(e) => setTexto(e.target.value)}
+            maxLength={100}
+            placeholder={BUSCAR[filtros.grupo]}
+            className={`${CLASE_ENTRADA} pl-10`}
           />
-          {filtros.grupo === 'auditoria' && (
+        </label>
+
+        {/*
+          Las columnas dependen de cuántos filtros hay (4 en cambios, 3 en las demás) y del ancho del contenido, no de la
+          ventana: así nunca queda un control solo en una segunda línea. 4 → 2×2 y, si cabe, los 4 en una fila; 3 → los 3 en una fila.
+        */}
+        <div className="@container mt-3">
+          <div className={`grid gap-3 ${filtros.grupo === 'auditoria' ? 'grid-cols-2 @3xl:grid-cols-4' : 'grid-cols-1 @md:grid-cols-3'}`}>
             <Selector
-              aria-label="Filtrar por acción"
-              valor={filtros.accion}
-              alCambiar={(accion) => cambiar({ accion })}
-              opciones={[{ valor: '', etiqueta: 'Todas las acciones' }, ...(opciones?.acciones ?? []).map((a) => ({ valor: a, etiqueta: nombreAccion(a) }))]}
+              aria-label="Filtrar por persona"
+              valor={filtros.usuario}
+              alCambiar={(usuario) => cambiar({ usuario })}
+              opciones={[{ valor: '', etiqueta: 'Todas las personas' }, ...(opciones?.usuarios ?? []).map((u) => ({ valor: u, etiqueta: u }))]}
             />
-          )}
-          <SelectorFecha aria-label="Desde" valor={filtros.desde} alCambiar={(desde) => cambiar({ desde })} max={filtros.hasta || undefined} hastaHoy textoVacio="Desde" opcional />
-          <SelectorFecha aria-label="Hasta" valor={filtros.hasta} alCambiar={(hasta) => cambiar({ hasta })} min={filtros.desde || undefined} hastaHoy textoVacio="Hasta" opcional />
+            {filtros.grupo === 'auditoria' && (
+              <Selector
+                aria-label="Filtrar por acción"
+                valor={filtros.accion}
+                alCambiar={(accion) => cambiar({ accion })}
+                opciones={[{ valor: '', etiqueta: 'Todas las acciones' }, ...(opciones?.acciones ?? []).map((a) => ({ valor: a, etiqueta: nombreAccion(a) }))]}
+              />
+            )}
+            <SelectorFecha aria-label="Desde" valor={filtros.desde} alCambiar={(desde) => cambiar({ desde })} max={filtros.hasta || undefined} hastaHoy textoVacio="Desde" opcional />
+            <SelectorFecha aria-label="Hasta" valor={filtros.hasta} alCambiar={(hasta) => cambiar({ hasta })} min={filtros.desde || undefined} hastaHoy textoVacio="Hasta" opcional />
+          </div>
         </div>
 
         <div className="mt-5 flex min-h-8 flex-wrap items-center justify-between gap-3">

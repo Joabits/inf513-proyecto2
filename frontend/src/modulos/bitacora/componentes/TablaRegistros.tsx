@@ -8,7 +8,7 @@ export function TablaRegistros({ registros, actualizando }: { registros: Registr
         <caption className="sr-only">Registros de actividad, del más reciente al más antiguo</caption>
         <thead>
           <tr className="text-xs uppercase tracking-wide text-texto-suave">
-            <th scope="col" className="py-2.5 pl-4 pr-3 font-semibold md:pl-5">
+            <th scope="col" className="border-l-4 border-transparent py-2.5 pl-3 pr-3 font-semibold md:pl-4">
               Cuándo
             </th>
             <th scope="col" className="hidden py-2.5 pr-4 font-semibold md:table-cell">
