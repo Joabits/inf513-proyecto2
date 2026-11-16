@@ -9,7 +9,11 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class BitacoraController extends Controller
 {
     /** «N.º» es el id de la fila en la tabla: sirve para cruzar el archivo con la base. En pantalla no se muestra. */
-    private const COLUMNAS_CSV = ['N.º', 'Fecha', 'Tipo', 'Usuario', 'Nombre', 'Acción', 'Recurso', 'Detalle', 'Cambios', 'IP', 'Navegador'];
+    /**
+     * Fecha y hora van en columnas separadas: Excel no ajusta el ancho de un CSV, y una fecha con hora no cabe en el
+     * ancho por defecto (se vería «######»); cada una por separado sí.
+     */
+    private const COLUMNAS_CSV = ['N.º', 'Fecha', 'Hora', 'Tipo', 'Usuario', 'Nombre', 'Acción', 'Recurso', 'Detalle', 'Cambios', 'IP', 'Navegador'];
 
     public function __construct(private BitacoraService $servicio, private Bitacora $bitacora) {}
 
@@ -42,7 +46,8 @@ class BitacoraController extends Controller
             foreach ($registros as $r) {
                 fputcsv($salida, array_map([self::class, 'celda'], [
                     (string) $r->id,
-                    $r->created_at?->format('Y-m-d H:i:s'),
+                    $r->created_at?->format('Y-m-d'),
+                    $r->created_at?->format('H:i:s'),
                     $r->tipo,
                     $r->usuario,
                     $r->nombre_usuario,
