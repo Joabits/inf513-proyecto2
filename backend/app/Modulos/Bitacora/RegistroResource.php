@@ -24,6 +24,9 @@ class RegistroResource extends JsonResource
             'ip' => $this->ip,
             'navegador' => $this->navegador,
             'codigo_http' => $this->tipo === 'acceso' && preg_match('/^HTTP (\d{3})$/', (string) $this->detalle, $m) ? (int) $m[1] : null,
+            // Lo que merece atención al revisar, y a qué sección del panel apuntaba un acceso
+            'importante' => BitacoraService::esImportante($this->resource),
+            'seccion' => $this->tipo === 'acceso' ? BitacoraService::seccionDe($this->recurso) : null,
         ];
     }
 }

@@ -16,9 +16,34 @@ class BitacoraService
      * los accesos son cada llamada a la API y sirven sobre todo para estadísticas y para ver intentos denegados.
      */
     public const GRUPOS = [
-        'auditoria' => ['etiqueta' => 'Cambios en el contenido', 'tipos' => ['accion', 'auditoria']],
-        'sesiones' => ['etiqueta' => 'Ingresos y salidas', 'tipos' => ['ingreso_ok', 'ingreso_fallido', 'salida']],
-        'accesos' => ['etiqueta' => 'Accesos a la API', 'tipos' => ['acceso']],
+        'auditoria' => ['etiqueta' => 'Cambios en el contenido', 'tipos' => ['accion', 'auditoria'], 'visible' => true],
+        'sesiones' => ['etiqueta' => 'Ingresos y salidas', 'tipos' => ['ingreso_ok', 'ingreso_fallido', 'salida'], 'visible' => true],
+        // Lo que un administrativo necesita saber de los accesos: quién intentó entrar a algo que no le correspondía
+        'denegados' => ['etiqueta' => 'Intentos sin permiso', 'tipos' => ['acceso'], 'visible' => true],
+        // Registro técnico de cada llamada del sistema: no se muestra en el panel, pero se puede consultar y exportar
+        'accesos' => ['etiqueta' => 'Accesos técnicos', 'tipos' => ['acceso'], 'visible' => false],
+    ];
+
+    /** Acciones que merecen atención al revisar: borran, cambian quién puede qué o sacan información del sistema. */
+    public const ACCIONES_IMPORTANTES = [
+        'eliminar', 'crear_usuario', 'eliminar_usuario', 'desactivar_usuario', 'cambiar_rol',
+        'asignar_permiso', 'quitar_permiso', 'cambiar_clave', 'exportar',
+    ];
+
+    /** Sección del panel a la que pertenece una ruta de la API, del prefijo más específico al más general. */
+    private const SECCIONES = [
+        'gestion/innova/solicitudes' => 'Solicitudes a INNOVA',
+        'gestion/usuarios' => 'Usuarios',
+        'gestion/bitacora' => 'Bitácora',
+        'gestion/documentos' => 'Documentos',
+        'gestion/docentes' => 'Autoridades y docentes',
+        'gestion/investigacion' => 'Investigación',
+        'gestion/revista' => 'Revista INNOVAR',
+        'inicio' => 'Página de inicio',
+        'institucional' => 'Información institucional',
+        'configuracion' => 'Datos de contacto y enlaces',
+        'innova' => 'Empresa Junior INNOVA',
+        'perfil' => 'Mi perfil',
     ];
 
     /** Resultado de un acceso según su código HTTP (se guarda en el detalle como «HTTP 403»). */
@@ -43,12 +68,31 @@ class BitacoraService
     public function opciones(): array
     {
         return [
-            'grupos' => collect(self::GRUPOS)->map(fn ($g, $clave) => ['valor' => $clave, 'etiqueta' => $g['etiqueta']])->values(),
+            'grupos' => collect(self::GRUPOS)->filter(fn ($g) => $g['visible'])
+                ->map(fn ($g, $clave) => ['valor' => $clave, 'etiqueta' => $g['etiqueta']])->values(),
             'resultados' => collect(self::RESULTADOS)->map(fn ($etiqueta, $clave) => ['valor' => $clave, 'etiqueta' => $etiqueta])->values(),
             'usuarios' => DB::table('bitacora')->whereNotNull('usuario')->distinct()->orderBy('usuario')->pluck('usuario'),
             'acciones' => DB::table('bitacora')->whereIn('tipo', self::GRUPOS['auditoria']['tipos'])
                 ->whereNotNull('accion')->distinct()->orderBy('accion')->pluck('accion'),
         ];
+    }
+
+    /** Nombre de la sección del panel a la que apunta una ruta de la API («api/gestion/usuarios/5» → «Usuarios»), o null. */
+    public static function seccionDe(?string $ruta): ?string
+    {
+        $ruta = preg_replace('#^api/#', '', (string) $ruta);
+        foreach (self::SECCIONES as $prefijo => $nombre) {
+            if ($ruta === $prefijo || str_starts_with($ruta, $prefijo.'/')) {
+                return $nombre;
+            }
+        }
+
+        return null;
+    }
+
+    public static function esImportante(Registro $registro): bool
+    {
+        return $registro->tipo === 'ingreso_fallido' || in_array($registro->accion, self::ACCIONES_IMPORTANTES, true);
     }
 
     private function consulta(array $filtros): Builder
@@ -62,6 +106,9 @@ class BitacoraService
             ->orderByDesc('bitacora.created_at')
             ->orderByDesc('bitacora.id');
 
+        if ($grupo === 'denegados') {
+            $consulta->whereIn('bitacora.detalle', ['HTTP 401', 'HTTP 403']);
+        }
         if (isset($filtros['usuario'])) {
             $consulta->where('bitacora.usuario', $filtros['usuario']);
         }

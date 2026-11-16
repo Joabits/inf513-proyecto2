@@ -159,7 +159,7 @@ class RevistaService
             }
         });
 
-        $this->bitacora->accion($usuario, 'editar', $edicion, 'Orden de los artículos');
+        $this->bitacora->accion($usuario, 'editar', 'Revista INNOVAR: orden de los artículos', $edicion->nombre());
     }
 
     // ---------- Archivos ----------

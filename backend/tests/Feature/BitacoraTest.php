@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Compartido\Servicios\Bitacora;
+use App\Modulos\Bitacora\BitacoraService;
 use App\Models\Rol;
 use App\Models\User;
 use Database\Seeders\PermisoSeeder;
@@ -194,7 +195,87 @@ class BitacoraTest extends TestCase
         $this->assertContains('ana@cae.test', $opciones->json('usuarios'));
         $this->assertContains('publicar', $opciones->json('acciones'));
         $this->assertNotContains('GET', $opciones->json('acciones'), 'los métodos HTTP de los accesos no son acciones');
-        $this->assertSame(['auditoria', 'sesiones', 'accesos'], array_column($opciones->json('grupos'), 'valor'));
+        $this->assertSame(['auditoria', 'sesiones', 'denegados'], array_column($opciones->json('grupos'), 'valor'), 'el registro técnico no se ofrece en el panel');
+    }
+
+    /**
+     * Los triggers de PostgreSQL anotan cada INSERT y DELETE de rol_permiso. Si el seeder vaciara la tabla y la
+     * volviera a llenar, cada ejecución dejaría cientos de «quitó» y «asignó» falsos. Aquí se comprueba qué escribe.
+     * (Los triggers de permisos solo existen en PostgreSQL, por eso se mira el SQL y no la bitácora.)
+     */
+    private function escriturasEnMatriz(callable $accion): array
+    {
+        $escrituras = [];
+        DB::listen(function ($consulta) use (&$escrituras) {
+            if (preg_match('/^(insert into|delete from|update)\s+"?rol_permiso"?/i', $consulta->sql, $m)) {
+                $escrituras[] = strtolower($m[1]);
+            }
+        });
+        $accion();
+
+        return $escrituras;
+    }
+
+    public function test_volver_a_sembrar_los_permisos_sin_cambios_no_escribe_en_la_matriz(): void
+    {
+        $this->assertSame([], $this->escriturasEnMatriz(fn () => $this->seed(PermisoSeeder::class)));
+    }
+
+    public function test_al_sembrar_solo_se_escribe_lo_que_cambio(): void
+    {
+        $editor = Rol::where('slug', Rol::EDITOR_COMUNICACION)->firstOrFail();
+        $editor->permisos()->detach($editor->permisos()->where('slug', 'noticias.eliminar')->value('permisos.id'));
+
+        $escrituras = $this->escriturasEnMatriz(fn () => $this->seed(PermisoSeeder::class));
+
+        $this->assertSame(['insert into'], $escrituras, 'solo vuelve a asignar el permiso que faltaba');
+        $this->assertTrue($editor->permisos()->where('slug', 'noticias.eliminar')->exists());
+    }
+
+    public function test_los_intentos_sin_permiso_muestran_la_seccion_y_ocultan_lo_exitoso(): void
+    {
+        $director = $this->director();
+        $this->fila(['tipo' => 'acceso', 'usuario' => 'luis@cae.test', 'accion' => 'DELETE', 'recurso' => 'api/gestion/usuarios/{usuario}', 'detalle' => 'HTTP 403']);
+        $this->fila(['tipo' => 'acceso', 'accion' => 'GET', 'recurso' => 'api/gestion/revista', 'detalle' => 'HTTP 401']);
+        $this->fila(['tipo' => 'acceso', 'accion' => 'GET', 'recurso' => 'api/revista', 'detalle' => 'HTTP 200']);
+        $this->fila(['tipo' => 'acceso', 'accion' => 'POST', 'recurso' => 'api/contacto', 'detalle' => 'HTTP 422']);
+
+        $filas = $this->consultar($director, ['grupo' => 'denegados'])->assertOk()->json('data');
+
+        $this->assertCount(2, $filas, 'solo los 401 y 403, sin los correctos ni los errores de validación');
+        $porRuta = collect($filas)->keyBy('recurso');
+        $this->assertSame('Usuarios', $porRuta['api/gestion/usuarios/{usuario}']['seccion']);
+        $this->assertSame('luis@cae.test', $porRuta['api/gestion/usuarios/{usuario}']['usuario']);
+        $this->assertSame('Revista INNOVAR', $porRuta['api/gestion/revista']['seccion']);
+        $this->assertNull($porRuta['api/gestion/revista']['usuario'], 'sin sesión');
+    }
+
+    public function test_las_rutas_se_traducen_a_secciones_del_panel(): void
+    {
+        $this->assertSame('Solicitudes a INNOVA', BitacoraService::seccionDe('api/gestion/innova/solicitudes/3'));
+        $this->assertSame('Empresa Junior INNOVA', BitacoraService::seccionDe('api/innova'));
+        $this->assertSame('Página de inicio', BitacoraService::seccionDe('api/inicio/banners'));
+        $this->assertSame('Datos de contacto y enlaces', BitacoraService::seccionDe('api/configuracion/enlaces'));
+        $this->assertNull(BitacoraService::seccionDe('api/ruta-desconocida'));
+        $this->assertNull(BitacoraService::seccionDe('api/innovacion-falsa'), 'un prefijo solo cuenta si es un segmento completo');
+    }
+
+    public function test_marca_como_importante_lo_delicado(): void
+    {
+        $director = $this->director();
+        $this->fila(['accion' => 'eliminar', 'recurso' => 'Proyecto #1']);
+        $this->fila(['accion' => 'editar', 'recurso' => 'Proyecto #2']);
+        $this->fila(['tipo' => 'auditoria', 'accion' => 'cambiar_rol', 'recurso' => 'Usuario #4']);
+
+        $porAccion = collect($this->consultar($director, ['texto' => 'Proyecto'])->json('data'))->keyBy('accion');
+        $this->assertTrue($porAccion['eliminar']['importante']);
+        $this->assertFalse($porAccion['editar']['importante']);
+
+        $rol = collect($this->consultar($director, ['accion' => 'cambiar_rol'])->json('data'))->first();
+        $this->assertTrue($rol['importante']);
+
+        $this->fila(['tipo' => 'ingreso_fallido', 'detalle' => 'Correo: x@y.com']);
+        $this->assertTrue($this->consultar($director, ['grupo' => 'sesiones'])->json('data.0.importante'), 'un ingreso fallido es importante');
     }
 
     public function test_exporta_csv_con_los_filtros_y_la_exportacion_queda_registrada(): void
