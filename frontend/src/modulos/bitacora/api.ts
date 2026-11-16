@@ -7,6 +7,7 @@ const GESTION = '/gestion/bitacora'
 function parametros(filtros: FiltrosBitacora, pagina?: number) {
   const valores: Record<string, string> = Object.fromEntries(Object.entries(filtros).filter(([, valor]) => valor !== ''))
   if (filtros.grupo !== 'auditoria') delete valores.accion
+  if (filtros.grupo === 'denegados') delete valores.importancia
   if (pagina && pagina > 1) valores.page = String(pagina)
   return valores
 }

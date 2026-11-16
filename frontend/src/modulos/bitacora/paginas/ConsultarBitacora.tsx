@@ -26,6 +26,17 @@ const AYUDA: Record<Grupo, string> = {
   denegados: 'Veces que alguien intentó entrar a una sección sin tener permiso o sin haber iniciado sesión.',
 }
 
+/**
+ * Columnas de la fila de filtros según cuántos tiene cada pestaña (5, 4 y 3) y el ancho del contenido,
+ * para que ningún control quede solo en una segunda línea. En la de cambios la persona ocupa las dos columnas
+ * en pantallas angostas (1 + 2 + 2); en ancho amplio, todos en una fila.
+ */
+const COLUMNAS: Record<Grupo, string> = {
+  auditoria: 'grid-cols-2 @3xl:grid-cols-5',
+  sesiones: 'grid-cols-2 @3xl:grid-cols-4',
+  denegados: 'grid-cols-1 @md:grid-cols-3',
+}
+
 const BUSCAR: Record<Grupo, string> = {
   auditoria: 'Buscar persona o elemento',
   sesiones: 'Buscar persona o correo',
@@ -63,7 +74,7 @@ export function ConsultarBitacora() {
     setPagina(1)
   }
 
-  const hayFiltros = Boolean(filtros.usuario || filtros.accion || filtros.texto || filtros.desde || filtros.hasta)
+  const hayFiltros = Boolean(filtros.usuario || filtros.accion || filtros.importancia || filtros.texto || filtros.desde || filtros.hasta)
   const meta = data?.meta
 
   return (
@@ -88,7 +99,7 @@ export function ConsultarBitacora() {
         etiqueta="Tipo de actividad"
         opciones={PESTANAS}
         activa={filtros.grupo}
-        alCambiar={(id) => cambiar({ grupo: id as Grupo, accion: '' })}
+        alCambiar={(id) => cambiar({ grupo: id as Grupo, accion: '', importancia: '' })}
       />
 
       <section id={`panel-${filtros.grupo}`} role="tabpanel" aria-labelledby={`pestana-${filtros.grupo}`} className="pt-5">
@@ -107,14 +118,11 @@ export function ConsultarBitacora() {
           />
         </label>
 
-        {/*
-          Las columnas dependen de cuántos filtros hay (4 en cambios, 3 en las demás) y del ancho del contenido, no de la
-          ventana: así nunca queda un control solo en una segunda línea. 4 → 2×2 y, si cabe, los 4 en una fila; 3 → los 3 en una fila.
-        */}
         <div className="@container mt-3">
-          <div className={`grid gap-3 ${filtros.grupo === 'auditoria' ? 'grid-cols-2 @3xl:grid-cols-4' : 'grid-cols-1 @md:grid-cols-3'}`}>
+          <div className={`grid gap-3 ${COLUMNAS[filtros.grupo]}`}>
             <Selector
               aria-label="Filtrar por persona"
+              className={filtros.grupo === 'auditoria' ? 'col-span-2 @3xl:col-span-1' : ''}
               valor={filtros.usuario}
               alCambiar={(usuario) => cambiar({ usuario })}
               opciones={[{ valor: '', etiqueta: 'Todas las personas' }, ...(opciones?.usuarios ?? []).map((u) => ({ valor: u, etiqueta: u }))]}
@@ -125,6 +133,17 @@ export function ConsultarBitacora() {
                 valor={filtros.accion}
                 alCambiar={(accion) => cambiar({ accion })}
                 opciones={[{ valor: '', etiqueta: 'Todas las acciones' }, ...(opciones?.acciones ?? []).map((a) => ({ valor: a, etiqueta: nombreAccion(a) }))]}
+              />
+            )}
+            {filtros.grupo !== 'denegados' && (
+              <Selector
+                aria-label="Filtrar por importancia"
+                valor={filtros.importancia}
+                alCambiar={(importancia) => cambiar({ importancia: importancia as FiltrosBitacora['importancia'] })}
+                opciones={[
+                  { valor: '', etiqueta: filtros.grupo === 'sesiones' ? 'Todos los ingresos' : 'Toda la actividad' },
+                  { valor: 'importantes', etiqueta: filtros.grupo === 'sesiones' ? 'Solo los fallidos' : 'Solo lo importante' },
+                ]}
               />
             )}
             <SelectorFecha aria-label="Desde" valor={filtros.desde} alCambiar={(desde) => cambiar({ desde })} max={filtros.hasta || undefined} hastaHoy textoVacio="Desde" opcional />

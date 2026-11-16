@@ -13,8 +13,6 @@ export interface Registro {
   ip: string | null
   navegador: string | null
   codigo_http: number | null
-  /** Eliminar, cambiar roles o permisos, desactivar cuentas, intentos fallidos... */
-  importante: boolean
   /** Sección del panel a la que apuntaba un acceso denegado («Usuarios») */
   seccion: string | null
 }
@@ -32,12 +30,14 @@ export interface FiltrosBitacora {
   grupo: Grupo
   usuario: string
   accion: string
+  /** «» = todo; «importantes» = lo que borra datos o cambia permisos, y los ingresos fallidos */
+  importancia: '' | 'importantes'
   texto: string
   desde: string
   hasta: string
 }
 
-export const FILTROS_VACIOS: FiltrosBitacora = { grupo: 'auditoria', usuario: '', accion: '', texto: '', desde: '', hasta: '' }
+export const FILTROS_VACIOS: FiltrosBitacora = { grupo: 'auditoria', usuario: '', accion: '', importancia: '', texto: '', desde: '', hasta: '' }
 
 /** Igual que BitacoraService::opciones() */
 export interface OpcionesBitacora {

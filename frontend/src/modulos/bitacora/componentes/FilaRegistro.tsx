@@ -1,5 +1,5 @@
 import { useId, useState } from 'react'
-import { IconoAbajo, IconoAlerta } from '@/compartido/ui/Iconos'
+import { IconoAbajo } from '@/compartido/ui/Iconos'
 import { formatoFechaHora, frase, mayuscula, navegadorLegible, nombreCampo, tiempoRelativo, valorCambio } from '../formato'
 import type { Registro } from '../tipos'
 
@@ -18,8 +18,8 @@ export function FilaRegistro({ registro }: { registro: Registro }) {
   return (
     <>
       <tr className={`border-t border-borde-tarjeta align-top ${abierta ? 'bg-fondo' : 'hover:bg-fondo'}`}>
-        {/* La barra de acento une la fila con su detalle: se ve dónde empieza y dónde termina lo abierto */}
-        <td className={`whitespace-nowrap border-l-4 py-2.5 pl-3 pr-3 text-sm text-texto-suave md:pl-4 ${abierta ? 'border-primario' : 'border-transparent'}`}>
+        {/* La barra de acento (azul marino: el rojo queda para alertas) une la fila con su detalle y marca lo abierto */}
+        <td className={`whitespace-nowrap border-l-4 py-2.5 pl-3 pr-3 text-sm text-texto-suave md:pl-4 ${abierta ? 'border-marino' : 'border-transparent'}`}>
           <time dateTime={registro.fecha} title={formatoFechaHora(registro.fecha)}>
             {tiempoRelativo(registro.fecha)}
           </time>
@@ -45,11 +45,6 @@ export function FilaRegistro({ registro }: { registro: Registro }) {
                 <strong className="font-semibold text-titulo">{actor}</strong> {texto}
               </span>
               <span className="hidden md:inline">{mayuscula(texto)}</span>
-              {registro.importante && (
-                <span className="ml-2 inline-flex items-center gap-1 whitespace-nowrap rounded border border-primario px-1.5 py-px align-middle text-xs font-bold text-primario">
-                  <IconoAlerta width={12} height={12} aria-hidden /> Importante
-                </span>
-              )}
               {cambios.length > 0 && (
                 <span className="ml-2 whitespace-nowrap text-xs text-texto-suave">
                   {cambios.length} {cambios.length === 1 ? 'campo' : 'campos'}
@@ -64,7 +59,7 @@ export function FilaRegistro({ registro }: { registro: Registro }) {
 
       {abierta && (
         <tr id={idDetalle} className="bg-fondo">
-          <td colSpan={4} className="border-l-4 border-primario px-3 pb-4 pt-1 text-sm md:px-4">
+          <td colSpan={4} className="border-l-4 border-marino px-3 pb-4 pt-1 text-sm md:px-4">
             <p className="mb-3 text-texto-suave">
               {formatoFechaHora(registro.fecha)}
               {registro.cuenta_eliminada && ' · la cuenta de esta persona ya no existe'}
