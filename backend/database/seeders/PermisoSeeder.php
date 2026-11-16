@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Permiso;
 use App\Models\Rol;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 /**
  * MATRIZ DE ACCESO del portal: recursos x acciones x roles.
@@ -56,8 +55,8 @@ class PermisoSeeder extends Seeder
 
     public function run(): void
     {
-        DB::table('rol_permiso')->delete();
-
+        // Sin vaciar rol_permiso: sync() solo agrega y quita lo que cambió. Así volver a ejecutar el seeder sin
+        // cambios no deja nada en la bitácora, y un cambio real queda registrado como lo que es.
         foreach (self::RECURSOS as $recurso => [$descripcion, $acciones]) {
             foreach ($acciones as $accion) {
                 Permiso::updateOrCreate(
