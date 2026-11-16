@@ -8,22 +8,28 @@ import { Pestanas } from '@/compartido/ui/Pestanas'
 import { Selector } from '@/compartido/ui/Selector'
 import { SelectorFecha } from '@/compartido/ui/SelectorFecha'
 import { TituloPagina } from '@/compartido/ui/TituloPagina'
-import { FilaRegistro } from '../componentes/FilaRegistro'
 import { Paginacion } from '../componentes/Paginacion'
-import { verboAccion } from '../formato'
+import { TablaRegistros } from '../componentes/TablaRegistros'
+import { nombreAccion } from '../formato'
 import { FILTROS_VACIOS, type FiltrosBitacora, type Grupo } from '../tipos'
 import { useBitacora, useExportarBitacora, useOpcionesBitacora } from '../useBitacora'
 
 const PESTANAS: { id: Grupo; titulo: string }[] = [
   { id: 'auditoria', titulo: 'Cambios en el contenido' },
   { id: 'sesiones', titulo: 'Ingresos y salidas' },
-  { id: 'accesos', titulo: 'Accesos a la API' },
+  { id: 'denegados', titulo: 'Intentos sin permiso' },
 ]
 
 const AYUDA: Record<Grupo, string> = {
-  auditoria: 'Quién creó, editó, publicó, ocultó o eliminó cada cosa, y qué valores cambió.',
-  sesiones: 'Inicios de sesión, intentos fallidos y cierres de sesión.',
-  accesos: 'Cada consulta a la API con su resultado. Sirve para ver intentos sin permiso.',
+  auditoria: 'Quién creó, editó, publicó, ocultó o eliminó cada cosa, y qué cambió.',
+  sesiones: 'Cuándo inició y cerró sesión cada cuenta, y los intentos de ingreso que fallaron.',
+  denegados: 'Veces que alguien intentó entrar a una sección sin tener permiso o sin haber iniciado sesión.',
+}
+
+const BUSCAR: Record<Grupo, string> = {
+  auditoria: 'Buscar persona o elemento',
+  sesiones: 'Buscar persona o correo',
+  denegados: 'Buscar persona o sección',
 }
 
 /** CU-29: consulta de la bitácora de actividad, solo lectura. */
@@ -57,7 +63,7 @@ export function ConsultarBitacora() {
     setPagina(1)
   }
 
-  const hayFiltros = Boolean(filtros.usuario || filtros.accion || filtros.texto || filtros.desde || filtros.hasta || filtros.resultado)
+  const hayFiltros = Boolean(filtros.usuario || filtros.accion || filtros.texto || filtros.desde || filtros.hasta)
   const meta = data?.meta
 
   return (
@@ -82,7 +88,7 @@ export function ConsultarBitacora() {
         etiqueta="Tipo de actividad"
         opciones={PESTANAS}
         activa={filtros.grupo}
-        alCambiar={(id) => cambiar({ grupo: id as Grupo, accion: '', resultado: '' })}
+        alCambiar={(id) => cambiar({ grupo: id as Grupo, accion: '' })}
       />
 
       <section id={`panel-${filtros.grupo}`} role="tabpanel" aria-labelledby={`pestana-${filtros.grupo}`} className="pt-5">
@@ -97,30 +103,22 @@ export function ConsultarBitacora() {
               value={texto}
               onChange={(e) => setTexto(e.target.value)}
               maxLength={100}
-              placeholder={filtros.grupo === 'accesos' ? 'Buscar por ruta o cuenta' : 'Buscar por recurso, detalle o cuenta'}
+              placeholder={BUSCAR[filtros.grupo]}
               className={`${CLASE_ENTRADA} pl-10`}
             />
           </label>
           <Selector
-            aria-label="Filtrar por cuenta"
+            aria-label="Filtrar por persona"
             valor={filtros.usuario}
             alCambiar={(usuario) => cambiar({ usuario })}
-            opciones={[{ valor: '', etiqueta: 'Todas las cuentas' }, ...(opciones?.usuarios ?? []).map((u) => ({ valor: u, etiqueta: u }))]}
+            opciones={[{ valor: '', etiqueta: 'Todas las personas' }, ...(opciones?.usuarios ?? []).map((u) => ({ valor: u, etiqueta: u }))]}
           />
           {filtros.grupo === 'auditoria' && (
             <Selector
               aria-label="Filtrar por acción"
               valor={filtros.accion}
               alCambiar={(accion) => cambiar({ accion })}
-              opciones={[{ valor: '', etiqueta: 'Todas las acciones' }, ...(opciones?.acciones ?? []).map((a) => ({ valor: a, etiqueta: verboAccion(a) }))]}
-            />
-          )}
-          {filtros.grupo === 'accesos' && (
-            <Selector
-              aria-label="Filtrar por resultado"
-              valor={filtros.resultado}
-              alCambiar={(resultado) => cambiar({ resultado })}
-              opciones={[{ valor: '', etiqueta: 'Todos los resultados' }, ...(opciones?.resultados ?? [])]}
+              opciones={[{ valor: '', etiqueta: 'Todas las acciones' }, ...(opciones?.acciones ?? []).map((a) => ({ valor: a, etiqueta: nombreAccion(a) }))]}
             />
           )}
           <SelectorFecha aria-label="Desde" valor={filtros.desde} alCambiar={(desde) => cambiar({ desde })} max={filtros.hasta || undefined} hastaHoy textoVacio="Desde" opcional />
@@ -152,11 +150,7 @@ export function ConsultarBitacora() {
 
         {data &&
           (data.data.length > 0 ? (
-            <ul className={`mt-3 space-y-3 transition-opacity ${isFetching ? 'opacity-60' : ''}`}>
-              {data.data.map((registro) => (
-                <FilaRegistro key={registro.id} registro={registro} />
-              ))}
-            </ul>
+            <TablaRegistros registros={data.data} actualizando={isFetching} />
           ) : (
             <p className="py-12 text-center text-texto-suave">
               {hayFiltros ? 'Ningún registro coincide con los filtros.' : 'Todavía no hay actividad registrada.'}

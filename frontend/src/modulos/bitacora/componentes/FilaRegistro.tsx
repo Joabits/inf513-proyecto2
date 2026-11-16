@@ -1,103 +1,119 @@
 import { useId, useState } from 'react'
-import { IconoAbajo } from '@/compartido/ui/Iconos'
-import { describir, formatoFechaHora, nombreCampo, valorCambio } from '../formato'
+import { IconoAbajo, IconoAlerta } from '@/compartido/ui/Iconos'
+import { formatoFechaHora, frase, mayuscula, navegadorLegible, nombreCampo, tiempoRelativo, valorCambio } from '../formato'
 import type { Registro } from '../tipos'
 
-/** Código HTTP de un acceso: neutro si salió bien; con el color de alerta del tema si fue denegado o falló. */
-function claseCodigo(codigo: number) {
-  if (codigo < 300) return 'bg-chip text-sobre-chip'
-  if (codigo === 401 || codigo === 403) return 'bg-primario text-sobre-primario'
-  return 'border border-primario text-primario'
-}
-
+/**
+ * Un registro es una fila: cuándo, quién y qué. En pantallas angostas la persona pasa a la columna de actividad
+ * para no perder espacio. Al abrirla muestra qué cambió y, plegados, los detalles técnicos.
+ */
 export function FilaRegistro({ registro }: { registro: Registro }) {
   const [abierta, setAbierta] = useState(false)
   const idDetalle = useId()
+  const { actor, texto } = frase(registro)
   const cambios = registro.cambios ? Object.entries(registro.cambios) : []
-  const fallido = registro.tipo === 'ingreso_fallido'
+  const navegador = navegadorLegible(registro.navegador)
+  const sinCuenta = !registro.usuario
 
   return (
-    <li className="rounded-tema border border-borde-tarjeta bg-tarjeta sombra-suave">
-      <button
-        type="button"
-        onClick={() => setAbierta((valor) => !valor)}
-        aria-expanded={abierta}
-        aria-controls={idDetalle}
-        className="flex w-full items-start gap-4 px-4 py-3 text-left md:px-5"
-      >
-        <div className="min-w-0 flex-1">
-          <p className={`font-semibold ${fallido ? 'text-primario' : 'text-titulo'}`}>
-            {describir(registro)}
-            {registro.codigo_http !== null && (
-              <span className={`ml-2 rounded px-1.5 py-0.5 text-xs font-bold ${claseCodigo(registro.codigo_http)}`}>{registro.codigo_http}</span>
-            )}
-          </p>
-          {registro.detalle && registro.tipo !== 'acceso' && <p className="mt-0.5 truncate text-sm text-texto">{registro.detalle}</p>}
-          <p className="mt-1 text-sm text-texto-suave">
-            <time dateTime={registro.fecha}>{formatoFechaHora(registro.fecha)}</time>
-            {' · '}
-            {registro.usuario ? (
-              <span>
-                {registro.nombre ?? registro.usuario}
-                {registro.cuenta_eliminada && <span className="italic"> (cuenta eliminada)</span>}
+    <>
+      <tr className={`border-t border-borde-tarjeta align-top ${abierta ? 'bg-fondo' : 'hover:bg-fondo'}`}>
+        <td className="whitespace-nowrap py-2.5 pl-4 pr-3 text-sm text-texto-suave md:pl-5">
+          <time dateTime={registro.fecha} title={formatoFechaHora(registro.fecha)}>
+            {tiempoRelativo(registro.fecha)}
+          </time>
+        </td>
+
+        <td className={`hidden max-w-56 py-2.5 pr-4 text-sm md:table-cell ${sinCuenta ? 'italic text-texto-suave' : 'font-semibold text-titulo'}`}>
+          <span className="block truncate" title={registro.usuario ?? undefined}>
+            {actor}
+          </span>
+          {registro.cuenta_eliminada && <span className="block text-xs font-normal italic text-texto-suave">cuenta eliminada</span>}
+        </td>
+
+        <td className="w-full py-2.5 pr-2 text-sm">
+          <button
+            type="button"
+            onClick={() => setAbierta((valor) => !valor)}
+            aria-expanded={abierta}
+            aria-controls={idDetalle}
+            className="flex w-full items-start gap-2 text-left text-texto"
+          >
+            <span className="min-w-0 flex-1">
+              <span className="md:hidden">
+                <strong className="font-semibold text-titulo">{actor}</strong> {texto}
               </span>
-            ) : (
-              <span className="italic">sin sesión</span>
-            )}
-            {cambios.length > 0 && ` · ${cambios.length} ${cambios.length === 1 ? 'campo modificado' : 'campos modificados'}`}
-          </p>
-        </div>
-        <IconoAbajo width={18} height={18} className={`mt-1 shrink-0 text-texto-suave transition-transform ${abierta ? 'rotate-180' : ''}`} />
-      </button>
+              <span className="hidden md:inline">{mayuscula(texto)}</span>
+              {registro.importante && (
+                <span className="ml-2 inline-flex items-center gap-1 whitespace-nowrap rounded border border-primario px-1.5 py-px align-middle text-xs font-bold text-primario">
+                  <IconoAlerta width={12} height={12} aria-hidden /> Importante
+                </span>
+              )}
+              {cambios.length > 0 && (
+                <span className="ml-2 whitespace-nowrap text-xs text-texto-suave">
+                  {cambios.length} {cambios.length === 1 ? 'campo' : 'campos'}
+                </span>
+              )}
+            </span>
+            <IconoAbajo width={16} height={16} className={`mt-0.5 shrink-0 text-texto-suave transition-transform ${abierta ? 'rotate-180' : ''}`} />
+          </button>
+        </td>
+        <td className="w-3 md:w-4" aria-hidden />
+      </tr>
 
       {abierta && (
-        <div id={idDetalle} className="border-t border-borde-tarjeta px-4 py-4 text-sm md:px-5">
-          {cambios.length > 0 && (
-            <div className="mb-4 overflow-x-auto">
-              <table className="w-full min-w-[28rem] border-collapse text-left">
-                <caption className="mb-2 text-left font-semibold text-titulo">Qué cambió</caption>
-                <thead>
-                  <tr className="text-texto-suave">
-                    <th scope="col" className="py-1 pr-4 font-semibold">Campo</th>
-                    <th scope="col" className="py-1 pr-4 font-semibold">Antes</th>
-                    <th scope="col" className="py-1 font-semibold">Después</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cambios.map(([campo, { antes, despues }]) => (
-                    <tr key={campo} className="border-t border-borde-tarjeta align-top">
-                      <th scope="row" className="py-2 pr-4 font-semibold capitalize text-titulo">{nombreCampo(campo)}</th>
-                      <td className="py-2 pr-4 text-texto-suave line-through decoration-primario/40">{valorCambio(antes)}</td>
-                      <td className="py-2 text-texto">{valorCambio(despues)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+        <tr id={idDetalle} className="bg-fondo">
+          <td colSpan={4} className="px-4 pb-4 pt-1 text-sm md:px-5">
+            <p className="mb-3 text-texto-suave">
+              {formatoFechaHora(registro.fecha)}
+              {registro.cuenta_eliminada && ' · la cuenta de esta persona ya no existe'}
+            </p>
 
-          <dl className="grid gap-x-6 gap-y-2 sm:grid-cols-[auto_1fr]">
-            {registro.usuario && (
-              <>
-                <dt className="font-semibold text-titulo">Cuenta</dt>
-                <dd className="break-all text-texto">{registro.usuario}</dd>
-              </>
+            {cambios.length > 0 && (
+              <div className="mb-4">
+                <p className="mb-2 font-semibold text-titulo">Qué cambió</p>
+                <ul className="space-y-2">
+                  {cambios.map(([campo, { antes, despues }]) => (
+                    <li key={campo} className="text-texto">
+                      <span className="font-semibold capitalize text-titulo">{nombreCampo(campo)}: </span>
+                      <span className="text-texto-suave line-through decoration-primario/40">{valorCambio(antes)}</span>
+                      <span aria-label="cambió a"> → </span>
+                      <span>{valorCambio(despues)}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
-            {registro.tipo === 'acceso' && registro.detalle && (
-              <>
-                <dt className="font-semibold text-titulo">Respuesta</dt>
-                <dd className="text-texto">{registro.detalle}</dd>
-              </>
-            )}
-            <dt className="font-semibold text-titulo">Dirección IP</dt>
-            <dd className="text-texto">{registro.ip ?? '—'}</dd>
-            <dt className="font-semibold text-titulo">Navegador</dt>
-            <dd className="break-words text-texto-suave">{registro.navegador || '—'}</dd>
-            <dt className="font-semibold text-titulo">Registro</dt>
-            <dd className="text-texto-suave">N.º {registro.id}</dd>
-          </dl>
-        </div>
+
+            <details>
+              <summary className="cursor-pointer font-semibold text-titulo">Detalles técnicos</summary>
+              <dl className="mt-3 grid gap-x-6 gap-y-2 sm:grid-cols-[auto_1fr]">
+                {registro.usuario && (
+                  <>
+                    <dt className="font-semibold text-titulo">Cuenta</dt>
+                    <dd className="break-all text-texto">{registro.usuario}</dd>
+                  </>
+                )}
+                <dt className="font-semibold text-titulo">Desde</dt>
+                <dd className="text-texto">
+                  {navegador ?? '—'}
+                  {registro.ip && <span className="text-texto-suave"> · dirección {registro.ip}</span>}
+                </dd>
+                {registro.tipo === 'acceso' && registro.codigo_http !== null && (
+                  <>
+                    <dt className="font-semibold text-titulo">Respuesta del sistema</dt>
+                    <dd className="text-texto">
+                      {registro.codigo_http === 401 ? 'No había sesión iniciada' : 'La cuenta no tiene ese permiso'} ({registro.accion} {registro.recurso}, código {registro.codigo_http})
+                    </dd>
+                  </>
+                )}
+                <dt className="font-semibold text-titulo">Registro</dt>
+                <dd className="text-texto-suave">N.º {registro.id}</dd>
+              </dl>
+            </details>
+          </td>
+        </tr>
       )}
-    </li>
+    </>
   )
 }

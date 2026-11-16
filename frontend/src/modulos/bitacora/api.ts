@@ -6,7 +6,6 @@ const GESTION = '/gestion/bitacora'
 /** Solo los filtros con valor: la URL queda corta y el servidor aplica sus valores por defecto. */
 function parametros(filtros: FiltrosBitacora, pagina?: number) {
   const valores: Record<string, string> = Object.fromEntries(Object.entries(filtros).filter(([, valor]) => valor !== ''))
-  if (filtros.grupo !== 'accesos') delete valores.resultado
   if (filtros.grupo !== 'auditoria') delete valores.accion
   if (pagina && pagina > 1) valores.page = String(pagina)
   return valores

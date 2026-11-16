@@ -13,6 +13,10 @@ export interface Registro {
   ip: string | null
   navegador: string | null
   codigo_http: number | null
+  /** Eliminar, cambiar roles o permisos, desactivar cuentas, intentos fallidos... */
+  importante: boolean
+  /** Sección del panel a la que apuntaba un acceso denegado («Usuarios») */
+  seccion: string | null
 }
 
 /** Paginación de Laravel (solo lo que usa la pantalla) */
@@ -21,7 +25,8 @@ export interface PaginaBitacora {
   meta: { current_page: number; last_page: number; total: number; from: number | null; to: number | null }
 }
 
-export type Grupo = 'auditoria' | 'sesiones' | 'accesos'
+/** «accesos» es el registro técnico: existe en el servidor pero la pantalla no lo ofrece. */
+export type Grupo = 'auditoria' | 'sesiones' | 'denegados'
 
 export interface FiltrosBitacora {
   grupo: Grupo
@@ -30,15 +35,13 @@ export interface FiltrosBitacora {
   texto: string
   desde: string
   hasta: string
-  resultado: string
 }
 
-export const FILTROS_VACIOS: FiltrosBitacora = { grupo: 'auditoria', usuario: '', accion: '', texto: '', desde: '', hasta: '', resultado: '' }
+export const FILTROS_VACIOS: FiltrosBitacora = { grupo: 'auditoria', usuario: '', accion: '', texto: '', desde: '', hasta: '' }
 
 /** Igual que BitacoraService::opciones() */
 export interface OpcionesBitacora {
   grupos: { valor: Grupo; etiqueta: string }[]
-  resultados: { valor: string; etiqueta: string }[]
   usuarios: string[]
   acciones: string[]
 }
