@@ -1,0 +1,1 @@
+export { rutasGestionGraduados } from './rutas'
