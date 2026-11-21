@@ -6,7 +6,7 @@ const FECHA = new Intl.DateTimeFormat('es-BO', { day: 'numeric', month: 'long', 
 const DIA = new Intl.DateTimeFormat('es-BO', { day: 'numeric' })
 const MES = new Intl.DateTimeFormat('es-BO', { month: 'short' })
 const DIA_MES = new Intl.DateTimeFormat('es-BO', { day: 'numeric', month: 'short' })
-const HORA = new Intl.DateTimeFormat('es-BO', { hour: '2-digit', minute: '2-digit' })
+const HORA = new Intl.DateTimeFormat('es-BO', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
 
 const mismoDia = (a: Date, b: Date) => a.toDateString() === b.toDateString()
 
