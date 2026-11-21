@@ -8,6 +8,7 @@ import { IconoBuscar, IconoFlecha, IconoInstitucion, IconoLibro } from '@/compar
 import { opcionesDe } from '@/compartido/ui/opciones'
 import { Selector } from '@/compartido/ui/Selector'
 import { TituloPagina } from '@/compartido/ui/TituloPagina'
+import { useIrAlAncla } from '@/compartido/navegacion/useIrAlAncla'
 import { SeccionSemilleros } from '../componentes/SeccionSemilleros'
 import { TarjetaProyecto } from '../componentes/TarjetaProyecto'
 import { numero, parrafos } from '../formato'
@@ -29,6 +30,8 @@ const sinTildes = (texto: string) =>
  */
 export function Investigacion() {
   const { data, isPending, isError, refetch } = useInvestigacionPublica()
+  // Desde el buscador se llega a una sección (#proyectos, #semilleros)
+  useIrAlAncla(!!data)
   const [parametros, setParametros] = useSearchParams()
   const filtro = Object.fromEntries(FILTROS.map((clave) => [clave, parametros.get(clave) ?? ''])) as Record<(typeof FILTROS)[number], string>
 

@@ -3,6 +3,7 @@ import { ChipIcono } from '@/compartido/ui/ChipIcono'
 import { EstadoCarga, MensajeError } from '@/compartido/ui/EstadoCarga'
 import { IconoConstruccion } from '@/compartido/ui/Iconos'
 import { TituloPagina } from '@/compartido/ui/TituloPagina'
+import { useIrAlAncla } from '@/compartido/navegacion/useIrAlAncla'
 import { FotoPersona } from '../componentes/FotoPersona'
 import { GRUPOS, type Grupo, type Persona } from '../tipos'
 import { useDocentesPublico } from '../useDocentes'
@@ -41,6 +42,8 @@ function TarjetaPersona({ persona }: { persona: Persona }) {
  */
 export function Docentes() {
   const { data: personas, isPending, isError, refetch } = useDocentesPublico()
+  // Desde el buscador se llega al grupo de la persona (#titulo-autoridad)
+  useIrAlAncla(!!personas)
 
   if (isPending) return <EstadoCarga />
 
@@ -75,7 +78,7 @@ export function Docentes() {
 
         return (
           <section key={grupo} aria-labelledby={`titulo-${grupo}`} className="mb-14 md:mb-20">
-            <h2 id={`titulo-${grupo}`} className="text-3xl text-titulo">
+            <h2 id={`titulo-${grupo}`} className="scroll-mt-28 text-3xl text-titulo">
               {GRUPOS[grupo]}
             </h2>
 
