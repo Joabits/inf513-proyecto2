@@ -76,7 +76,7 @@ function Noticias({ noticias }: { noticias: NoticiaPortada[] }) {
     <section aria-labelledby="titulo-noticias">
       <Encabezado id="titulo-noticias" etiqueta="Novedades" titulo="Noticias" destino="/noticias" textoVisible="Ver todas" textoOculto="las noticias" />
 
-      <div className={`grid gap-5 ${demas.length > 0 ? 'md:grid-cols-2' : ''}`}>
+      <div className={`grid gap-5 ${demas.length > 0 ? 'lg:grid-cols-2' : ''}`}>
         {/* La más reciente, grande: foto arriba y resumen */}
         <Link
           to={destacada.ruta}
@@ -105,7 +105,7 @@ function Noticias({ noticias }: { noticias: NoticiaPortada[] }) {
                   className={`${TARJETA} flex h-full`}
                 >
                   {/* La foto llena todo el alto de la tarjeta, recortada sin deformarse */}
-                  <ImagenNoticia noticia={noticia} className="h-full min-h-28 w-32 shrink-0 self-stretch sm:w-40" />
+                  <ImagenNoticia noticia={noticia} className="h-full min-h-28 w-32 shrink-0 self-stretch sm:w-40 lg:w-32 xl:w-40" />
                   <div className="min-w-0 flex-1 p-4 sm:p-5">
                     {noticia.fecha && (
                       <time dateTime={noticia.fecha} className="text-xs text-texto-suave">
