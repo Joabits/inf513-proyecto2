@@ -4,6 +4,7 @@ import { ChipIcono } from '@/compartido/ui/ChipIcono'
 import {
   type ComponenteIcono,
   IconoBuscar,
+  IconoDocentes,
   IconoDocumento,
   IconoExterno,
   IconoFlecha,
@@ -12,6 +13,7 @@ import {
   IconoInvestigacion,
   IconoLibro,
   IconoObjetivo,
+  IconoRevista,
 } from '@/compartido/ui/Iconos'
 import type { ResultadoBusqueda as Resultado } from '../tipos'
 import { Resaltado } from './Resaltado'
@@ -24,6 +26,9 @@ const ICONOS: Record<string, ComponenteIcono> = {
   semillero: IconoGraduacion,
   materia: IconoLibro,
   carrera: IconoInstitucion,
+  persona: IconoDocentes,
+  edicion: IconoRevista,
+  articulo: IconoRevista,
 }
 
 const ACCION = 'mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-acento underline-offset-4 hover:underline'
