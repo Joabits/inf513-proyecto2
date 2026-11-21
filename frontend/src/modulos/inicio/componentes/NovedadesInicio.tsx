@@ -10,6 +10,20 @@ const HORA = new Intl.DateTimeFormat('es-BO', { hour: '2-digit', minute: '2-digi
 
 const mismoDia = (a: Date, b: Date) => a.toDateString() === b.toDateString()
 
+/**
+ * Lo mismo para todas las tarjetas: al pasar el cursor suben 2 px y la sombra crece (200 ms); con teclado,
+ * un anillo visible. El borde no cambia de color: el rojo de la marca se confundiría con «seleccionado» o con un error.
+ */
+const TARJETA =
+  'group overflow-hidden rounded-tema border border-borde-tarjeta bg-tarjeta sombra-suave transition duration-200 ease-out ' +
+  'hover:-translate-y-0.5 hover:sombra-elevada focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primario ' +
+  'motion-reduce:transition-none motion-reduce:hover:translate-y-0'
+
+/** Un evento que ya empezó y todavía no termina. */
+function enCurso(evento: EventoPortada, ahora = Date.now()) {
+  return new Date(evento.inicio).getTime() <= ahora && ahora <= new Date(evento.fin).getTime()
+}
+
 /** «9:00 – 12:00» si es en un día; «20 nov. – 22 nov.» si dura varios. */
 function horario(evento: EventoPortada) {
   const inicio = new Date(evento.inicio)
@@ -19,7 +33,7 @@ function horario(evento: EventoPortada) {
 
 function ImagenNoticia({ noticia, className }: { noticia: NoticiaPortada; className: string }) {
   if (noticia.imagen) {
-    return <img src={noticia.imagen} alt="" loading="lazy" className={`${className} object-cover`} />
+    return <img src={noticia.imagen} alt="" loading="lazy" className={`${className} bg-fondo object-cover`} />
   }
   // Sin foto: un bloque del tema con el ícono de noticias, para que la tarjeta no quede vacía
   return (
@@ -29,17 +43,27 @@ function ImagenNoticia({ noticia, className }: { noticia: NoticiaPortada; classN
   )
 }
 
-function Encabezado({ id, etiqueta, titulo, destino, textoDestino }: { id: string; etiqueta: string; titulo: string; destino: string; textoDestino: string }) {
+/**
+ * El enlace va siempre a la derecha del título y en la misma línea. Se ve corto («Ver todas») para que quepa también
+ * en la columna angosta de eventos; el lector de pantalla lo anuncia completo.
+ */
+function Encabezado(props: { id: string; etiqueta: string; titulo: string; destino: string; textoVisible: string; textoOculto: string }) {
+  const { id, etiqueta, titulo, destino, textoVisible, textoOculto } = props
   return (
-    <div className="mb-6 flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
-      <div>
+    <div className="mb-6 flex items-end justify-between gap-4">
+      <div className="min-w-0">
         <p className="text-sm font-bold uppercase tracking-widest text-acento">{etiqueta}</p>
         <h2 id={id} className="mt-2 text-3xl text-titulo">
           {titulo}
         </h2>
       </div>
-      <Link to={destino} className="group inline-flex items-center gap-1.5 text-sm font-semibold text-acento hover:underline">
-        {textoDestino} <IconoFlecha width={16} height={16} aria-hidden="true" className="transition-transform group-hover:translate-x-1" />
+      <Link
+        to={destino}
+        className="group mb-1 inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-tema text-sm font-semibold text-acento hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primario"
+      >
+        {textoVisible}
+        <span className="sr-only"> {textoOculto}</span>
+        <IconoFlecha width={16} height={16} aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transition-none" />
       </Link>
     </div>
   )
@@ -50,13 +74,13 @@ function Noticias({ noticias }: { noticias: NoticiaPortada[] }) {
 
   return (
     <section aria-labelledby="titulo-noticias">
-      <Encabezado id="titulo-noticias" etiqueta="Novedades" titulo="Noticias" destino="/noticias" textoDestino="Ver todas las noticias" />
+      <Encabezado id="titulo-noticias" etiqueta="Novedades" titulo="Noticias" destino="/noticias" textoVisible="Ver todas" textoOculto="las noticias" />
 
       <div className={`grid gap-5 ${demas.length > 0 ? 'md:grid-cols-2' : ''}`}>
         {/* La más reciente, grande: foto arriba y resumen */}
         <Link
           to={destacada.ruta}
-          className="group flex flex-col overflow-hidden rounded-tema border border-borde-tarjeta bg-tarjeta sombra-suave transition hover:-translate-y-1 hover:border-primario hover:sombra-elevada motion-reduce:hover:translate-y-0"
+          className={`${TARJETA} flex flex-col`}
         >
           <ImagenNoticia noticia={destacada} className="aspect-[16/9] w-full" />
           <div className="flex flex-1 flex-col p-6">
@@ -65,8 +89,9 @@ function Noticias({ noticias }: { noticias: NoticiaPortada[] }) {
                 {FECHA.format(new Date(destacada.fecha))}
               </time>
             )}
-            <h3 className="mt-2 text-xl leading-snug text-titulo group-hover:text-acento">{destacada.titulo}</h3>
-            <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-texto-suave">{destacada.resumen}</p>
+            <h3 className="mt-2 break-words text-xl leading-snug text-titulo transition-colors duration-200 group-hover:text-acento">{destacada.titulo}</h3>
+            {/* La destacada tiene más espacio: tres líneas de resumen; las secundarias, dos */}
+            <p className="mt-3 line-clamp-3 break-words text-sm leading-relaxed text-texto-suave">{destacada.resumen}</p>
           </div>
         </Link>
 
@@ -77,17 +102,20 @@ function Noticias({ noticias }: { noticias: NoticiaPortada[] }) {
               <li key={noticia.id} className="flex-1">
                 <Link
                   to={noticia.ruta}
-                  className="group flex h-full overflow-hidden rounded-tema border border-borde-tarjeta bg-tarjeta sombra-suave transition hover:border-primario hover:sombra-elevada"
+                  className={`${TARJETA} flex h-full`}
                 >
-                  <ImagenNoticia noticia={noticia} className="w-32 shrink-0 sm:w-40" />
+                  {/* La foto llena todo el alto de la tarjeta, recortada sin deformarse */}
+                  <ImagenNoticia noticia={noticia} className="h-full min-h-28 w-32 shrink-0 self-stretch sm:w-40" />
                   <div className="min-w-0 flex-1 p-4 sm:p-5">
                     {noticia.fecha && (
                       <time dateTime={noticia.fecha} className="text-xs text-texto-suave">
                         {FECHA.format(new Date(noticia.fecha))}
                       </time>
                     )}
-                    <h3 className="mt-1 line-clamp-2 font-semibold leading-snug text-titulo group-hover:text-acento">{noticia.titulo}</h3>
-                    <p className="mt-2 line-clamp-2 text-sm text-texto-suave">{noticia.resumen}</p>
+                    <h3 className="mt-1 line-clamp-2 break-words font-semibold leading-snug text-titulo transition-colors duration-200 group-hover:text-acento">
+                      {noticia.titulo}
+                    </h3>
+                    <p className="mt-2 line-clamp-2 break-words text-sm text-texto-suave">{noticia.resumen}</p>
                   </div>
                 </Link>
               </li>
@@ -102,24 +130,27 @@ function Noticias({ noticias }: { noticias: NoticiaPortada[] }) {
 function Eventos({ eventos }: { eventos: EventoPortada[] }) {
   return (
     <section aria-labelledby="titulo-eventos">
-      <Encabezado id="titulo-eventos" etiqueta="Agenda" titulo="Próximos eventos" destino="/eventos" textoDestino="Ver todos los eventos" />
+      <Encabezado id="titulo-eventos" etiqueta="Agenda" titulo="Próximos eventos" destino="/eventos" textoVisible="Ver todos" textoOculto="los eventos" />
 
-      <ul className="flex flex-col gap-4">
+      <ul className="grid gap-4 md:grid-cols-3 lg:grid-cols-1">
         {eventos.map((evento) => {
           const inicio = new Date(evento.inicio)
+          const ahora = enCurso(evento)
           return (
             <li key={evento.id}>
-              <Link
-                to={evento.ruta}
-                className="group flex gap-4 rounded-tema border border-borde-tarjeta bg-tarjeta p-4 sombra-suave transition hover:border-primario hover:sombra-elevada"
-              >
+              <Link to={evento.ruta} className={`${TARJETA} flex h-full gap-4 p-4`}>
                 {/* Fecha como en un calendario de pared: se lee de un vistazo */}
                 <time dateTime={evento.inicio} className="flex w-16 shrink-0 flex-col items-center justify-center rounded-tema bg-primario py-2 text-sobre-primario">
                   <span className="font-titulos text-2xl font-extrabold leading-none">{DIA.format(inicio)}</span>
                   <span className="mt-1 text-xs font-semibold uppercase">{MES.format(inicio).replace('.', '')}</span>
                 </time>
                 <div className="min-w-0 flex-1">
-                  <h3 className="line-clamp-2 font-semibold leading-snug text-titulo group-hover:text-acento">{evento.titulo}</h3>
+                  {ahora && (
+                    <span className="mb-1.5 inline-block rounded-full bg-chip px-2 py-0.5 text-xs font-semibold text-sobre-chip">En curso</span>
+                  )}
+                  <h3 className="line-clamp-2 break-words font-semibold leading-snug text-titulo transition-colors duration-200 group-hover:text-acento">
+                    {evento.titulo}
+                  </h3>
                   <p className="mt-2 flex items-center gap-1.5 text-sm text-texto-suave">
                     <IconoHorario width={15} height={15} aria-hidden="true" className="shrink-0" /> {horario(evento)}
                   </p>
