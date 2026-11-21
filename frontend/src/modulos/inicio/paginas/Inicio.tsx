@@ -8,6 +8,7 @@ import { BannerInicio } from '../componentes/BannerInicio'
 import { EnlaceInicio } from '../componentes/EnlaceInicio'
 import { EsqueletoInicio } from '../componentes/EsqueletoInicio'
 import { MensajeDirector } from '../componentes/MensajeDirector'
+import { NovedadesInicio } from '../componentes/NovedadesInicio'
 import { useInicio } from '../useInicio'
 
 const BOTON = 'inline-flex items-center justify-center gap-2 rounded-tema px-6 py-3 font-semibold transition-colors'
@@ -28,7 +29,7 @@ export function Inicio() {
     )
   }
 
-  const { portada, banners, cifras, accesos } = data
+  const { portada, banners, cifras, accesos, secciones } = data
 
   return (
     <>
@@ -82,6 +83,8 @@ export function Inicio() {
           </div>
         </section>
       )}
+
+      <NovedadesInicio noticias={secciones?.noticias ?? []} eventos={secciones?.eventos ?? []} />
 
       {portada && <MensajeDirector portada={portada} />}
 
