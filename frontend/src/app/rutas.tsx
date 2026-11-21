@@ -16,6 +16,7 @@ import { rutasGestionInnova, rutasInnova } from '@/modulos/innova'
 import { rutasGestionInvestigacion, rutasInvestigacion } from '@/modulos/investigacion'
 import { rutasMallaCurricular } from '@/modulos/malla-curricular'
 import { rutasDocentes, rutasGestionDocentes } from '@/modulos/docentes'
+import { rutasGestionNoticias, rutasNoticias } from '@/modulos/noticias'
 import { rutasGestionInstitucional, rutasInstitucional } from '@/modulos/institucional'
 import { rutasGestionUsuarios, rutasPerfil } from '@/modulos/usuarios'
 import { rutasGestionRevista, rutasRevista } from '@/modulos/revista'
@@ -38,6 +39,7 @@ export const router = createBrowserRouter(
         ...rutasDocentes,
         ...rutasInstitucional,
         ...rutasInvestigacion,
+        ...rutasNoticias,
         ...rutasInnova,
         ...rutasMallaCurricular,
         ...rutasRevista,
@@ -52,6 +54,7 @@ export const router = createBrowserRouter(
         { path: 'gestion', element: <PanelGestion /> },
         ...rutasGestionInicio,
         ...rutasGestionDocentes,
+        ...rutasGestionNoticias,
         ...rutasGestionDocumentos,
         ...rutasGestionUsuarios,
         ...rutasPerfil,
