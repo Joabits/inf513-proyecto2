@@ -3,6 +3,7 @@ import { ChipIcono } from '@/compartido/ui/ChipIcono'
 import { EstadoCarga, MensajeError } from '@/compartido/ui/EstadoCarga'
 import { IconoRevista } from '@/compartido/ui/Iconos'
 import { TituloPagina } from '@/compartido/ui/TituloPagina'
+import { useIrAlAncla } from '@/compartido/navegacion/useIrAlAncla'
 import { TarjetaEdicion } from '../componentes/TarjetaEdicion'
 import { parrafos } from '../formato'
 import { useRevistaPublica } from '../useRevista'
@@ -23,6 +24,8 @@ function Parrafos({ texto, className = '' }: { texto: string; className?: string
 /** Página pública «Revista INNOVAR» (CU-21): presentación, ediciones publicadas e información para colaboradores. */
 export function Revista() {
   const { data, isPending, isError, refetch } = useRevistaPublica()
+  // Desde el buscador se llega a una edición concreta (#edicion-3)
+  useIrAlAncla(!!data)
 
   if (isPending) return <EstadoCarga />
 

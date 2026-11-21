@@ -5,6 +5,7 @@ import {
   type ComponenteIcono,
   IconoBuscar,
   IconoCalendario,
+  IconoDocentes,
   IconoDocumento,
   IconoExterno,
   IconoGaleria,
@@ -15,6 +16,7 @@ import {
   IconoLibro,
   IconoNoticias,
   IconoObjetivo,
+  IconoRevista,
 } from '@/compartido/ui/Iconos'
 import type { ResultadoBusqueda as Resultado } from '../tipos'
 import { Resaltado } from './Resaltado'
@@ -30,6 +32,9 @@ const ICONOS: Record<string, ComponenteIcono> = {
   noticia: IconoNoticias,
   evento: IconoCalendario,
   foto: IconoGaleria,
+  persona: IconoDocentes,
+  edicion: IconoRevista,
+  articulo: IconoRevista,
 }
 
 const ACCION = 'mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-acento underline-offset-4 hover:underline'
