@@ -132,7 +132,7 @@ function Eventos({ eventos }: { eventos: EventoPortada[] }) {
     <section aria-labelledby="titulo-eventos">
       <Encabezado id="titulo-eventos" etiqueta="Agenda" titulo="Próximos eventos" destino="/eventos" textoVisible="Ver todos" textoOculto="los eventos" />
 
-      <ul className="grid gap-4 md:grid-cols-3 lg:grid-cols-1">
+      <ul className="flex flex-col gap-4">
         {eventos.map((evento) => {
           const inicio = new Date(evento.inicio)
           const ahora = enCurso(evento)
