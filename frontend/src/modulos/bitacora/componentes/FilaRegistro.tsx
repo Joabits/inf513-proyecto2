@@ -7,7 +7,7 @@ import type { Registro } from '../tipos'
  * Un registro es una fila: cuándo, quién y qué. En pantallas angostas la persona pasa a la columna de actividad
  * para no perder espacio. Al abrirla muestra qué cambió y, plegados, los detalles técnicos.
  */
-export function FilaRegistro({ registro }: { registro: Registro }) {
+export function FilaRegistro({ registro, mostrarIp = false }: { registro: Registro; mostrarIp?: boolean }) {
   const [abierta, setAbierta] = useState(false)
   const idDetalle = useId()
   const { actor, texto } = frase(registro)
@@ -31,6 +31,8 @@ export function FilaRegistro({ registro }: { registro: Registro }) {
           </span>
           {registro.cuenta_eliminada && <span className="block text-xs font-normal italic text-texto-suave">cuenta eliminada</span>}
         </td>
+
+        {mostrarIp && <td className="hidden whitespace-nowrap py-2.5 pr-4 text-sm tabular-nums text-texto-suave md:table-cell">{registro.ip ?? '—'}</td>}
 
         <td className="w-full py-2.5 pr-2 text-sm">
           <button
@@ -59,7 +61,7 @@ export function FilaRegistro({ registro }: { registro: Registro }) {
 
       {abierta && (
         <tr id={idDetalle} className="bg-fondo">
-          <td colSpan={4} className="border-l-4 border-marino px-3 pb-4 pt-1 text-sm md:px-4">
+          <td colSpan={mostrarIp ? 5 : 4} className="border-l-4 border-marino px-3 pb-4 pt-1 text-sm md:px-4">
             <p className="mb-3 text-texto-suave">
               {formatoFechaHora(registro.fecha)}
               {registro.cuenta_eliminada && ' · la cuenta de esta persona ya no existe'}

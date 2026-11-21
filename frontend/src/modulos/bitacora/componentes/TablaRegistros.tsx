@@ -1,7 +1,8 @@
 import { FilaRegistro } from './FilaRegistro'
 import type { Registro } from '../tipos'
 
-export function TablaRegistros({ registros, actualizando }: { registros: Registro[]; actualizando: boolean }) {
+/** «mostrarIp»: en ingresos e intentos sin permiso importa desde dónde fue cada uno, así que la dirección va en su propia columna, junto a la persona. */
+export function TablaRegistros({ registros, actualizando, mostrarIp = false }: { registros: Registro[]; actualizando: boolean; mostrarIp?: boolean }) {
   return (
     <div className={`mt-3 overflow-hidden rounded-tema border border-borde-tarjeta bg-tarjeta sombra-suave transition-opacity ${actualizando ? 'opacity-60' : ''}`}>
       <table className="w-full border-collapse text-left">
@@ -14,6 +15,11 @@ export function TablaRegistros({ registros, actualizando }: { registros: Registr
             <th scope="col" className="hidden py-2.5 pr-4 font-semibold md:table-cell">
               Persona
             </th>
+            {mostrarIp && (
+              <th scope="col" className="hidden whitespace-nowrap py-2.5 pr-4 font-semibold md:table-cell">
+                Dirección IP
+              </th>
+            )}
             <th scope="col" className="py-2.5 pr-2 font-semibold">
               Actividad
             </th>
@@ -24,7 +30,7 @@ export function TablaRegistros({ registros, actualizando }: { registros: Registr
         </thead>
         <tbody>
           {registros.map((registro) => (
-            <FilaRegistro key={registro.id} registro={registro} />
+            <FilaRegistro key={registro.id} registro={registro} mostrarIp={mostrarIp} />
           ))}
         </tbody>
       </table>
