@@ -34,16 +34,15 @@ export function Inicio() {
     <>
       <title>Administración de Empresas | FCEE - UAGRM</title>
 
-      {!portada && banners.length > 0 && <BannerInicio banners={banners} />}
+      {banners.length > 0 && <BannerInicio banners={banners} />}
 
       {portada && (
-        // Sobre el fondo del modo (blanco de día, azul oscuro de noche); sube con -mt hasta la cabecera
-        <section aria-labelledby="titulo-portada" className="relative -mt-8 pb-14 pt-10 md:-mt-12 md:pb-20 md:pt-16">
-          {banners.length > 0 && (
-            <div className="relative">
-              <BannerInicio banners={banners} />
-            </div>
-          )}
+        // Sobre el fondo del modo (blanco de día, azul oscuro de noche). Con banner, este va arriba y pegado a la cabecera;
+        // sin banner, la franja sube con -mt hasta la cabecera
+        <section
+          aria-labelledby="titulo-portada"
+          className={`relative pb-14 md:pb-20 ${banners.length > 0 ? '' : '-mt-8 pt-10 md:-mt-12 md:pt-16'}`}
+        >
 
           <div className={`relative grid items-center gap-10 lg:gap-16 ${cifras.length > 0 ? 'lg:grid-cols-[1.25fr_1fr]' : ''}`}>
             <div>
