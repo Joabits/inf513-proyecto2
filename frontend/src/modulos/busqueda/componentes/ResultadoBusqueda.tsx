@@ -4,21 +4,24 @@ import { ChipIcono } from '@/compartido/ui/ChipIcono'
 import {
   type ComponenteIcono,
   IconoBuscar,
+  IconoCalendario,
   IconoDocentes,
   IconoDocumento,
   IconoExterno,
+  IconoGaleria,
   IconoFlecha,
   IconoGraduacion,
   IconoInstitucion,
   IconoInvestigacion,
   IconoLibro,
+  IconoNoticias,
   IconoObjetivo,
   IconoRevista,
 } from '@/compartido/ui/Iconos'
 import type { ResultadoBusqueda as Resultado } from '../tipos'
 import { Resaltado } from './Resaltado'
 
-/** Ícono por tipo de resultado. Un tipo nuevo (noticias, eventos...) usa la lupa hasta que se le asigne uno. */
+/** Ícono por tipo de resultado. Un tipo nuevo usa la lupa hasta que se le asigne uno. */
 const ICONOS: Record<string, ComponenteIcono> = {
   documento: IconoDocumento,
   proyecto: IconoInvestigacion,
@@ -26,6 +29,9 @@ const ICONOS: Record<string, ComponenteIcono> = {
   semillero: IconoGraduacion,
   materia: IconoLibro,
   carrera: IconoInstitucion,
+  noticia: IconoNoticias,
+  evento: IconoCalendario,
+  foto: IconoGaleria,
   persona: IconoDocentes,
   edicion: IconoRevista,
   articulo: IconoRevista,
