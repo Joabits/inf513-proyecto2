@@ -189,6 +189,31 @@ class DocumentosTest extends TestCase
             ->assertJsonPath('data.0.nombre_original', 'reglamento.pdf');
     }
 
+    public function test_el_listado_publico_solo_trae_lo_publicado_y_ningun_dato_interno(): void
+    {
+        $this->crear(['titulo' => 'Reglamento publicado', 'archivo' => $this->pdf('borrador_v3_firmar_director.pdf')]);
+        $this->crear(['titulo' => 'Documento oculto', 'publicado' => '0']);
+
+        $respuesta = $this->getJson('/api/documentos')->assertOk()->assertJsonCount(1, 'data');
+        $documento = $respuesta->json('data.0');
+
+        $this->assertSame('Reglamento publicado', $documento['titulo']);
+        $this->assertSame('Reglamentos', $documento['categoria']['nombre']);
+        // Solo lo que muestra la página: nada del panel (quién lo subió, nombre del archivo, estado, historial)
+        $this->assertEqualsCanonicalizing(['id', 'titulo', 'descripcion', 'categoria', 'tipo', 'tamano', 'creado'], array_keys($documento));
+        $this->assertStringNotContainsString('borrador_v3', $respuesta->getContent(), 'el nombre original del archivo no sale');
+        $this->assertStringNotContainsString(User::first()->name, $respuesta->getContent(), 'el nombre de quien lo subió no sale');
+    }
+
+    public function test_el_panel_sigue_viendo_quien_subio_cada_documento(): void
+    {
+        $this->crear();
+
+        $this->actingAs($this->editor())->getJson('/api/gestion/documentos')
+            ->assertOk()
+            ->assertJsonStructure(['data' => [['id', 'subido_por', 'nombre_original', 'publicado']]]);
+    }
+
     public function test_el_visitante_descarga_solo_documentos_publicados(): void
     {
         $publicado = $this->crear();
