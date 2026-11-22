@@ -1,107 +1,97 @@
-import { useState } from 'react'
-import { RUTA_BASE } from '@/compartido/api/cliente'
+import { useEffect, useRef, useState } from 'react'
+import { Boton } from '@/compartido/ui/Boton'
 import { EstadoCarga, MensajeError } from '@/compartido/ui/EstadoCarga'
+import { IconoCerrar } from '@/compartido/ui/Iconos'
 import { TituloPagina } from '@/compartido/ui/TituloPagina'
 import { TarjetaGaleria } from '../componentes/TarjetaGaleria'
+import { urlImagen } from '../urlImagen'
 import { useGaleria } from '../hooks/useGaleria'
 import type { Galeria } from '../tipos'
 
+/**
+ * Página pública «Galería multimedia» (CU-06).
+ *
+ * El visor usa <dialog> nativo con showModal(): el navegador ya cierra con Esc, mantiene el foco dentro mientras
+ * está abierto, deja inerte el resto de la página y devuelve el foco a la foto que lo abrió al cerrar.
+ * Un clic fuera de la imagen (en el fondo oscuro) también lo cierra.
+ */
 export function ListaGaleria() {
-  const { data: galerias, isPending, isError } = useGaleria({ publicadas: true })
-  const [seleccionada, setSeleccionada] = useState<Galeria | null>(null)
+  const { data: fotos, isPending, isError, refetch } = useGaleria({ publicadas: true })
+  const [abierta, setAbierta] = useState<Galeria | null>(null)
+  const visor = useRef<HTMLDialogElement>(null)
 
-  const urlModal = seleccionada
-    ? seleccionada.imagen.startsWith('http://') ||
-      seleccionada.imagen.startsWith('https://') ||
-      !RUTA_BASE
-      ? seleccionada.imagen
-      : `${RUTA_BASE}${seleccionada.imagen}`
-    : ''
+  useEffect(() => {
+    const dialogo = visor.current
+    if (!dialogo) return
+    if (abierta && !dialogo.open) dialogo.showModal()
+    if (!abierta && dialogo.open) dialogo.close()
+  }, [abierta])
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
-      <TituloPagina
-        titulo="Galería Multimedia"
-        subtitulo="Fotografías de eventos, actividades académicas y vida universitaria de la Carrera de Administración de Empresas."
-      />
+    <div className="mx-auto max-w-6xl">
+      <TituloPagina titulo="Galería multimedia" subtitulo="Fotografías de eventos, actividades académicas y vida universitaria de la Carrera." />
 
       {isPending && <EstadoCarga />}
 
       {isError && (
-        <MensajeError texto="No se pudo cargar la galería multimedia. Intente nuevamente." />
-      )}
-
-      {!isPending && !isError && galerias && galerias.length === 0 && (
-        <div className="rounded-tema border border-borde bg-fondo p-12 text-center">
-          <p className="text-texto">No hay fotografías disponibles en la galería en este momento.</p>
+        <div className="mx-auto max-w-xl space-y-4 py-10 text-center">
+          <MensajeError texto="No se pudo cargar la galería." />
+          <Boton variante="borde" onClick={() => refetch()}>
+            Reintentar
+          </Boton>
         </div>
       )}
 
-      {!isPending && !isError && galerias && galerias.length > 0 && (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {galerias.map((item) => (
-            <TarjetaGaleria
-              key={item.id}
-              item={item}
-              aspecto="square"
-              alHacerClic={(seleccionado) => setSeleccionada(seleccionado)}
-            />
+      {fotos && fotos.length === 0 && (
+        <p className="rounded-tema bg-superficie p-10 text-center text-texto-suave">Todavía no hay fotografías en la galería.</p>
+      )}
+
+      {fotos && fotos.length > 0 && (
+        <ul className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {fotos.map((foto) => (
+            <li key={foto.id}>
+              <TarjetaGaleria item={foto} alAbrir={setAbierta} />
+            </li>
           ))}
-        </div>
+        </ul>
       )}
 
-      {/* Modal con imagen en grande y descripción */}
-      {seleccionada && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="modal-titulo"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-marino-oscuro/80 p-4 backdrop-blur-sm"
-          onClick={() => setSeleccionada(null)}
-        >
-          <div
-            className="relative max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-tema border border-borde bg-fondo p-4 sm:p-6"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Botón cerrar */}
+      <dialog
+        ref={visor}
+        aria-labelledby={abierta?.titulo ? 'visor-titulo' : undefined}
+        aria-label={abierta?.titulo ? undefined : 'Fotografía ampliada'}
+        onClose={() => setAbierta(null)}
+        onClick={(e) => {
+          // El clic en el fondo cae sobre el propio <dialog>; dentro del contenido cae en sus hijos
+          if (e.target === e.currentTarget) visor.current?.close()
+        }}
+        className="m-auto max-h-[90vh] w-[calc(100%-2rem)] max-w-4xl overflow-y-auto rounded-tema bg-tarjeta p-0 text-texto backdrop:bg-marino-oscuro/80 backdrop:backdrop-blur-sm"
+      >
+        {abierta && (
+          <div className="relative p-4 sm:p-6">
             <button
               type="button"
-              onClick={() => setSeleccionada(null)}
-              className="absolute top-4 right-4 z-10 grid h-8 w-8 place-items-center rounded-tema border border-borde bg-fondo text-texto hover:border-acento hover:text-acento"
-              aria-label="Cerrar visor"
+              onClick={() => visor.current?.close()}
+              aria-label="Cerrar el visor"
+              className="absolute right-4 top-4 z-10 grid h-10 w-10 place-items-center rounded-full bg-tarjeta text-titulo sombra-suave transition-colors hover:text-acento focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primario"
             >
-              ✕
+              <IconoCerrar width={20} height={20} aria-hidden="true" />
             </button>
 
-            {/* Imagen grande */}
-            <div className="flex max-h-[65vh] w-full items-center justify-center overflow-hidden rounded-tema bg-marino-oscuro/5">
-              <img
-                src={urlModal}
-                alt={seleccionada.titulo || 'Fotografía ampliada'}
-                className="max-h-[65vh] w-auto max-w-full object-contain"
-              />
-            </div>
+            <img src={urlImagen(abierta.imagen)} alt={abierta.titulo || 'Fotografía ampliada'} className="mx-auto max-h-[65vh] w-auto max-w-full rounded-tema object-contain" />
 
-            {/* Información al pie */}
-            <div className="mt-4 space-y-2">
-              {seleccionada.titulo && (
-                <h2 id="modal-titulo" className="text-xl font-bold text-titulo">
-                  {seleccionada.titulo}
+            <div className="mt-4 space-y-2 pr-12">
+              {abierta.titulo && (
+                <h2 id="visor-titulo" className="text-xl text-titulo">
+                  {abierta.titulo}
                 </h2>
               )}
-              {seleccionada.descripcion && (
-                <p className="whitespace-pre-line text-sm text-texto">
-                  {seleccionada.descripcion}
-                </p>
-              )}
-              <div className="flex flex-wrap items-center gap-4 pt-2 text-xs text-texto">
-                {seleccionada.creado_en && <span>Fecha: {seleccionada.creado_en}</span>}
-                {seleccionada.autor && <span>Publicado por: {seleccionada.autor}</span>}
-              </div>
+              {abierta.descripcion && <p className="whitespace-pre-line text-sm text-texto">{abierta.descripcion}</p>}
+              {abierta.creado_en && <p className="text-xs text-texto-suave">{abierta.creado_en}</p>}
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </dialog>
     </div>
   )
 }

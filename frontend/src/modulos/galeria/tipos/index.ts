@@ -3,7 +3,9 @@ export interface Galeria {
   titulo: string | null
   descripcion: string | null
   imagen: string
-  publicado: boolean
-  autor: string | null
+  /** Solo en el panel */
+  publicado?: boolean
+  /** Solo en el panel */
+  autor?: string | null
   creado_en: string
 }
