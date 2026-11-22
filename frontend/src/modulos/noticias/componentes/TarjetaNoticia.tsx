@@ -1,60 +1,39 @@
 import { Link } from 'react-router'
-import { Calendar, User } from 'lucide-react'
+import { IconoCalendario, IconoNoticias } from '@/compartido/ui/Iconos'
 import type { Noticia } from '../tipos'
 
-interface TarjetaNoticiaProps {
-  noticia: Noticia
-}
+/**
+ * Toda la tarjeta es un solo enlace (antes había dos al mismo destino, el título y «Leer más»).
+ * Mismo comportamiento que las tarjetas de la portada: sube 2 px, la sombra crece y el foco de teclado se ve.
+ */
+export function TarjetaNoticia({ noticia }: { noticia: Noticia }) {
+  const fecha = noticia.publicada_en || noticia.creada_en
 
-export function TarjetaNoticia({ noticia }: TarjetaNoticiaProps) {
   return (
-    <article className="group flex flex-col overflow-hidden rounded-tema border border-borde bg-fondo font-montserrat shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md">
+    <Link
+      to={`/noticias/${noticia.id}`}
+      className="group flex h-full flex-col overflow-hidden rounded-tema border border-borde-tarjeta bg-tarjeta sombra-suave transition duration-200 ease-out hover:-translate-y-0.5 hover:sombra-elevada focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primario motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+    >
       {noticia.imagen ? (
-        <div className="relative aspect-video w-full overflow-hidden bg-marino-oscuro">
-          <img
-            src={noticia.imagen}
-            alt={noticia.titulo}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-            loading="lazy"
-          />
-        </div>
+        <img src={noticia.imagen} alt="" loading="lazy" className="aspect-video w-full bg-fondo object-cover" />
       ) : (
-        <div className="flex aspect-video w-full items-center justify-center bg-marino text-sobre-primario">
-          <span className="text-sm font-medium">UAGRM Noticias</span>
+        <div aria-hidden="true" className="flex aspect-video w-full items-center justify-center bg-fondo text-texto-suave">
+          <IconoNoticias width={36} height={36} />
         </div>
       )}
 
       <div className="flex flex-1 flex-col p-5">
-        <div className="mb-3 flex items-center gap-4 text-xs text-texto opacity-75">
-          <span className="flex items-center gap-1">
-            <Calendar className="h-3.5 w-3.5 text-acento" />
-            {noticia.publicada_en || noticia.creada_en}
-          </span>
-          <span className="flex items-center gap-1">
-            <User className="h-3.5 w-3.5 text-acento" />
-            {noticia.autor}
-          </span>
-        </div>
-
-        <h3 className="mb-2 line-clamp-2 text-lg font-bold text-titulo transition-colors group-hover:text-acento">
-          <Link to={`/noticias/${noticia.id}`}>
-            {noticia.titulo}
-          </Link>
-        </h3>
-
-        <p className="mb-4 line-clamp-3 flex-1 text-sm text-texto">
-          {noticia.resumen}
-        </p>
-
-        <div className="pt-2">
-          <Link
-            to={`/noticias/${noticia.id}`}
-            className="inline-flex items-center text-sm font-semibold text-acento hover:underline"
-          >
-            Leer más &rarr;
-          </Link>
-        </div>
+        {fecha && (
+          <p className="flex items-center gap-1.5 text-sm text-texto-suave">
+            <IconoCalendario width={15} height={15} aria-hidden="true" /> {fecha}
+          </p>
+        )}
+        <h2 className="mt-2 line-clamp-2 break-words text-lg leading-snug text-titulo transition-colors duration-200 group-hover:text-acento">
+          {noticia.titulo}
+        </h2>
+        <p className="mt-2 line-clamp-3 flex-1 break-words text-sm leading-relaxed text-texto-suave">{noticia.resumen}</p>
+        <span className="mt-4 text-sm font-semibold text-acento">Leer la noticia →</span>
       </div>
-    </article>
+    </Link>
   )
 }

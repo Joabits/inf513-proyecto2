@@ -8,8 +8,10 @@ export interface Evento {
   fecha_fin_iso?: string
   lugar: string
   enlace: string | null
-  publicado: boolean
-  autor: string
+  /** Solo en el panel */
+  publicado?: boolean
+  /** Solo en el panel: es la cuenta que lo cargó, no quien lo organiza */
+  autor?: string
 }
 
 export type EventoEntrada = {
