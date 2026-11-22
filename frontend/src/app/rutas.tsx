@@ -16,7 +16,9 @@ import { rutasGestionInnova, rutasInnova } from '@/modulos/innova'
 import { rutasGestionInvestigacion, rutasInvestigacion } from '@/modulos/investigacion'
 import { rutasMallaCurricular } from '@/modulos/malla-curricular'
 import { rutasDocentes, rutasGestionDocentes } from '@/modulos/docentes'
+import { rutasGestionNoticias, rutasNoticias } from '@/modulos/noticias'
 import { rutasGestionInstitucional, rutasInstitucional } from '@/modulos/institucional'
+import { rutasEventos, rutasGestionEventos } from '@/modulos/eventos'
 import { rutasGestionUsuarios, rutasPerfil } from '@/modulos/usuarios'
 import { rutasGestionRevista, rutasRevista } from '@/modulos/revista'
 import { rutasGestionBitacora } from '@/modulos/bitacora'
@@ -40,9 +42,11 @@ export const router = createBrowserRouter(
         ...rutasDocumentos,
         ...rutasInstitucional,
         ...rutasInvestigacion,
+        ...rutasNoticias,
         ...rutasInnova,
         ...rutasMallaCurricular,
         ...rutasRevista,
+        ...rutasEventos,
         // Cualquier ruta del menú cuyo módulo aún no existe
         { path: '*', element: <EnConstruccion /> },
       ],
@@ -54,6 +58,7 @@ export const router = createBrowserRouter(
         { path: 'gestion', element: <PanelGestion /> },
         ...rutasGestionInicio,
         ...rutasGestionDocentes,
+        ...rutasGestionNoticias,
         ...rutasGestionDocumentos,
         ...rutasGestionUsuarios,
         ...rutasPerfil,
@@ -63,6 +68,7 @@ export const router = createBrowserRouter(
         ...rutasGestionInvestigacion,
         ...rutasGestionRevista,
         ...rutasGestionBitacora,
+        ...rutasGestionEventos,
         // Cualquier opción del panel cuyo módulo aún no existe
         { path: 'gestion/*', element: <EnConstruccion /> },
       ],

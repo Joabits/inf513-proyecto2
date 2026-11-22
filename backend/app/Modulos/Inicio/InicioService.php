@@ -2,6 +2,7 @@
 
 namespace App\Modulos\Inicio;
 
+use App\Compartido\Portada\SeccionPortada;
 use App\Compartido\Servicios\Bitacora;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -22,7 +23,23 @@ class InicioService
             'banners' => Banner::orderBy('orden')->get(),
             'cifras' => Cifra::orderBy('orden')->get(),
             'accesos' => Acceso::orderBy('orden')->get(),
+            'secciones' => $this->secciones(),
         ];
+    }
+
+    /**
+     * Contenido que otros módulos aportan a la portada (CU-01), por clave: ['noticias' => [...], 'eventos' => [...]].
+     * Cada módulo lo declara en su en_portada.php; si un módulo no está instalado, su sección simplemente no aparece.
+     *
+     * @return array<string, list<array<string, mixed>>>
+     */
+    public function secciones(): array
+    {
+        return collect(glob(app_path('Modulos/*/en_portada.php')))
+            ->flatMap(fn (string $archivo) => require $archivo)
+            ->map(fn (string $clase) => app($clase))
+            ->mapWithKeys(fn (SeccionPortada $seccion) => [$seccion->clave() => $seccion->elementos()])
+            ->all();
     }
 
     public function actualizarPortada(array $datos, User $usuario): void

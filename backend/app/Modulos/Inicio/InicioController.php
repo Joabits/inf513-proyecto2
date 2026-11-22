@@ -18,6 +18,8 @@ class InicioController extends Controller
             'banners' => BannerResource::collection($contenido['banners']),
             'cifras' => CifraResource::collection($contenido['cifras']),
             'accesos' => AccesoResource::collection($contenido['accesos']),
+            // Objeto JSON aunque esté vacío: el frontend lo lee por clave
+            'secciones' => (object) $contenido['secciones'],
         ];
     }
 
