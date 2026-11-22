@@ -59,8 +59,10 @@ class NoticiasTest extends TestCase
             ->assertJsonFragment([
                 'id' => $noticia->id,
                 'titulo' => 'Noticia Pública UAGRM',
-                'publicada' => true,
             ]);
+        // Lo público no lleva datos internos: ni el estado ni la cuenta que la cargó
+        $this->assertArrayNotHasKey('publicada', $response->json('data.0'));
+        $this->assertArrayNotHasKey('autor', $response->json('data.0'));
     }
 
     public function test_visitante_no_ve_borradores(): void

@@ -46,8 +46,10 @@ class GaleriaTest extends TestCase
         $respuesta->assertJsonFragment([
             'titulo' => 'Acto de Colación 2026',
             'descripcion' => 'Entrega de títulos a la promoción.',
-            'publicado' => true,
         ]);
+        // Lo público no lleva datos internos: ni el estado ni la cuenta que la subió
+        $this->assertArrayNotHasKey('publicado', $respuesta->json('data.0'));
+        $this->assertArrayNotHasKey('autor', $respuesta->json('data.0'));
     }
 
     public function test_visitante_no_ve_borradores(): void

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class Controller extends BaseController
 {
@@ -13,24 +14,26 @@ class Controller extends BaseController
 
     public function index(HttpRequest $request): AnonymousResourceCollection
     {
-        $esEditor = $request->user() && $request->user()->tienePermiso('galeria.ver');
-        $soloPublicadas = ! $esEditor || $request->boolean('publicadas');
+        $esEditor = (bool) $request->user('sanctum')?->tienePermiso('galeria.ver');
 
-        $items = $this->servicio->listar($soloPublicadas);
+        // El panel (sin parámetros) ve todo, con los datos internos; lo público, solo lo publicado y sin ellos
+        if ($esEditor && ! $request->boolean('publicadas')) {
+            return Resource::collection($this->servicio->listar(false));
+        }
 
-        return Resource::collection($items);
+        return GaleriaPublicaResource::collection($this->servicio->listar(true));
     }
 
-    public function show(int $id, HttpRequest $request): Resource
+    public function show(int $id, HttpRequest $request): JsonResource
     {
         $galeria = $this->servicio->obtener($id);
 
-        $esEditor = $request->user() && $request->user()->tienePermiso('galeria.ver');
+        $esEditor = (bool) $request->user('sanctum')?->tienePermiso('galeria.ver');
         if (! $galeria->publicado && ! $esEditor) {
             abort(404, 'Elemento no encontrado o no publicado.');
         }
 
-        return new Resource($galeria);
+        return $esEditor ? new Resource($galeria) : new GaleriaPublicaResource($galeria);
     }
 
     public function store(Request $request): JsonResponse
