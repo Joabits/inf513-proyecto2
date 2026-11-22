@@ -121,7 +121,7 @@ export function ListaDocumentos() {
           </div>
 
           {visibles.length > 0 ? (
-            <ul className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="mt-4 grid gap-6 md:grid-cols-2">
               {visibles.map((doc) => (
                 <li key={doc.id}>
                   <TarjetaDocumento documento={doc} />
