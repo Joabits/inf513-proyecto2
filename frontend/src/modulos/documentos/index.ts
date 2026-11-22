@@ -1,1 +1,2 @@
-export { rutasGestionDocumentos } from './rutas'
+export { rutasDocumentos, rutasGestionDocumentos } from './rutas'
+export type { Documento } from './tipos/index'

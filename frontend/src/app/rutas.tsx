@@ -11,6 +11,7 @@ import { rutasGestionConfiguracion } from '@/modulos/configuracion'
 import { rutasContacto } from '@/modulos/contacto'
 import { rutasBusqueda } from '@/modulos/busqueda'
 import { rutasGestionDocumentos } from '@/modulos/documentos'
+import { rutasDocumentos, rutasGestionDocumentos } from '@/modulos/documentos'
 import { rutasGestionInicio, rutasInicio } from '@/modulos/inicio'
 import { rutasGestionInnova, rutasInnova } from '@/modulos/innova'
 import { rutasGestionInvestigacion, rutasInvestigacion } from '@/modulos/investigacion'
@@ -36,6 +37,7 @@ export const router = createBrowserRouter(
         ...rutasBusqueda,
         ...rutasContacto,
         ...rutasDocentes,
+        ...rutasDocumentos,
         ...rutasInstitucional,
         ...rutasInvestigacion,
         ...rutasInnova,
