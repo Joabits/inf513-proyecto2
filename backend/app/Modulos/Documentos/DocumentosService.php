@@ -24,6 +24,16 @@ class DocumentosService
         return Documento::with(self::RELACIONES)->withCount('versiones')->latest('updated_at')->latest('id')->get();
     }
 
+    /** Lo que ve el visitante: solo lo publicado y sin cargar a quien lo subió (ese dato no sale del panel). */
+    public function listarPublicos(): Collection
+    {
+        return Documento::with('categoria')
+            ->where('publicado', true)
+            ->latest('updated_at')
+            ->latest('id')
+            ->get();
+    }
+
     public function categorias(): Collection
     {
         return Categoria::orderBy('nombre')->get();

@@ -4,6 +4,7 @@ use App\Modulos\Documentos\DocumentosController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/documentos/{documento}/descargar', [DocumentosController::class, 'descargarPublico']);
+Route::get('/documentos', [DocumentosController::class, 'listarPublicos']);
 
 Route::middleware('auth:sanctum')->prefix('gestion/documentos')->group(function () {
     Route::get('/', [DocumentosController::class, 'listar'])->middleware('permiso:documentos.ver');

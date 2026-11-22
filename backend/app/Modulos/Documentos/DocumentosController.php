@@ -17,6 +17,11 @@ class DocumentosController extends Controller
         return DocumentoResource::collection($this->servicio->listar());
     }
 
+    public function listarPublicos()
+    {
+        return DocumentoPublicoResource::collection($this->servicio->listarPublicos());
+    }
+
     public function categorias()
     {
         return CategoriaResource::collection($this->servicio->categorias());
