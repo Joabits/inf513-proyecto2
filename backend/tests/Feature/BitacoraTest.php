@@ -165,8 +165,11 @@ class BitacoraTest extends TestCase
 
     public function test_los_textos_largos_se_recortan(): void
     {
+        // Sin guardar: PostgreSQL rechaza un nombre de 500 caracteres (varchar 255) antes de llegar a la bitácora.
+        // Lo que se prueba es el recorte que hace la bitácora con un cambio largo, sea del campo que sea.
         $persona = User::find($this->cuenta(Rol::USUARIO)->id);
-        $persona->update(['name' => str_repeat('a', 500)]);
+        $persona->name = str_repeat('a', 500);
+        $persona->syncChanges();
 
         $this->assertLessThanOrEqual(303, mb_strlen(Bitacora::diferencias($persona)['name']['despues']));
     }
@@ -268,9 +271,12 @@ class BitacoraTest extends TestCase
         $this->fila(['accion' => 'exportar', 'recurso' => 'Bitácora']);
         $this->fila(['accion' => 'cambiar_clave', 'recurso' => 'User #4']);
         $this->fila(['tipo' => 'auditoria', 'accion' => 'cambiar_rol', 'recurso' => 'Usuario #4']);
-        $this->fila(['tipo' => 'auditoria', 'accion' => 'quitar_permiso', 'recurso' => 'Rol Usuario']);
+        $this->fila(['tipo' => 'auditoria', 'accion' => 'quitar_permiso', 'recurso' => 'Rol de prueba']);
 
-        $acciones = fn (array $filtros) => collect($this->consultar($director, $filtros)->json('data'))->pluck('accion')->sort()->values()->all();
+        // Solo las filas de esta prueba: en PostgreSQL los triggers ya registraron la siembra inicial de permisos
+        $propias = ['Proyecto #1', 'Proyecto #2', 'Bitácora', 'User #4', 'Usuario #4', 'Rol de prueba'];
+        $acciones = fn (array $filtros) => collect($this->consultar($director, $filtros)->json('data'))
+            ->whereIn('recurso', $propias)->pluck('accion')->sort()->values()->all();
 
         $this->assertSame(['cambiar_rol', 'eliminar', 'quitar_permiso'], $acciones(['importancia' => 'importantes']),
             'exportar y cambiar contraseñas se ven, pero no se marcan como importantes');
