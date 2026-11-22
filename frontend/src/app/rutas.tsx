@@ -18,6 +18,7 @@ import { rutasMallaCurricular } from '@/modulos/malla-curricular'
 import { rutasDocentes, rutasGestionDocentes } from '@/modulos/docentes'
 import { rutasGestionNoticias, rutasNoticias } from '@/modulos/noticias'
 import { rutasGestionInstitucional, rutasInstitucional } from '@/modulos/institucional'
+import { rutasEventos, rutasGestionEventos } from '@/modulos/eventos'
 import { rutasGestionUsuarios, rutasPerfil } from '@/modulos/usuarios'
 import { rutasGestionRevista, rutasRevista } from '@/modulos/revista'
 
@@ -43,6 +44,7 @@ export const router = createBrowserRouter(
         ...rutasInnova,
         ...rutasMallaCurricular,
         ...rutasRevista,
+        ...rutasEventos,
         // Cualquier ruta del menú cuyo módulo aún no existe
         { path: '*', element: <EnConstruccion /> },
       ],
@@ -63,6 +65,7 @@ export const router = createBrowserRouter(
         ...rutasGestionInnova,
         ...rutasGestionInvestigacion,
         ...rutasGestionRevista,
+        ...rutasGestionEventos,
         // Cualquier opción del panel cuyo módulo aún no existe
         { path: 'gestion/*', element: <EnConstruccion /> },
       ],
