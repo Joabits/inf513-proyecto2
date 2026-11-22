@@ -8,3 +8,9 @@ export function formatoTamano(bytes: number) {
 }
 
 export const NOMBRE_TIPO = { pdf: 'PDF', docx: 'Word', xlsx: 'Excel' } as const
+
+/** «PDF», «Word», «Excel» para mostrar al visitante; un tipo desconocido se muestra en mayúsculas. */
+export function nombreFormato(tipo?: string) {
+  if (!tipo) return null
+  return NOMBRE_TIPO[tipo as keyof typeof NOMBRE_TIPO] ?? tipo.toUpperCase()
+}
