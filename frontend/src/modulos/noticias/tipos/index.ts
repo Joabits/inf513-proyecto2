@@ -2,10 +2,13 @@ export interface Noticia {
   id: number
   titulo: string
   resumen: string
-  contenido: string
+  /** Solo en el detalle y en el panel */
+  contenido?: string
   imagen: string | null
-  publicada: boolean
+  /** Solo en el panel */
+  publicada?: boolean
   publicada_en: string | null
-  autor: string
+  /** Solo en el panel: es la cuenta que la cargó, no se muestra al público */
+  autor?: string
   creada_en: string
 }
