@@ -40,9 +40,10 @@ class RevistaService
 
     public function actualizarContenido(array $datos, User $usuario): void
     {
-        (Revista::first() ?? new Revista)->fill($datos)->save();
+        $revista = Revista::first() ?? new Revista;
+        $revista->fill($datos)->save();
 
-        $this->bitacora->accion($usuario, 'editar', 'Revista INNOVAR: presentación y colaboradores');
+        $this->bitacora->accion($usuario, 'editar', 'Revista INNOVAR: presentación y colaboradores', cambios: Bitacora::diferencias($revista));
     }
 
     // ---------- Ediciones ----------
@@ -158,7 +159,7 @@ class RevistaService
             }
         });
 
-        $this->bitacora->accion($usuario, 'editar', $edicion, 'Orden de los artículos');
+        $this->bitacora->accion($usuario, 'editar', 'Revista INNOVAR: orden de los artículos', $edicion->nombre());
     }
 
     // ---------- Archivos ----------
