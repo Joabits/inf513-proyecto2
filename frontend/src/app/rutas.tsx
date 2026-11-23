@@ -13,7 +13,7 @@ import { rutasBusqueda } from '@/modulos/busqueda'
 import { rutasDocumentos, rutasGestionDocumentos } from '@/modulos/documentos'
 import { rutasGaleria, rutasGestionGaleria } from '@/modulos/galeria'
 import { rutasGestionDocumentos } from '@/modulos/documentos'
-import { rutasGestionGraduados } from '@/modulos/graduados'
+import { rutasGestionGraduados, rutasGraduados } from '@/modulos/graduados'
 import { rutasGestionInicio, rutasInicio } from '@/modulos/inicio'
 import { rutasGestionInnova, rutasInnova } from '@/modulos/innova'
 import { rutasGestionInvestigacion, rutasInvestigacion } from '@/modulos/investigacion'
@@ -55,6 +55,7 @@ export const router = createBrowserRouter(
         ...rutasGaleria,
         ...rutasInformacionAcademica,
         ...rutasVinculacion,
+        ...rutasGraduados,
         // Cualquier ruta del menú cuyo módulo aún no existe
         { path: '*', element: <EnConstruccion /> },
       ],

@@ -25,10 +25,64 @@ class GraduadosTest extends TestCase
         return User::factory()->create(['rol_id' => Rol::where('slug', $rol)->value('id')]);
     }
 
-    public function test_sin_sesion_no_puede_ver(): void
+    public function test_sin_sesion_no_puede_ver_panel(): void
     {
         $this->getJson('/api/gestion/graduados')
             ->assertUnauthorized();
+    }
+
+    public function test_visitante_puede_consultar_graduados_publicos(): void
+    {
+        $editor = $this->editor();
+        Graduado::create([
+            'nombre_completo' => 'Mario Gomez',
+            'ci' => '1234567',
+            'correo' => 'mario@ejemplo.com',
+            'telefono' => '70000000',
+            'gestion_ingreso' => 'I-2018',
+            'gestion_egreso' => 'II-2023',
+            'modalidad' => 'Tesis de Grado',
+            'titulo_tema' => 'Sistema de información',
+            'user_id' => $editor->id,
+        ]);
+
+        $this->getJson('/api/graduados')
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.nombre_completo', 'Mario Gomez');
+    }
+
+    public function test_exportar_csv_sin_sesion_da_error(): void
+    {
+        $this->getJson('/api/gestion/graduados/exportar')
+            ->assertUnauthorized();
+    }
+
+    public function test_editor_puede_exportar_csv(): void
+    {
+        $editor = $this->editor();
+        Graduado::create([
+            'nombre_completo' => 'Mario Gomez',
+            'ci' => '1234567',
+            'correo' => 'mario@ejemplo.com',
+            'telefono' => '70000000',
+            'gestion_ingreso' => 'I-2018',
+            'gestion_egreso' => 'II-2023',
+            'modalidad' => 'Tesis de Grado',
+            'titulo_tema' => 'Sistema de información',
+            'user_id' => $editor->id,
+        ]);
+
+        $response = $this->actingAs($editor)
+            ->get('/api/gestion/graduados/exportar');
+
+        $response->assertOk();
+        $this->assertStringContainsString('text/csv', $response->headers->get('Content-Type'));
+        $content = $response->streamedContent();
+        $this->assertStringContainsString("\xEF\xBB\xBF", $content);
+        $this->assertStringContainsString('Nombre,CI,Correo', $content);
+        $this->assertStringContainsString('"Gestión Ingreso"', $content);
+        $this->assertStringContainsString('Mario Gomez', $content);
     }
 
     public function test_editor_crea_un_graduado(): void

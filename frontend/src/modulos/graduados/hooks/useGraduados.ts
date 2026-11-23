@@ -1,8 +1,22 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { actualizarGraduado, crearGraduado, eliminarGraduado, getGraduados } from '../api/graduados'
+import {
+  actualizarGraduado,
+  crearGraduado,
+  eliminarGraduado,
+  getGraduados,
+  getGraduadosPublicos,
+} from '../api/graduados'
 import type { GraduadoFormValores } from '../esquema/graduadoSchema'
 
 export const CLAVE_GRADUADOS = ['graduados']
+export const CLAVE_GRADUADOS_PUBLICOS = ['graduados-publicos']
+
+export function useGraduadosPublicos() {
+  return useQuery({
+    queryKey: CLAVE_GRADUADOS_PUBLICOS,
+    queryFn: getGraduadosPublicos,
+  })
+}
 
 export function useGraduados() {
   return useQuery({
@@ -18,6 +32,7 @@ export function useCrearGraduado() {
     mutationFn: (datos: GraduadoFormValores) => crearGraduado(datos),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: CLAVE_GRADUADOS })
+      queryClient.invalidateQueries({ queryKey: CLAVE_GRADUADOS_PUBLICOS })
     },
   })
 }
@@ -29,6 +44,7 @@ export function useActualizarGraduado() {
     mutationFn: ({ id, datos }: { id: number; datos: GraduadoFormValores }) => actualizarGraduado(id, datos),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: CLAVE_GRADUADOS })
+      queryClient.invalidateQueries({ queryKey: CLAVE_GRADUADOS_PUBLICOS })
     },
   })
 }
@@ -40,6 +56,7 @@ export function useEliminarGraduado() {
     mutationFn: (id: number) => eliminarGraduado(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: CLAVE_GRADUADOS })
+      queryClient.invalidateQueries({ queryKey: CLAVE_GRADUADOS_PUBLICOS })
     },
   })
 }

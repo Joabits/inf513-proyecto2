@@ -4,8 +4,9 @@ import { Boton } from '@/compartido/ui/Boton'
 import { BotonConfirmar } from '@/compartido/ui/BotonConfirmar'
 import { CLASE_ENTRADA } from '@/compartido/ui/Campo'
 import { EstadoCarga, MensajeError } from '@/compartido/ui/EstadoCarga'
-import { IconoAgregar, IconoBuscar, IconoEditar, IconoEliminar } from '@/compartido/ui/Iconos'
+import { IconoAgregar, IconoBuscar, IconoDocumento, IconoEditar, IconoEliminar } from '@/compartido/ui/Iconos'
 import { TituloPagina } from '@/compartido/ui/TituloPagina'
+import { exportarGraduados } from '../api/graduados'
 import { FormularioGraduado } from '../componentes/FormularioGraduado'
 import { useEliminarGraduado, useGraduados } from '../hooks/useGraduados'
 import type { Graduado } from '../tipos'
@@ -62,11 +63,20 @@ export function GestionGraduados() {
           titulo="Gestión de Graduados"
           subtitulo="Registro y actualización de datos académicos de los graduados de la carrera."
         />
-        {puedeCrear && (
-          <Boton type="button" onClick={abrirCrear} className="mb-6 inline-flex items-center gap-2">
-            <IconoAgregar width={18} height={18} /> Registrar graduado
-          </Boton>
-        )}
+        <div className="mb-6 flex flex-wrap items-center gap-3">
+          <a
+            href={exportarGraduados()}
+            download
+            className="inline-flex items-center gap-2 rounded-tema border border-borde-tarjeta bg-superficie px-4 py-2 text-sm font-semibold text-titulo hover:bg-superficie/80 transition-colors"
+          >
+            <IconoDocumento width={18} height={18} /> Exportar a Excel/CSV
+          </a>
+          {puedeCrear && (
+            <Boton type="button" onClick={abrirCrear} className="inline-flex items-center gap-2">
+              <IconoAgregar width={18} height={18} /> Registrar graduado
+            </Boton>
+          )}
+        </div>
       </div>
 
       <div className="mb-6 flex flex-wrap items-center gap-4">

@@ -1,6 +1,15 @@
-import { cliente } from '@/compartido/api/cliente'
+import { cliente, RUTA_BASE } from '@/compartido/api/cliente'
 import type { Graduado } from '../tipos'
 import type { GraduadoFormValores } from '../esquema/graduadoSchema'
+
+export async function getGraduadosPublicos(): Promise<Graduado[]> {
+  const { data } = await cliente.get<{ data: Graduado[] }>('/graduados')
+  return data.data
+}
+
+export function exportarGraduados(): string {
+  return `${RUTA_BASE}/api/gestion/graduados/exportar`
+}
 
 export async function getGraduados(): Promise<Graduado[]> {
   const { data } = await cliente.get<{ data: Graduado[] }>('/gestion/graduados')
