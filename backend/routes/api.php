@@ -12,4 +12,3 @@ foreach (glob(app_path('Modulos/*/rutas.php')) as $rutasModulo) {
 }
 
 require __DIR__.'/../app/Modulos/Noticias/rutas.php';
-
