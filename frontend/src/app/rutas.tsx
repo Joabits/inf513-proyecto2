@@ -24,6 +24,7 @@ import { rutasEventos, rutasGestionEventos } from '@/modulos/eventos'
 import { rutasGestionUsuarios, rutasPerfil } from '@/modulos/usuarios'
 import { rutasGestionRevista, rutasRevista } from '@/modulos/revista'
 import { rutasGestionBitacora } from '@/modulos/bitacora'
+import { rutasGestionVinculacion, rutasVinculacion } from '@/modulos/vinculacion'
 
 /*
  * Cada módulo exporta sus rutas desde src/modulos/<modulo>/index.ts
@@ -51,6 +52,7 @@ export const router = createBrowserRouter(
         ...rutasEventos,
         ...rutasGaleria,
         ...rutasInformacionAcademica,
+        ...rutasVinculacion,
         // Cualquier ruta del menú cuyo módulo aún no existe
         { path: '*', element: <EnConstruccion /> },
       ],
@@ -75,6 +77,7 @@ export const router = createBrowserRouter(
         ...rutasGestionBitacora,
         ...rutasGestionEventos,
         ...rutasGestionGaleria,
+        ...rutasGestionVinculacion,
         // Cualquier opción del panel cuyo módulo aún no existe
         { path: 'gestion/*', element: <EnConstruccion /> },
       ],
