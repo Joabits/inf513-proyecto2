@@ -12,6 +12,8 @@ import { rutasContacto } from '@/modulos/contacto'
 import { rutasBusqueda } from '@/modulos/busqueda'
 import { rutasDocumentos, rutasGestionDocumentos } from '@/modulos/documentos'
 import { rutasGaleria, rutasGestionGaleria } from '@/modulos/galeria'
+import { rutasGestionDocumentos } from '@/modulos/documentos'
+import { rutasGestionGraduados } from '@/modulos/graduados'
 import { rutasGestionInicio, rutasInicio } from '@/modulos/inicio'
 import { rutasGestionInnova, rutasInnova } from '@/modulos/innova'
 import { rutasGestionInvestigacion, rutasInvestigacion } from '@/modulos/investigacion'
@@ -66,6 +68,7 @@ export const router = createBrowserRouter(
         ...rutasGestionDocentes,
         ...rutasGestionNoticias,
         ...rutasGestionDocumentos,
+        ...rutasGestionGraduados,
         ...rutasGestionUsuarios,
         ...rutasPerfil,
         ...rutasGestionConfiguracion,

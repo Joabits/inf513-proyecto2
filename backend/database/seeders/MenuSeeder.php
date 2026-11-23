@@ -60,6 +60,7 @@ class MenuSeeder extends Seeder
                 ['Convenios y vinculación', '/gestion/vinculacion', 'vinculacion'],
                 ['Empresa Junior INNOVA', '/gestion/empresa-junior', 'empresa_junior'],
                 ['Solicitudes a INNOVA', '/gestion/solicitudes-innova', 'solicitudes_innova'],
+                ['Graduados', '/gestion/graduados', 'graduados'],
             ]],
             ['Comunicación', [
                 ['Noticias', '/gestion/noticias', 'noticias'],
@@ -70,7 +71,6 @@ class MenuSeeder extends Seeder
             ['Administración', [
                 ['Estadísticas', '/gestion/estadisticas', 'estadisticas'],
                 ['Usuarios', '/gestion/usuarios', 'usuarios'],
-                ['Graduados', '/gestion/graduados', 'graduados'],
                 ['Bitácora', '/gestion/bitacora', 'bitacora'],
                 ['Datos de contacto y enlaces', '/gestion/configuracion', 'configuracion'],
             ]],
