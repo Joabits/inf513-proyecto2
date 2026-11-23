@@ -18,6 +18,7 @@ import { rutasGestionInvestigacion, rutasInvestigacion } from '@/modulos/investi
 import { rutasMallaCurricular } from '@/modulos/malla-curricular'
 import { rutasDocentes, rutasGestionDocentes } from '@/modulos/docentes'
 import { rutasGestionNoticias, rutasNoticias } from '@/modulos/noticias'
+import { rutasGestionInformacionAcademica, rutasInformacionAcademica } from '@/modulos/informacion-academica'
 import { rutasGestionInstitucional, rutasInstitucional } from '@/modulos/institucional'
 import { rutasEventos, rutasGestionEventos } from '@/modulos/eventos'
 import { rutasGestionUsuarios, rutasPerfil } from '@/modulos/usuarios'
@@ -49,6 +50,7 @@ export const router = createBrowserRouter(
         ...rutasRevista,
         ...rutasEventos,
         ...rutasGaleria,
+        ...rutasInformacionAcademica,
         // Cualquier ruta del menú cuyo módulo aún no existe
         { path: '*', element: <EnConstruccion /> },
       ],
@@ -66,6 +68,7 @@ export const router = createBrowserRouter(
         ...rutasPerfil,
         ...rutasGestionConfiguracion,
         ...rutasGestionInstitucional,
+        ...rutasGestionInformacionAcademica,
         ...rutasGestionInnova,
         ...rutasGestionInvestigacion,
         ...rutasGestionRevista,

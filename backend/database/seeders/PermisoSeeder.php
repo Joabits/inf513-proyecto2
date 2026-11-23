@@ -21,6 +21,7 @@ class PermisoSeeder extends Seeder
         'institucional' => ['Información institucional', ['ver', 'editar']],
         'docentes' => ['Autoridades y docentes', self::CRUD],
         'info_academica' => ['Información académica', self::CRUD],
+        'informacion_academica' => ['Información académica', ['ver', 'editar']],
         'documentos' => ['Documentos', self::CRUD],
         'investigacion' => ['Investigación', self::CRUD],
         'revista' => ['Revista INNOVAR', self::CRUD],
@@ -43,7 +44,7 @@ class PermisoSeeder extends Seeder
     private const MATRIZ = [
         Rol::DIRECTOR => ['*'],
         Rol::EDITOR_INSTITUCIONAL => [
-            'inicio', 'institucional', 'docentes', 'info_academica', 'documentos',
+            'inicio', 'institucional', 'docentes', 'info_academica', 'informacion_academica', 'documentos',
             'investigacion', 'revista', 'vinculacion', 'empresa_junior', 'solicitudes_innova',
         ],
         Rol::EDITOR_COMUNICACION => ['noticias', 'eventos', 'galeria', 'mensajes'],

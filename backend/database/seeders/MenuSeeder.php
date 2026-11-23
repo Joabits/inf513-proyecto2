@@ -51,7 +51,7 @@ class MenuSeeder extends Seeder
                 ['Página de inicio', '/gestion/inicio', 'inicio'],
                 ['Información institucional', '/gestion/institucional', 'institucional'],
                 ['Autoridades y docentes', '/gestion/docentes', 'docentes'],
-                ['Información académica', '/gestion/informacion-academica', 'info_academica'],
+                ['Información académica', '/gestion/informacion-academica', 'informacion_academica'],
                 ['Documentos', '/gestion/documentos', 'documentos'],
             ]],
             ['Investigación y vinculación', [
