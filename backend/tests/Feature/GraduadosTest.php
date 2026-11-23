@@ -49,7 +49,32 @@ class GraduadosTest extends TestCase
         $this->getJson('/api/graduados')
             ->assertOk()
             ->assertJsonCount(1, 'data')
-            ->assertJsonPath('data.0.nombre_completo', 'Mario Gomez');
+            ->assertJsonPath('data.0.nombre_completo', 'Mario Gomez')
+            ->assertJsonPath('data.0.modalidad', 'Tesis de Grado');
+    }
+
+    public function test_el_directorio_publico_no_expone_datos_personales(): void
+    {
+        $editor = $this->editor();
+        Graduado::create([
+            'nombre_completo' => 'Mario Gomez',
+            'ci' => '1234567',
+            'correo' => 'mario@ejemplo.com',
+            'telefono' => '70000000',
+            'gestion_ingreso' => 'I-2018',
+            'gestion_egreso' => 'II-2023',
+            'modalidad' => 'Tesis de Grado',
+            'user_id' => $editor->id,
+        ]);
+
+        $respuesta = $this->getJson('/api/graduados')->assertOk();
+
+        foreach (['ci', 'correo', 'telefono', 'user_id', 'autor'] as $campo) {
+            $respuesta->assertJsonMissingPath("data.0.{$campo}");
+        }
+        $this->assertStringNotContainsString('1234567', $respuesta->getContent());
+        $this->assertStringNotContainsString('mario@ejemplo.com', $respuesta->getContent());
+        $this->assertStringNotContainsString($editor->email, $respuesta->getContent());
     }
 
     public function test_exportar_csv_sin_sesion_da_error(): void

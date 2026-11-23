@@ -22,7 +22,6 @@ export function ListaGraduados() {
       if (!buscado) return true
       return (
         normalizar(g.nombre_completo).includes(buscado) ||
-        normalizar(g.ci).includes(buscado) ||
         normalizar(g.gestion_egreso).includes(buscado) ||
         normalizar(g.modalidad).includes(buscado) ||
         (g.titulo_tema && normalizar(g.titulo_tema).includes(buscado))
@@ -46,7 +45,7 @@ export function ListaGraduados() {
             type="search"
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
-            placeholder="Buscar por nombre o CI..."
+            placeholder="Buscar por nombre, gestión, modalidad o tema..."
             className={`${CLASE_ENTRADA} !mt-0 pl-10`}
           />
         </div>
@@ -94,10 +93,6 @@ export function ListaGraduados() {
                     <h3 className="mt-4 text-base font-bold text-titulo">
                       {g.nombre_completo}
                     </h3>
-
-                    <p className="mt-1 text-xs text-texto-suave">
-                      CI: <span className="font-semibold text-texto">{g.ci}</span>
-                    </p>
 
                     {g.titulo_tema && (
                       <div className="mt-3 rounded-tema bg-superficie/50 p-3">

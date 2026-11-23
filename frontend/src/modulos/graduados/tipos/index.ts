@@ -20,6 +20,12 @@ export interface Graduado {
   updated_at?: string
 }
 
+/** Lo que publica el Directorio de Graduados (/alumni): sin carnet, correo ni teléfono. */
+export type GraduadoPublico = Pick<
+  Graduado,
+  'id' | 'nombre_completo' | 'gestion_ingreso' | 'gestion_egreso' | 'modalidad' | 'titulo_tema'
+>
+
 export type GraduadoFormEntrada = {
   nombre_completo: string
   ci: string

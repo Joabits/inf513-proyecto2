@@ -3,7 +3,6 @@
 namespace App\Modulos\Graduados;
 
 use App\Http\Controllers\Controller as BaseController;
-use App\Modulos\Graduados\Resource as GraduadoResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -24,7 +23,7 @@ class Controller extends BaseController
 
     public function listarPublicos(): AnonymousResourceCollection
     {
-        return GraduadoResource::collection($this->servicio->listar());
+        return GraduadoPublicoResource::collection($this->servicio->listar());
     }
 
     public function exportarCsv(): StreamedResponse
