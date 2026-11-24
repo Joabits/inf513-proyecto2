@@ -3,6 +3,7 @@
 namespace App\Modulos\Contacto;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -40,13 +41,16 @@ class MensajeContacto extends Model
         'atendido_en' => 'datetime',
     ];
 
+    /** El panel lee «atendido» en el JSON: ya no es columna, se calcula desde el estado. */
+    protected $appends = ['atendido'];
+
     public function atendidoPor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'atendido_por');
     }
 
-    public function atendido(): bool
+    protected function atendido(): Attribute
     {
-        return $this->estado === self::ATENDIDO;
+        return Attribute::get(fn () => $this->estado === self::ATENDIDO);
     }
 }

@@ -47,11 +47,14 @@ class AtenderMensajesTest extends TestCase
         $mensaje = $this->mensaje();
 
         $this->actingAs($editor)->putJson("/api/mensajes/{$mensaje->id}", ['atendido' => true, 'respuesta' => 'Le escribimos con las fechas.'])
-            ->assertOk();
+            ->assertOk()->assertJsonPath('data.atendido', true);
+
+        // El panel decide «Pendiente» o «Atendido» con este campo del JSON
+        $this->actingAs($editor)->getJson('/api/mensajes')->assertJsonPath('0.atendido', true);
 
         $mensaje->refresh();
         $this->assertSame(MensajeContacto::ATENDIDO, $mensaje->estado);
-        $this->assertTrue($mensaje->atendido());
+        $this->assertTrue($mensaje->atendido);
         $this->assertSame($editor->id, $mensaje->atendido_por);
         $this->assertNotNull($mensaje->atendido_en);
         $this->assertSame('Le escribimos con las fechas.', $mensaje->respuesta);
@@ -64,11 +67,13 @@ class AtenderMensajesTest extends TestCase
         $mensaje = $this->mensaje();
         $this->actingAs($editor)->putJson("/api/mensajes/{$mensaje->id}", ['atendido' => true])->assertOk();
 
-        $this->actingAs($editor)->putJson("/api/mensajes/{$mensaje->id}", ['atendido' => false])->assertOk();
+        $this->actingAs($editor)->putJson("/api/mensajes/{$mensaje->id}", ['atendido' => false])
+            ->assertOk()->assertJsonPath('data.atendido', false);
+        $this->actingAs($editor)->getJson('/api/mensajes')->assertJsonPath('0.atendido', false);
 
         $mensaje->refresh();
         $this->assertSame(MensajeContacto::NUEVO, $mensaje->estado);
-        $this->assertFalse($mensaje->atendido());
+        $this->assertFalse($mensaje->atendido);
         $this->assertNull($mensaje->atendido_por);
         $this->assertNull($mensaje->atendido_en);
     }
