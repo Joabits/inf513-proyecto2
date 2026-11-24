@@ -42,6 +42,7 @@ class DocentesService
             ...$datos,
             'orden' => $this->siguienteOrden($datos['grupo']),
             'foto' => $foto?->store(self::CARPETA, 'public'),
+            'user_id' => $usuario->id,
         ]);
 
         $this->bitacora->accion($usuario, 'crear', $persona, $persona->nombre);
@@ -61,7 +62,7 @@ class DocentesService
             $datos['foto'] = $foto?->store(self::CARPETA, 'public');
         }
 
-        $persona->update($datos);
+        $persona->update([...$datos, 'user_id' => $usuario->id]);
 
         $this->bitacora->accion($usuario, 'editar', $persona, $persona->nombre);
 

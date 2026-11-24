@@ -2,11 +2,16 @@
 
 namespace App\Modulos\MallaCurricular;
 
+use App\Compartido\Modelos\PerteneceAContenidoUnico;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Materia extends Model
 {
+    use PerteneceAContenidoUnico;
+
+    public const CONTENIDO = ['plan_id', PlanEstudios::class];
+
     protected $table = 'malla_materias';
 
     protected $fillable = ['sigla', 'nombre', 'semestre', 'horas_teoricas', 'horas_practicas', 'creditos', 'optativa', 'orden'];

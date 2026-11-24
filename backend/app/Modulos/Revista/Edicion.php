@@ -2,6 +2,7 @@
 
 namespace App\Modulos\Revista;
 
+use App\Compartido\Modelos\PerteneceAContenidoUnico;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +11,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Edicion extends Model
 {
+    use PerteneceAContenidoUnico;
+
+    public const CONTENIDO = ['revista_id', Revista::class];
+
     protected $table = 'revista_ediciones';
 
     protected $fillable = ['volumen', 'numero', 'anio', 'titulo', 'descripcion', 'portada', 'archivo', 'archivo_nombre', 'archivo_tamano', 'publicada', 'user_id'];

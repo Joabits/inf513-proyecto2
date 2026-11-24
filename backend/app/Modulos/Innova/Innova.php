@@ -3,6 +3,7 @@
 namespace App\Modulos\Innova;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /** Presentación de la Empresa Junior INNOVA: una sola fila. */
 class Innova extends Model
@@ -22,5 +23,10 @@ class Innova extends Model
     public static function recibeSolicitudes(): bool
     {
         return self::query()->value('recibe_solicitudes') ?? true;
+    }
+
+    public function servicios(): HasMany
+    {
+        return $this->hasMany(ServicioInnova::class, 'innova_id')->orderBy('orden');
     }
 }

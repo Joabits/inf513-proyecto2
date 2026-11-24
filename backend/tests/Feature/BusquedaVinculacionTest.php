@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use App\Modulos\InformacionAcademica\Model as InformacionAcademica;
+use App\Modulos\Innova\Innova;
 use App\Modulos\Innova\ServicioInnova;
 use App\Modulos\Vinculacion\Model as Vinculacion;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -32,6 +33,7 @@ class BusquedaVinculacionTest extends TestCase
     public function test_encuentra_informacion_academica_y_servicios_de_innova(): void
     {
         InformacionAcademica::create(['mision' => 'Formar líderes', 'vision' => 'Ser referentes', 'perfil_profesional' => 'Gerente', 'objetivos' => 'Alta gerencia y finanzas']);
+        Innova::create(['presentacion' => 'Empresa Junior de la Carrera']);
         ServicioInnova::create(['nombre' => 'Estudio de mercado', 'descripcion' => 'Análisis de clientes y competencia.', 'orden' => 0]);
 
         $this->assertContains('informacion_academica', $this->tipos('alta gerencia'));

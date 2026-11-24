@@ -3,6 +3,7 @@
 namespace App\Modulos\Investigacion;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /** Textos de semilleros, PIA e instituto vinculado: una sola fila. */
 class ContenidoInvestigacion extends Model
@@ -13,4 +14,9 @@ class ContenidoInvestigacion extends Model
         'semilleros_presentacion', 'semilleros_mision', 'semilleros_vision', 'semilleros_objetivos',
         'semilleros_coordinador', 'pia_presentacion', 'instituto',
     ];
+
+    public function semilleros(): HasMany
+    {
+        return $this->hasMany(Semillero::class, 'contenido_id')->orderBy('orden');
+    }
 }

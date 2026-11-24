@@ -42,9 +42,9 @@ class Controller extends BaseController
             : $request->input('estado', MensajeContacto::ATENDIDO) === MensajeContacto::ATENDIDO;
 
         $mensaje->update([
-            'atendido' => $atendido,
             'respuesta' => $request->has('respuesta') ? $request->input('respuesta') : $mensaje->respuesta,
             'estado' => $atendido ? MensajeContacto::ATENDIDO : MensajeContacto::NUEVO,
+            'atendido_por' => $atendido ? ($mensaje->atendido_por ?? $request->user()->id) : null,
             'atendido_en' => $atendido ? ($mensaje->atendido_en ?? now()) : null,
         ]);
 

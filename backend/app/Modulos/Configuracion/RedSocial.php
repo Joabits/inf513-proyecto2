@@ -2,10 +2,15 @@
 
 namespace App\Modulos\Configuracion;
 
+use App\Compartido\Modelos\PerteneceAContenidoUnico;
 use Illuminate\Database\Eloquent\Model;
 
 class RedSocial extends Model
 {
+    use PerteneceAContenidoUnico;
+
+    public const CONTENIDO = ['configuracion_id', DatosContacto::class];
+
     /** Redes admitidas y los dominios válidos de cada una (así no se pega un enlace de otra red por error). */
     public const DOMINIOS = [
         'facebook' => ['facebook.com', 'fb.com'],

@@ -3,6 +3,7 @@
 namespace App\Modulos\Estadisticas;
 
 use App\Modulos\Bitacora\BitacoraService;
+use App\Modulos\Contacto\MensajeContacto;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -103,7 +104,7 @@ class EstadisticasService
             'eventos_proximos' => $contar('eventos', fn ($q) => $q->where('publicado', true)->where('fecha_fin', '>=', now())),
             'documentos_publicados' => $contar('documentos', fn ($q) => $q->where('publicado', true)),
             'graduados' => $contar('graduados'),
-            'mensajes_pendientes' => $contar('mensajes_contacto', fn ($q) => $q->where('atendido', false)),
+            'mensajes_pendientes' => $contar('mensajes_contacto', fn ($q) => $q->where('estado', MensajeContacto::NUEVO)),
             'solicitudes_innova_pendientes' => $contar('innova_solicitudes', fn ($q) => $q->where('estado', 'pendiente')),
             'usuarios_activos' => $contar('users', fn ($q) => $q->where('activo', true)),
         ];

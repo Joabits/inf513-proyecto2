@@ -51,7 +51,8 @@ class AtenderMensajesTest extends TestCase
 
         $mensaje->refresh();
         $this->assertSame(MensajeContacto::ATENDIDO, $mensaje->estado);
-        $this->assertTrue($mensaje->atendido);
+        $this->assertTrue($mensaje->atendido());
+        $this->assertSame($editor->id, $mensaje->atendido_por);
         $this->assertNotNull($mensaje->atendido_en);
         $this->assertSame('Le escribimos con las fechas.', $mensaje->respuesta);
         $this->assertTrue(DB::table('bitacora')->where('accion', 'atender')->where('recurso', "Mensaje de contacto #{$mensaje->id}")->exists());
@@ -67,7 +68,8 @@ class AtenderMensajesTest extends TestCase
 
         $mensaje->refresh();
         $this->assertSame(MensajeContacto::NUEVO, $mensaje->estado);
-        $this->assertFalse($mensaje->atendido);
+        $this->assertFalse($mensaje->atendido());
+        $this->assertNull($mensaje->atendido_por);
         $this->assertNull($mensaje->atendido_en);
     }
 

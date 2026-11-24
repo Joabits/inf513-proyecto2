@@ -46,12 +46,7 @@ class InvestigacionSeeder extends Seeder
             }
         }
 
-        if (! Semillero::exists()) {
-            foreach (self::SEMILLEROS as $orden => $nombre) {
-                Semillero::create(compact('nombre', 'orden'));
-            }
-        }
-
+        // Primero el contenido: los semilleros cuelgan de él
         if (! ContenidoInvestigacion::exists()) {
             ContenidoInvestigacion::create([
                 'semilleros_presentacion' => 'Es un espacio académico donde estudiantes de la Carrera, con la orientación de docentes tutores, desarrollan habilidades de investigación mediante el trabajo colaborativo y la participación en proyectos científicos. Su propósito es fortalecer la formación investigativa, el pensamiento crítico y la generación de conocimiento aplicado, promoviendo soluciones a problemáticas empresariales y contribuyendo al desarrollo de la investigación y la producción científica de la Carrera.',
@@ -68,6 +63,12 @@ class InvestigacionSeeder extends Seeder
                 'pia_presentacion' => 'Es una estrategia académica aplicada en las asignaturas de la Carrera de Administración de Empresas y orientada a integrar la investigación dentro del proceso de enseñanza – aprendizaje. El propósito es promover la generación de proyectos académicos desde las asignaturas, permitiendo que los estudiantes desarrollen soluciones frente a problemáticas reales del entorno organizacional y socioeconómico; además de generar informes, presentaciones, ponencias, pósteres y propuestas de mejora.',
                 'instituto' => 'La FCEE cuenta con el Instituto de Investigaciones Económicas y Sociales José Ortiz Mercado (IIESJOM).',
             ]);
+        }
+
+        if (! Semillero::exists()) {
+            foreach (self::SEMILLEROS as $orden => $nombre) {
+                Semillero::create(compact('nombre', 'orden'));
+            }
         }
     }
 }

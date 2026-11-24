@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Modulos\Docentes\Persona;
 use App\Modulos\Revista\Articulo;
 use App\Modulos\Revista\Edicion;
+use App\Modulos\Revista\Revista;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -25,6 +26,9 @@ class BusquedaPersonalRevistaTest extends TestCase
 
     private function edicion(int $numero, bool $publicada, string $titulo, array $datos = []): Edicion
     {
+        // Las ediciones cuelgan de la presentación de la revista
+        Revista::firstOrCreate([], ['presentacion' => 'Revista INNOVAR', 'colaboradores' => 'Normas para colaboradores']);
+
         return Edicion::create(['numero' => $numero, 'anio' => 2026, 'titulo' => $titulo, 'publicada' => $publicada, ...$datos]);
     }
 
