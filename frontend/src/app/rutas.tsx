@@ -3,9 +3,9 @@ import { RUTA_BASE } from '@/compartido/api/cliente'
 import { Plantilla } from '@/compartido/layout/Plantilla'
 import { PlantillaAcceso } from '@/compartido/layout/PlantillaAcceso'
 import { PlantillaGestion } from '@/compartido/layout/PlantillaGestion'
-import { EnConstruccion } from '@/compartido/paginas/EnConstruccion'
 import { PaginaError } from '@/compartido/paginas/PaginaError'
 import { PanelGestion } from '@/compartido/paginas/PanelGestion'
+import { RutaDesconocida } from '@/compartido/paginas/RutaDesconocida'
 import { rutasAutenticacion } from '@/modulos/autenticacion'
 import { rutasGestionConfiguracion } from '@/modulos/configuracion'
 import { rutasContacto, rutasGestionContacto } from '@/modulos/contacto'
@@ -56,8 +56,8 @@ export const router = createBrowserRouter(
         ...rutasInformacionAcademica,
         ...rutasVinculacion,
         ...rutasGraduados,
-        // Cualquier ruta del menú cuyo módulo aún no existe
-        { path: '*', element: <EnConstruccion /> },
+        // Opción del menú sin módulo todavía («en construcción») o dirección que no existe («no encontrada»)
+        { path: '*', element: <RutaDesconocida /> },
       ],
     },
     {
@@ -84,8 +84,8 @@ export const router = createBrowserRouter(
         ...rutasGestionEventos,
         ...rutasGestionGaleria,
         ...rutasGestionVinculacion,
-        // Cualquier opción del panel cuyo módulo aún no existe
-        { path: 'gestion/*', element: <EnConstruccion /> },
+        // Lo mismo dentro del panel
+        { path: 'gestion/*', element: <RutaDesconocida /> },
       ],
     },
     {
