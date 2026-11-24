@@ -10,9 +10,13 @@ import type { Graduado } from '../tipos'
 interface PropsFormularioGraduado {
   graduado?: Graduado | null
   alTerminar: () => void
+  /** CU-10: el propio graduado guarda sus datos por otra ruta (Mis datos de graduado) */
+  guardarPropio?: (valores: GraduadoFormValores) => Promise<unknown>
+  /** En su propia página no hay a dónde volver: sin botón Cancelar */
+  sinCancelar?: boolean
 }
 
-export function FormularioGraduado({ graduado, alTerminar }: PropsFormularioGraduado) {
+export function FormularioGraduado({ graduado, alTerminar, guardarPropio, sinCancelar = false }: PropsFormularioGraduado) {
   const esEdicion = Boolean(graduado)
   const crear = useCrearGraduado()
   const actualizar = useActualizarGraduado()
@@ -38,7 +42,9 @@ export function FormularioGraduado({ graduado, alTerminar }: PropsFormularioGrad
 
   const guardar = async (valores: GraduadoFormValores) => {
     try {
-      if (esEdicion && graduado) {
+      if (guardarPropio) {
+        await guardarPropio(valores)
+      } else if (esEdicion && graduado) {
         await actualizar.mutateAsync({ id: graduado.id, datos: valores })
       } else {
         await crear.mutateAsync(valores)
@@ -161,11 +167,17 @@ export function FormularioGraduado({ graduado, alTerminar }: PropsFormularioGrad
       </Campo>
 
       <div className="flex flex-wrap items-center justify-end gap-3 pt-3">
-        <Boton type="button" variante="borde" onClick={alTerminar} disabled={isSubmitting}>
-          Cancelar
-        </Boton>
+        {!sinCancelar && (
+          <Boton type="button" variante="borde" onClick={alTerminar} disabled={isSubmitting}>
+            Cancelar
+          </Boton>
+        )}
         <Boton type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Guardando...' : esEdicion ? 'Actualizar graduado' : 'Registrar graduado'}
+          {isSubmitting
+            ? 'Guardando...'
+            : guardarPropio
+              ? esEdicion ? 'Guardar mis datos' : 'Registrar mis datos'
+              : esEdicion ? 'Actualizar graduado' : 'Registrar graduado'}
         </Boton>
       </div>
     </form>

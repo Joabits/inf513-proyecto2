@@ -19,3 +19,8 @@ Route::middleware(['auth:sanctum', 'permiso:contacto.editar'])->group(function (
     Route::put('/mensajes/{id}', [ContactoGestionController::class, 'update']);
     Route::patch('/mensajes/{id}', [ContactoGestionController::class, 'update']);
 });
+
+Route::middleware(['auth:sanctum', 'permiso:contacto.eliminar'])->group(function () {
+    Route::delete('/contacto/mensajes/{id}', [ContactoGestionController::class, 'destroy']);
+    Route::delete('/mensajes/{id}', [ContactoGestionController::class, 'destroy']);
+});

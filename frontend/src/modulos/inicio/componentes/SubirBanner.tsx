@@ -96,7 +96,7 @@ export function SubirBanner({ deshabilitado }: { deshabilitado: boolean }) {
           <span className="flex flex-col items-center gap-2 p-4 text-sm text-texto-suave">
             <IconoImagen width={28} height={28} />
             <span className="font-semibold text-titulo">Elegir imagen</span>
-            JPG, PNG o WebP · mínimo 1200 × 400 px · hasta {MAXIMO_MB} MB
+            JPG, PNG o WebP · mínimo 1200 × 400 px · hasta {MAXIMO_MB} MB. Se muestra en proporción 8:3 (ideal: 1920 × 720 px): con otra proporción se recortan los bordes.
           </span>
         )}
         <input

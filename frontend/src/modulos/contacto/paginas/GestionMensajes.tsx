@@ -1,12 +1,24 @@
 import { useState } from 'react'
-import { Mail, CheckCircle, Clock, X, MessageSquare, Eye, Inbox } from 'lucide-react'
+import { CheckCircle, Clock, X, MessageSquare, Eye, Inbox, RotateCcw } from 'lucide-react'
+import { usePermiso } from '@/compartido/sesion/usePermiso'
 import { Boton } from '@/compartido/ui/Boton'
-import { useAtenderMensaje, useMensajes } from '../hooks/useMensajes'
+import { BotonConfirmar } from '@/compartido/ui/BotonConfirmar'
+import { TituloPagina } from '@/compartido/ui/TituloPagina'
+import { CABECERA_TABLA } from '@/compartido/ui/tabla'
+import { useAtenderMensaje, useEliminarMensaje, useMensajes } from '../hooks/useMensajes'
 import type { MensajeContacto } from '../tipos'
+
+/** Estados con los colores del tema: pendiente en rojo de la marca (pide acción), atendido en azul. */
+const ESTADO = 'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold'
+const PENDIENTE = `${ESTADO} bg-primario text-sobre-primario`
+const ATENDIDO = `${ESTADO} bg-chip text-sobre-chip`
 
 export function GestionMensajes() {
   const { data: mensajes, isLoading, isError } = useMensajes()
   const atenderMutation = useAtenderMensaje()
+  const eliminarMutation = useEliminarMensaje()
+  const puedeAtender = usePermiso('contacto.editar')
+  const puedeEliminar = usePermiso('contacto.eliminar')
 
   const [mensajeSeleccionado, setMensajeSeleccionado] = useState<MensajeContacto | null>(null)
   const [respuesta, setRespuesta] = useState('')
@@ -35,6 +47,18 @@ export function GestionMensajes() {
       },
     )
   }
+
+  const handleVolverPendiente = () => {
+    if (!mensajeSeleccionado) return
+    atenderMutation.mutate({ id: mensajeSeleccionado.id, respuesta, atendido: false }, { onSuccess: cerrarModal })
+  }
+
+  const handleEliminar = () => {
+    if (!mensajeSeleccionado) return
+    eliminarMutation.mutate(mensajeSeleccionado.id, { onSuccess: cerrarModal })
+  }
+
+  const ocupado = atenderMutation.isPending || eliminarMutation.isPending
 
   const listaFiltrada = (mensajes || []).filter((m) => {
     if (filtroEstado === 'pendientes' && m.atendido) return false
@@ -69,19 +93,12 @@ export function GestionMensajes() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl p-4 sm:p-6 font-montserrat">
-      {/* Encabezado */}
-      <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
-          <h1 className="flex items-center gap-2 text-2xl font-bold text-titulo">
-            <Mail className="h-6 w-6 text-acento" />
-            Atención de Mensajes de Contacto
-          </h1>
-          <p className="text-sm text-texto">
-            Revise y responda las consultas y mensajes enviados por los visitantes del portal.
-          </p>
-        </div>
-      </div>
+    <div className="font-montserrat">
+      {/* Mismo encabezado que las demás secciones del panel */}
+      <TituloPagina
+        titulo="Atención de Mensajes de Contacto"
+        subtitulo="Revise y responda las consultas y mensajes enviados por los visitantes del portal."
+      />
 
       {/* Filtros */}
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -140,7 +157,7 @@ export function GestionMensajes() {
       )}
 
       {isError && (
-        <div className="rounded-tema border border-red-500/30 bg-red-500/10 p-4 text-center text-red-500">
+        <div className="rounded-tema border border-primario/30 bg-primario/10 p-4 text-center font-semibold text-acento">
           Ocurrió un error al cargar los mensajes de contacto. Por favor intente nuevamente.
         </div>
       )}
@@ -161,8 +178,8 @@ export function GestionMensajes() {
       {/* Tabla de mensajes */}
       {!isLoading && !isError && listaFiltrada.length > 0 && (
         <div className="overflow-x-auto rounded-tema border border-borde bg-fondo shadow-sm">
-          <table className="w-full text-left text-sm text-texto">
-            <thead className="border-b border-borde bg-marino-oscuro/10 text-xs uppercase text-titulo">
+          <table className="tabla-adaptable w-full text-left text-sm text-texto">
+            <thead className={CABECERA_TABLA}>
               <tr>
                 <th scope="col" className="px-4 py-3">Nombre</th>
                 <th scope="col" className="px-4 py-3">Correo</th>
@@ -178,24 +195,24 @@ export function GestionMensajes() {
                   <td className="px-4 py-3 font-semibold text-titulo">
                     {item.nombre}
                   </td>
-                  <td className="px-4 py-3 text-xs text-texto">
+                  <td data-titulo="Correo" className="px-4 py-3 text-xs text-texto">
                     {item.correo}
                   </td>
-                  <td className="px-4 py-3">
+                  <td data-titulo="Asunto" className="px-4 py-3">
                     <span className="line-clamp-1 max-w-xs">{item.asunto}</span>
                   </td>
-                  <td className="px-4 py-3 text-xs opacity-75">
+                  <td data-titulo="Fecha" className="px-4 py-3 text-xs opacity-75">
                     {formatearFecha(item.creado_en || item.created_at)}
                   </td>
-                  <td className="px-4 py-3">
+                  <td data-titulo="Estado" className="px-4 py-3">
                     {item.atendido ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-                        <CheckCircle className="h-3 w-3" />
+                      <span className={ATENDIDO}>
+                        <CheckCircle className="h-3 w-3" aria-hidden="true" />
                         Atendido
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2.5 py-0.5 text-xs font-semibold text-amber-600 dark:text-amber-400">
-                        <Clock className="h-3 w-3" />
+                      <span className={PENDIENTE}>
+                        <Clock className="h-3 w-3" aria-hidden="true" />
                         Pendiente
                       </span>
                     )}
@@ -219,7 +236,7 @@ export function GestionMensajes() {
 
       {/* Modal Ver / Atender */}
       {mensajeSeleccionado && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-marino-oscuro/70 p-4 backdrop-blur-xs">
           <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-tema border border-borde bg-fondo p-6 shadow-2xl">
             {/* Cabecera del modal */}
             <div className="mb-4 flex items-center justify-between border-b border-borde pb-3">
@@ -268,11 +285,7 @@ export function GestionMensajes() {
                 </div>
                 <div>
                   <span className="font-semibold text-titulo">Estado actual:</span>{' '}
-                  {mensajeSeleccionado.atendido ? (
-                    <span className="font-semibold text-emerald-600 dark:text-emerald-400">Atendido</span>
-                  ) : (
-                    <span className="font-semibold text-amber-600 dark:text-amber-400">Pendiente</span>
-                  )}
+                  {mensajeSeleccionado.atendido ? <span className={ATENDIDO}>Atendido</span> : <span className={PENDIENTE}>Pendiente</span>}
                 </div>
                 <div className="sm:col-span-2">
                   <span className="font-semibold text-titulo">Asunto:</span>{' '}
@@ -290,47 +303,66 @@ export function GestionMensajes() {
                 </div>
               </div>
 
-              {/* Respuesta / Nota interna */}
-              <div>
-                <label htmlFor="modal-respuesta" className="mb-1 block text-sm font-semibold text-titulo">
-                  Respuesta o nota interna:
-                </label>
-                <textarea
-                  id="modal-respuesta"
-                  rows={4}
-                  value={respuesta}
-                  onChange={(e) => setRespuesta(e.target.value)}
-                  placeholder="Escriba la respuesta enviada al usuario o una nota interna sobre la atención..."
-                  className="w-full rounded-tema border border-borde bg-fondo p-3 text-sm text-texto placeholder:text-texto/50 focus:border-acento focus:outline-none"
-                />
-              </div>
+              {/* Respuesta / Nota interna: solo quien puede atender la escribe */}
+              {puedeAtender ? (
+                <div>
+                  <label htmlFor="modal-respuesta" className="mb-1 block text-sm font-semibold text-titulo">
+                    Respuesta o nota interna:
+                  </label>
+                  <textarea
+                    id="modal-respuesta"
+                    rows={4}
+                    value={respuesta}
+                    onChange={(e) => setRespuesta(e.target.value)}
+                    placeholder="Escriba la respuesta enviada al usuario o una nota interna sobre la atención..."
+                    className="w-full rounded-tema border border-borde bg-fondo p-3 text-sm text-texto placeholder:text-texto/50 focus:border-acento focus:outline-none"
+                  />
+                </div>
+              ) : (
+                mensajeSeleccionado.respuesta && (
+                  <div>
+                    <p className="mb-1 text-sm font-semibold text-titulo">Respuesta o nota interna:</p>
+                    <p className="whitespace-pre-wrap rounded-tema border border-borde p-3 text-sm text-texto">{mensajeSeleccionado.respuesta}</p>
+                  </div>
+                )
+              )}
 
-              {atenderMutation.isError && (
-                <p className="text-sm font-semibold text-red-500">
-                  Ocurrió un error al actualizar el mensaje. Intente de nuevo.
+              {(atenderMutation.isError || eliminarMutation.isError) && (
+                <p role="alert" className="text-sm font-semibold text-acento">
+                  No se pudo guardar el cambio. Revise su conexión e intente de nuevo.
                 </p>
               )}
 
               {/* Acciones del modal */}
-              <div className="flex flex-col-reverse justify-end gap-2 pt-2 sm:flex-row">
-                <Boton
-                  type="button"
-                  variante="borde"
-                  onClick={cerrarModal}
-                  disabled={atenderMutation.isPending}
-                >
+              <div className="flex flex-col-reverse flex-wrap items-stretch justify-end gap-2 pt-2 sm:flex-row sm:items-center">
+                {puedeEliminar && (
+                  <div className="sm:mr-auto">
+                    <BotonConfirmar pregunta="¿Eliminar este mensaje?" confirmar="Sí, eliminar" ocupado={eliminarMutation.isPending} alConfirmar={handleEliminar}>
+                      Eliminar
+                    </BotonConfirmar>
+                  </div>
+                )}
+                <Boton type="button" variante="borde" onClick={cerrarModal} disabled={ocupado}>
                   Cerrar
                 </Boton>
-                <Boton
-                  type="button"
-                  variante="primario"
-                  onClick={handleMarcarAtendido}
-                  disabled={atenderMutation.isPending}
-                  className="inline-flex items-center justify-center gap-2"
-                >
-                  <CheckCircle className="h-4 w-4" />
-                  {atenderMutation.isPending ? 'Guardando...' : 'Marcar como atendido'}
-                </Boton>
+                {puedeAtender && mensajeSeleccionado.atendido && (
+                  <Boton type="button" variante="borde" onClick={handleVolverPendiente} disabled={ocupado} className="inline-flex items-center justify-center gap-2">
+                    <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                    Volver a pendiente
+                  </Boton>
+                )}
+                {puedeAtender && (
+                  <Boton
+                    type="button"
+                    variante="primario"
+                    onClick={handleMarcarAtendido}
+                    disabled={ocupado}
+                    className="inline-flex items-center justify-center gap-2"
+                  >
+                    <CheckCircle className="h-4 w-4" aria-hidden="true" />
+                    {atenderMutation.isPending ? 'Guardando...' : mensajeSeleccionado.atendido ? 'Guardar nota' : 'Marcar como atendido'}
+                  </Boton>
+                )}
               </div>
             </div>
           </div>

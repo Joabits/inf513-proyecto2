@@ -33,7 +33,7 @@ export function GestionUsuarios() {
   }, [usuarios, busqueda, rol, estado])
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div>
       <div className="flex flex-wrap items-start justify-between gap-x-6">
         <TituloPagina titulo="Usuarios" subtitulo="Cuentas que ingresan al panel de gestión. El rol define lo que puede hacer cada una." />
         {puedeCrear && !creando && (

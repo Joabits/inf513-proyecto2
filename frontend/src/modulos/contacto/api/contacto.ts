@@ -9,12 +9,18 @@ export async function getMensajes(): Promise<MensajeContacto[]> {
   return respuesta.data as MensajeContacto[]
 }
 
-export async function atenderMensaje(id: number, respuesta?: string | null): Promise<MensajeContacto> {
+/** Marca el mensaje como atendido con su nota, o lo devuelve a pendiente (atendido: false). */
+export async function atenderMensaje(id: number, respuesta?: string | null, atendido = true): Promise<MensajeContacto> {
   const res = await cliente.put<{ data: MensajeContacto } | MensajeContacto>(`/mensajes/${id}`, {
     respuesta: respuesta ?? '',
+    atendido,
   })
   if (res.data && typeof res.data === 'object' && 'data' in res.data) {
     return (res.data as { data: MensajeContacto }).data
   }
   return res.data as MensajeContacto
+}
+
+export async function eliminarMensaje(id: number): Promise<void> {
+  await cliente.delete(`/mensajes/${id}`)
 }

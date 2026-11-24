@@ -1,5 +1,6 @@
 import { useId, useState } from 'react'
-import { IconoDocentes, IconoInvestigacion, IconoUsuario } from '@/compartido/ui/Iconos'
+import { IconoDocentes, IconoDocumento, IconoExterno, IconoInvestigacion, IconoUsuario } from '@/compartido/ui/Iconos'
+import { publicacionDe } from '../publicacion'
 import { ESTADOS, TIPOS, type Proyecto } from '../tipos'
 
 const PASTILLA = 'rounded-full px-2.5 py-0.5 text-xs font-semibold'
@@ -11,7 +12,9 @@ const RESUMEN_LARGO = 240
 export function TarjetaProyecto({ proyecto }: { proyecto: Proyecto }) {
   const [abierto, setAbierto] = useState(false)
   const idResumen = useId()
-  const largo = proyecto.resumen.length > RESUMEN_LARGO
+  const publicacion = publicacionDe(proyecto.resumen)
+  const resumen = publicacion?.resumen ?? proyecto.resumen
+  const largo = resumen.length > RESUMEN_LARGO
 
   return (
     <article className="rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave md:p-6">
@@ -55,7 +58,7 @@ export function TarjetaProyecto({ proyecto }: { proyecto: Proyecto }) {
       </dl>
 
       <p id={idResumen} className={`mt-4 leading-relaxed text-texto ${largo && !abierto ? 'line-clamp-3' : ''}`}>
-        {proyecto.resumen}
+        {resumen}
       </p>
       {largo && (
         <button
@@ -67,6 +70,25 @@ export function TarjetaProyecto({ proyecto }: { proyecto: Proyecto }) {
         >
           {abierto ? 'Leer menos' : 'Leer el resumen completo'}
         </button>
+      )}
+
+      {publicacion && (
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-borde pt-4">
+          <p className="flex items-center gap-2 text-sm text-texto-suave">
+            <IconoDocumento width={16} height={16} aria-hidden="true" className="shrink-0" />
+            <span>
+              Publicado en <span className="font-semibold text-titulo">{publicacion.revista}</span>
+            </span>
+          </p>
+          <a
+            href={publicacion.enlace}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-tema bg-primario px-3.5 py-2 text-sm font-semibold text-sobre-primario transition-colors hover:bg-marino"
+          >
+            Leer el artículo (PDF) <IconoExterno width={14} height={14} aria-hidden="true" />
+          </a>
+        </div>
       )}
     </article>
   )

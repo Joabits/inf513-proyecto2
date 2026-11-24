@@ -58,18 +58,21 @@ export function FormContacto({ contacto, editable }: { contacto: DatosContacto |
               <input placeholder="Módulo 255" {...entrada('referencia')} />
             </Campo>
           </div>
-          <Campo id="ciudad" etiqueta="Ciudad" error={errors.ciudad?.message}>
-            <input placeholder="Santa Cruz de la Sierra, Bolivia" {...entrada('ciudad')} />
-          </Campo>
-          <Campo
-            id="mapa_url"
-            etiqueta="Enlace del mapa"
-            opcional
-            ayuda="En Google Maps use «Compartir» y copie el enlace. La página de contacto mostrará el botón «Cómo llegar»."
-            error={errors.mapa_url?.message}
-          >
-            <input inputMode="url" placeholder="https://maps.app.goo.gl/..." {...entrada('mapa_url')} />
-          </Campo>
+          {/* En pares, como los de arriba: a todo el ancho del panel un campo de una línea quedaba demasiado largo */}
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Campo id="ciudad" etiqueta="Ciudad" error={errors.ciudad?.message}>
+              <input placeholder="Santa Cruz de la Sierra, Bolivia" {...entrada('ciudad')} />
+            </Campo>
+            <Campo
+              id="mapa_url"
+              etiqueta="Enlace del mapa"
+              opcional
+              ayuda="En Google Maps use «Compartir» y copie el enlace. La página de contacto mostrará el botón «Cómo llegar»."
+              error={errors.mapa_url?.message}
+            >
+              <input inputMode="url" placeholder="https://maps.app.goo.gl/..." {...entrada('mapa_url')} />
+            </Campo>
+          </div>
         </fieldset>
 
         <fieldset className={SECCION}>
@@ -82,12 +85,14 @@ export function FormContacto({ contacto, editable }: { contacto: DatosContacto |
               <input type="tel" placeholder="591 70000000" {...entrada('whatsapp')} />
             </Campo>
           </div>
-          <Campo id="correo" etiqueta="Correo electrónico" opcional error={errors.correo?.message}>
-            <input type="email" placeholder="carrera@uagrm.edu.bo" {...entrada('correo')} />
-          </Campo>
-          <Campo id="horario" etiqueta="Horario de atención" opcional error={errors.horario?.message}>
-            <input placeholder="Lunes a viernes de 8:00 a 12:00 y de 14:30 a 18:30" {...entrada('horario')} />
-          </Campo>
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Campo id="correo" etiqueta="Correo electrónico" opcional error={errors.correo?.message}>
+              <input type="email" placeholder="carrera@uagrm.edu.bo" {...entrada('correo')} />
+            </Campo>
+            <Campo id="horario" etiqueta="Horario de atención" opcional error={errors.horario?.message}>
+              <input placeholder="Lunes a viernes de 8:00 a 12:00 y de 14:30 a 18:30" {...entrada('horario')} />
+            </Campo>
+          </div>
 
           {editable && (
             <BarraGuardar sucio={isDirty} guardando={guardar.isPending} guardado={guardar.isSuccess && !isDirty} error={errors.root?.message} />

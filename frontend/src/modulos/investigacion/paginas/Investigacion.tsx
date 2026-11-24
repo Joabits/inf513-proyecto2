@@ -1,9 +1,10 @@
-import { useMemo } from 'react'
+import { useId, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router'
 import { Boton } from '@/compartido/ui/Boton'
 import { CLASE_ENTRADA } from '@/compartido/ui/Campo'
 import { ChipIcono } from '@/compartido/ui/ChipIcono'
 import { EstadoCarga, MensajeError } from '@/compartido/ui/EstadoCarga'
+import { iconoPorTema } from '@/compartido/ui/iconoPorTema'
 import { IconoBuscar, IconoFlecha, IconoInstitucion, IconoLibro } from '@/compartido/ui/Iconos'
 import { opcionesDe } from '@/compartido/ui/opciones'
 import { Selector } from '@/compartido/ui/Selector'
@@ -11,12 +12,38 @@ import { TituloPagina } from '@/compartido/ui/TituloPagina'
 import { useIrAlAncla } from '@/compartido/navegacion/useIrAlAncla'
 import { SeccionSemilleros } from '../componentes/SeccionSemilleros'
 import { TarjetaProyecto } from '../componentes/TarjetaProyecto'
-import { numero, parrafos } from '../formato'
+import { publicacionDe } from '../publicacion'
+import { parrafos } from '../formato'
 import { ESTADOS, TIPOS } from '../tipos'
 import { useInvestigacionPublica } from '../useInvestigacion'
 
 const ANTETITULO = 'text-sm font-bold uppercase tracking-widest text-acento'
 const FILTROS = ['q', 'linea', 'tipo', 'estado'] as const
+
+/** Descripción de una línea en dos renglones; «Ver más» la muestra completa. */
+function DescripcionCorta({ texto }: { texto: string }) {
+  const [abierta, setAbierta] = useState(false)
+  const id = useId()
+  const larga = texto.length > 110
+  return (
+    <div className="mt-2 flex-1">
+      <p id={id} className={`text-sm leading-relaxed text-texto ${larga && !abierta ? 'line-clamp-2' : ''}`}>
+        {texto}
+      </p>
+      {larga && (
+        <button
+          type="button"
+          aria-expanded={abierta}
+          aria-controls={id}
+          onClick={() => setAbierta(!abierta)}
+          className="mt-1.5 text-sm font-semibold text-acento underline-offset-4 hover:underline"
+        >
+          {abierta ? 'Ver menos' : 'Ver más'}
+        </button>
+      )}
+    </div>
+  )
+}
 
 const sinTildes = (texto: string) =>
   texto
@@ -103,6 +130,21 @@ export function Investigacion() {
         ))}
       </nav>
 
+      {/* En cifras: se calcula de lo publicado, no se escribe a mano */}
+      <dl className="-mt-4 mb-14 grid grid-cols-2 gap-3 sm:gap-4 md:mb-20 lg:grid-cols-4">
+        {[
+          { valor: lineas.length, etiqueta: lineas.length === 1 ? 'Línea de investigación' : 'Líneas de investigación' },
+          { valor: proyectos.length, etiqueta: proyectos.length === 1 ? 'Proyecto publicado' : 'Proyectos publicados' },
+          { valor: proyectos.filter((p) => publicacionDe(p.resumen)).length, etiqueta: 'Artículos para leer en PDF' },
+          { valor: semilleros.length, etiqueta: semilleros.length === 1 ? 'Semillero' : 'Semilleros' },
+        ].map(({ valor, etiqueta }) => (
+          <div key={etiqueta} className="flex flex-col-reverse rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave">
+            <dt className="mt-1 text-sm text-texto-suave">{etiqueta}</dt>
+            <dd className="font-titulos text-3xl font-extrabold tabular-nums text-titulo">{valor}</dd>
+          </div>
+        ))}
+      </dl>
+
       {lineas.length > 0 && (
         <section id="lineas" aria-labelledby="titulo-lineas" className="scroll-mt-28">
           <p className={ANTETITULO}>Hacia dónde investigamos</p>
@@ -110,13 +152,12 @@ export function Investigacion() {
             {lineas.length} líneas de investigación
           </h2>
           <ol className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {lineas.map((linea, i) => (
+            {lineas.map((linea) => (
               <li key={linea.id} className="flex flex-col rounded-tema border border-borde-tarjeta bg-tarjeta p-6 sombra-suave">
-                <span aria-hidden="true" className="text-3xl font-bold leading-none text-acento">
-                  {numero(i + 1)}
-                </span>
+                {/* Ícono del tema en vez de un número: las líneas no son una secuencia */}
+                <ChipIcono icono={iconoPorTema(linea.nombre)} />
                 <h3 className="mt-4 text-lg font-bold leading-snug text-titulo">{linea.nombre}</h3>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-texto">{linea.descripcion}</p>
+                <DescripcionCorta texto={linea.descripcion} />
                 {/* Sin proyectos la tarjeta queda limpia: repetir «sin proyectos» en cada línea solo es ruido */}
                 {linea.proyectos > 0 && (
                   <div className="mt-5 border-t border-borde pt-4 text-sm">
@@ -136,7 +177,7 @@ export function Investigacion() {
         </section>
       )}
 
-      <section id="proyectos" aria-labelledby="titulo-proyectos" className="mt-16 scroll-mt-28 md:mt-24">
+      <section id="proyectos" aria-labelledby="titulo-proyectos" className="mt-12 scroll-mt-28 md:mt-24">
         <p className={ANTETITULO}>Lo que estamos investigando</p>
         <h2 id="titulo-proyectos" className="mt-2 text-3xl text-titulo">
           Proyectos de investigación
@@ -214,13 +255,13 @@ export function Investigacion() {
       </section>
 
       {haySemilleros && (
-        <div className="mt-16 md:mt-24">
+        <div className="mt-12 md:mt-24">
           <SeccionSemilleros contenido={contenido} semilleros={semilleros} />
         </div>
       )}
 
       {contenido?.pia_presentacion && (
-        <section id="aula" aria-labelledby="titulo-aula" className="mt-16 scroll-mt-28 md:mt-24">
+        <section id="aula" aria-labelledby="titulo-aula" className="mt-12 scroll-mt-28 md:mt-24">
           <div className="grid gap-6 rounded-tema border border-borde-tarjeta bg-tarjeta p-6 sombra-suave md:grid-cols-[auto_1fr] md:gap-8 md:p-10">
             <ChipIcono icono={IconoLibro} tamano="lg" />
             <div>
@@ -239,7 +280,7 @@ export function Investigacion() {
       )}
 
       {/* Cierre: el instituto de la Facultad y una invitación a participar */}
-      <section className="mt-16 flex flex-col items-start justify-between gap-6 border-t border-borde pt-10 md:mt-20 md:flex-row md:items-center">
+      <section className="mt-12 flex flex-col items-start justify-between gap-6 border-t border-borde pt-10 md:mt-20 md:flex-row md:items-center">
         <div className="flex max-w-2xl items-start gap-4">
           {contenido?.instituto && <ChipIcono icono={IconoInstitucion} className="hidden sm:grid" />}
           <div>

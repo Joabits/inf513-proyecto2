@@ -24,7 +24,7 @@ export function GestionInnova() {
   const activa = SECCIONES.some((s) => s.id === pedida) ? pedida! : SECCIONES[0].id
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div>
       <div className="flex flex-wrap items-start justify-between gap-x-6">
         <TituloPagina titulo="Empresa Junior INNOVA" subtitulo="Presentación y servicios que muestra la página de INNOVA." />
         <div className="mb-6 flex flex-wrap gap-2">

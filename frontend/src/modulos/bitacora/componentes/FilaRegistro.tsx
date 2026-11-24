@@ -19,7 +19,7 @@ export function FilaRegistro({ registro, mostrarIp = false }: { registro: Regist
     <>
       <tr className={`border-t border-borde-tarjeta align-top ${abierta ? 'bg-fondo' : 'hover:bg-fondo'}`}>
         {/* La barra de acento (azul marino: el rojo queda para alertas) une la fila con su detalle y marca lo abierto */}
-        <td className={`whitespace-nowrap border-l-4 py-2.5 pl-3 pr-3 text-sm text-texto-suave md:pl-4 ${abierta ? 'border-marino' : 'border-transparent'}`}>
+        <td className={`hidden whitespace-nowrap border-l-4 py-2.5 pl-4 pr-3 text-sm text-texto-suave md:table-cell ${abierta ? 'border-marino' : 'border-transparent'}`}>
           <time dateTime={registro.fecha} title={formatoFechaHora(registro.fecha)}>
             {tiempoRelativo(registro.fecha)}
           </time>
@@ -34,7 +34,10 @@ export function FilaRegistro({ registro, mostrarIp = false }: { registro: Regist
 
         {mostrarIp && <td className="hidden whitespace-nowrap py-2.5 pr-4 text-sm tabular-nums text-texto-suave md:table-cell">{registro.ip ?? '—'}</td>}
 
-        <td className="w-full py-2.5 pr-2 text-sm">
+        {/* En el celular esta celda lleva la barra de acento y el «cuándo» (la primera columna se oculta) */}
+        <td
+          className={`w-full border-l-4 py-2.5 pl-3 pr-2 text-sm md:border-l-0 md:pl-0 ${abierta ? 'border-marino' : 'border-transparent'}`}
+        >
           <button
             type="button"
             onClick={() => setAbierta((valor) => !valor)}
@@ -42,8 +45,11 @@ export function FilaRegistro({ registro, mostrarIp = false }: { registro: Regist
             aria-controls={idDetalle}
             className="flex w-full items-start gap-2 text-left text-texto"
           >
-            <span className="min-w-0 flex-1">
+            <span className="min-w-0 flex-1 [overflow-wrap:anywhere]">
               <span className="md:hidden">
+                <time dateTime={registro.fecha} className="mb-0.5 block text-xs text-texto-suave">
+                  {tiempoRelativo(registro.fecha)}
+                </time>
                 <strong className="font-semibold text-titulo">{actor}</strong> {texto}
               </span>
               <span className="hidden md:inline">{mayuscula(texto)}</span>

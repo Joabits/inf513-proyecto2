@@ -1,6 +1,11 @@
 import { useState } from 'react'
-import { Plus, Edit2, Trash2, X, Eye, Newspaper } from 'lucide-react'
+import { Plus, Edit2, Trash2, X, Eye } from 'lucide-react'
 import { Link } from 'react-router'
+import { usePermiso } from '@/compartido/sesion/usePermiso'
+import { Boton } from '@/compartido/ui/Boton'
+import { BotonConfirmar } from '@/compartido/ui/BotonConfirmar'
+import { TituloPagina } from '@/compartido/ui/TituloPagina'
+import { CABECERA_TABLA } from '@/compartido/ui/tabla'
 import { useNoticias, useEliminarNoticia } from '../hooks/useNoticias'
 import { FormularioNoticia } from '../componentes/FormularioNoticia'
 import type { Noticia } from '../tipos'
@@ -8,10 +13,12 @@ import type { Noticia } from '../tipos'
 export function GestionNoticias() {
   const { data: noticias, isLoading, isError } = useNoticias(true)
   const eliminarMutation = useEliminarNoticia()
+  const puedeCrear = usePermiso('noticias.crear')
+  const puedeEditar = usePermiso('noticias.editar')
+  const puedeEliminar = usePermiso('noticias.eliminar')
 
   const [modalAbierto, setModalAbierto] = useState(false)
   const [noticiaEditando, setNoticiaEditando] = useState<Noticia | undefined>(undefined)
-  const [idEliminando, setIdEliminando] = useState<number | null>(null)
 
   const abrirModalCrear = () => {
     setNoticiaEditando(undefined)
@@ -28,37 +35,17 @@ export function GestionNoticias() {
     setNoticiaEditando(undefined)
   }
 
-  const confirmarEliminar = (id: number) => {
-    if (window.confirm('¿Está seguro de que desea eliminar esta noticia? Esta acción no se puede deshacer.')) {
-      setIdEliminando(id)
-      eliminarMutation.mutate(id, {
-        onSettled: () => {
-          setIdEliminando(null)
-        },
-      })
-    }
-  }
-
   return (
-    <div className="p-6 font-montserrat">
-      <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
-          <h1 className="flex items-center gap-2 text-2xl font-bold text-titulo">
-            <Newspaper className="h-6 w-6 text-acento" />
-            Gestión de Noticias
-          </h1>
-          <p className="text-sm text-texto">
-            Administre las noticias, comunicados y publicaciones del portal.
-          </p>
-        </div>
-
-        <button
-          onClick={abrirModalCrear}
-          className="inline-flex items-center gap-2 rounded-tema bg-primario px-4 py-2 text-sm font-semibold text-sobre-primario shadow hover:bg-marino"
-        >
-          <Plus className="h-4 w-4" />
-          Nueva Noticia
-        </button>
+    <div className="font-montserrat">
+      {/* Mismo encabezado que las demás secciones del panel: título con su ícono y el botón a la derecha */}
+      <div className="flex flex-wrap items-start justify-between gap-x-6">
+        <TituloPagina titulo="Gestión de Noticias" subtitulo="Administre las noticias, comunicados y publicaciones del portal." />
+        {puedeCrear && (
+          <Boton type="button" onClick={abrirModalCrear} className="mb-6 inline-flex items-center gap-2">
+            <Plus className="h-4 w-4" />
+            Nueva Noticia
+          </Boton>
+        )}
       </div>
 
       {isLoading && (
@@ -68,7 +55,7 @@ export function GestionNoticias() {
       )}
 
       {isError && (
-        <div className="rounded-tema border border-red-500/30 bg-red-500/10 p-4 text-center text-red-500">
+        <div role="alert" className="rounded-tema border border-primario/30 bg-primario/10 p-3 text-center text-sm font-semibold text-acento">
           Error al cargar las noticias.
         </div>
       )}
@@ -76,14 +63,16 @@ export function GestionNoticias() {
       {!isLoading && !isError && (!noticias || noticias.length === 0) && (
         <div className="rounded-tema border border-borde bg-fondo p-12 text-center text-texto">
           <p className="text-base font-medium text-titulo">No hay noticias registradas</p>
-          <p className="mt-1 text-xs opacity-75">Haga clic en &quot;Nueva Noticia&quot; para crear la primera.</p>
+          {puedeCrear && (
+            <p className="mt-1 text-xs opacity-75">Haga clic en &quot;Nueva Noticia&quot; para crear la primera.</p>
+          )}
         </div>
       )}
 
       {!isLoading && !isError && noticias && noticias.length > 0 && (
-        <div className="overflow-x-auto rounded-tema border border-borde bg-fondo shadow-sm">
-          <table className="w-full text-left text-sm text-texto">
-            <thead className="border-b border-borde bg-marino-oscuro/10 text-xs uppercase text-titulo">
+        <div className="overflow-x-auto rounded-tema border border-borde bg-fondo sombra-suave">
+          <table className="tabla-adaptable w-full text-left text-sm text-texto">
+            <thead className={CABECERA_TABLA}>
               <tr>
                 <th scope="col" className="px-4 py-3">Título</th>
                 <th scope="col" className="px-4 py-3">Autor</th>
@@ -107,19 +96,19 @@ export function GestionNoticias() {
                       <span className="line-clamp-2 max-w-xs">{item.titulo}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-xs">{item.autor}</td>
-                  <td className="px-4 py-3">
+                  <td data-titulo="Autor" className="px-4 py-3 text-xs">{item.autor}</td>
+                  <td data-titulo="Estado" className="px-4 py-3">
                     {item.publicada ? (
-                      <span className="inline-flex rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                      <span className="inline-flex rounded-full bg-chip px-2.5 py-0.5 text-xs font-semibold text-sobre-chip">
                         Publicada
                       </span>
                     ) : (
-                      <span className="inline-flex rounded-full bg-amber-500/15 px-2.5 py-0.5 text-xs font-semibold text-amber-600 dark:text-amber-400">
+                      <span className="inline-flex rounded-full border border-borde px-2.5 py-0.5 text-xs font-semibold text-texto-suave">
                         Borrador
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-xs opacity-75">
+                  <td data-titulo="Fecha" className="px-4 py-3 text-xs opacity-75">
                     {item.publicada_en || item.creada_en}
                   </td>
                   <td className="px-4 py-3 text-right">
@@ -133,21 +122,26 @@ export function GestionNoticias() {
                       >
                         <Eye className="h-4 w-4" />
                       </Link>
-                      <button
-                        onClick={() => abrirModalEditar(item)}
-                        title="Editar"
-                        className="rounded p-1 text-texto hover:bg-marino/10 hover:text-acento"
-                      >
-                        <Edit2 className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => confirmarEliminar(item.id)}
-                        disabled={idEliminando === item.id}
-                        title="Eliminar"
-                        className="rounded p-1 text-red-500 hover:bg-red-500/10 disabled:opacity-50"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+                      {puedeEditar && (
+                        <Boton
+                          type="button"
+                          variante="borde"
+                          onClick={() => abrirModalEditar(item)}
+                          className="flex items-center gap-2 text-sm"
+                        >
+                          <Edit2 className="h-4 w-4" aria-hidden="true" /> Editar
+                        </Boton>
+                      )}
+                      {puedeEliminar && (
+                        <BotonConfirmar
+                          pregunta="¿Eliminar esta noticia?"
+                          confirmar="Sí, eliminar"
+                          ocupado={eliminarMutation.isPending && eliminarMutation.variables === item.id}
+                          alConfirmar={() => eliminarMutation.mutate(item.id)}
+                        >
+                          <Trash2 className="h-4 w-4" aria-hidden="true" /> Eliminar
+                        </BotonConfirmar>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -159,14 +153,16 @@ export function GestionNoticias() {
 
       {/* Modal Crear / Editar */}
       {modalAbierto && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
-          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-tema border border-borde bg-fondo p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-marino-oscuro/70 p-4 backdrop-blur-xs">
+          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-tema border border-borde bg-fondo p-6 sombra-elevada">
             <div className="mb-4 flex items-center justify-between border-b border-borde pb-3">
               <h2 className="text-xl font-bold text-titulo">
                 {noticiaEditando ? 'Editar Noticia' : 'Nueva Noticia'}
               </h2>
               <button
+                type="button"
                 onClick={cerrarModal}
+                aria-label="Cerrar"
                 className="rounded-tema p-1 text-texto hover:bg-marino/10 hover:text-acento"
               >
                 <X className="h-5 w-5" />

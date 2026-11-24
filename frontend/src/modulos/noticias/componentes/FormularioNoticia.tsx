@@ -1,6 +1,7 @@
 import { useState, type ChangeEvent } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Boton } from '@/compartido/ui/Boton'
 import { noticiaSchema, type NoticiaFormData } from '../esquema/noticiaSchema'
 import { useCrearNoticia, useActualizarNoticia } from '../hooks/useNoticias'
 import type { Noticia } from '../tipos'
@@ -85,7 +86,7 @@ export function FormularioNoticia({ noticia, alGuardar, alCancelar }: Formulario
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 font-montserrat">
       {errorEnvio && (
-        <div className="rounded-tema border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-500">
+        <div role="alert" className="rounded-tema border border-primario/30 bg-primario/10 p-3 text-sm font-semibold text-acento">
           {errorEnvio}
         </div>
       )}
@@ -102,7 +103,7 @@ export function FormularioNoticia({ noticia, alGuardar, alCancelar }: Formulario
           {...register('titulo')}
         />
         {errors.titulo && (
-          <p className="mt-1 text-xs text-red-500">{errors.titulo.message}</p>
+          <p className="mt-1 text-xs font-semibold text-acento">{errors.titulo.message}</p>
         )}
       </div>
 
@@ -118,7 +119,7 @@ export function FormularioNoticia({ noticia, alGuardar, alCancelar }: Formulario
           {...register('resumen')}
         />
         {errors.resumen && (
-          <p className="mt-1 text-xs text-red-500">{errors.resumen.message}</p>
+          <p className="mt-1 text-xs font-semibold text-acento">{errors.resumen.message}</p>
         )}
       </div>
 
@@ -134,7 +135,7 @@ export function FormularioNoticia({ noticia, alGuardar, alCancelar }: Formulario
           {...register('contenido')}
         />
         {errors.contenido && (
-          <p className="mt-1 text-xs text-red-500">{errors.contenido.message}</p>
+          <p className="mt-1 text-xs font-semibold text-acento">{errors.contenido.message}</p>
         )}
       </div>
 
@@ -169,21 +170,12 @@ export function FormularioNoticia({ noticia, alGuardar, alCancelar }: Formulario
       </div>
 
       <div className="flex justify-end gap-3 pt-4">
-        <button
-          type="button"
-          onClick={alCancelar}
-          disabled={estaCargando}
-          className="rounded-tema border border-borde px-4 py-2 text-sm font-semibold text-texto hover:bg-fondo/80 hover:text-acento disabled:opacity-50"
-        >
+        <Boton type="button" variante="borde" onClick={alCancelar} disabled={estaCargando} className="text-sm">
           Cancelar
-        </button>
-        <button
-          type="submit"
-          disabled={estaCargando}
-          className="rounded-tema bg-primario px-5 py-2 text-sm font-semibold text-sobre-primario hover:bg-marino disabled:cursor-not-allowed disabled:opacity-50"
-        >
+        </Boton>
+        <Boton type="submit" disabled={estaCargando} className="text-sm">
           {estaCargando ? 'Guardando...' : 'Guardar Noticia'}
-        </button>
+        </Boton>
       </div>
     </form>
   )

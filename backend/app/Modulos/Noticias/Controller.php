@@ -2,6 +2,7 @@
 
 namespace App\Modulos\Noticias;
 
+use App\Compartido\Servicios\Bitacora;
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request as HttpRequest;
@@ -12,6 +13,7 @@ class Controller extends BaseController
 {
     public function __construct(
         protected Service $service,
+        private Bitacora $bitacora,
     ) {}
 
     /**
@@ -44,6 +46,7 @@ class Controller extends BaseController
     public function store(Request $request): JsonResponse
     {
         $noticia = $this->service->crear($request->validated(), (int) $request->user()->id);
+        $this->bitacora->accion($request->user(), 'crear', "Noticia #{$noticia->id}", $noticia->titulo);
 
         return (new Resource($noticia))
             ->response()
@@ -52,7 +55,9 @@ class Controller extends BaseController
 
     public function update(int $id, Request $request): Resource
     {
+        $antes = Model::findOrFail($id)->getAttributes();
         $noticia = $this->service->actualizar($id, $request->validated());
+        $this->bitacora->accion($request->user(), 'editar', "Noticia #{$id}", $noticia->titulo, Bitacora::comparar($antes, $noticia));
 
         return new Resource($noticia);
     }
@@ -62,9 +67,11 @@ class Controller extends BaseController
         return (bool) $request->user('sanctum')?->tienePermiso('noticias.ver');
     }
 
-    public function destroy(int $id): JsonResponse
+    public function destroy(int $id, HttpRequest $request): JsonResponse
     {
+        $titulo = Model::findOrFail($id)->titulo;
         $this->service->eliminar($id);
+        $this->bitacora->accion($request->user(), 'eliminar', "Noticia #{$id}", $titulo);
 
         return response()->json(['mensaje' => 'Noticia eliminada correctamente']);
     }

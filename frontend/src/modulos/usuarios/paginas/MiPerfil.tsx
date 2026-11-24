@@ -11,7 +11,7 @@ export function MiPerfil() {
   if (!usuario) return null
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div>
       <TituloPagina titulo="Mi perfil" subtitulo={`Sus datos para ingresar al panel. Rol: ${usuario.rol?.nombre ?? 'sin rol'}.`} />
       <div className="space-y-6">
         <FormPerfil usuario={usuario} />

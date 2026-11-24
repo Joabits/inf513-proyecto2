@@ -38,7 +38,7 @@ export function GestionSolicitudes() {
   const opciones: [Filtro, string][] = [['todas', 'Todas'], ...(Object.entries(ESTADOS) as [EstadoSolicitud, string][])]
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div>
       <div className="flex flex-wrap items-start justify-between gap-x-6">
         <TituloPagina
           titulo="Solicitudes a INNOVA"

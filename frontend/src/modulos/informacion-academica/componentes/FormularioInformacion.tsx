@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { usePermiso } from '@/compartido/sesion/usePermiso'
 import { Boton } from '@/compartido/ui/Boton'
 import { informacionSchema, type FormularioInformacionDatos } from '../esquema/informacionSchema'
 import type { InformacionAcademica } from '../tipos'
@@ -15,6 +16,8 @@ export function FormularioInformacion({ informacion, onGuardadoExitoso }: Formul
   const [mensajeExito, setMensajeExito] = useState(false)
   const [errorServidor, setErrorServidor] = useState<string | null>(null)
   const mutacion = useActualizarInformacion()
+  // Sin permiso de edición el contenido se muestra igual, pero de solo lectura y sin botón de guardar
+  const puedeEditar = usePermiso('informacion_academica.editar')
 
   const {
     register,
@@ -72,8 +75,8 @@ export function FormularioInformacion({ informacion, onGuardadoExitoso }: Formul
       )}
 
       {errorServidor && (
-        <div className="rounded-tema border border-borde bg-fondo p-4 text-acento">
-          <p className="font-semibold">{errorServidor}</p>
+        <div role="alert" className="rounded-tema border border-primario/30 bg-primario/10 p-3 text-sm font-semibold text-acento">
+          {errorServidor}
         </div>
       )}
 
@@ -85,6 +88,7 @@ export function FormularioInformacion({ informacion, onGuardadoExitoso }: Formul
           id="mision"
           rows={5}
           placeholder="Escriba aquí la misión de la carrera..."
+          readOnly={!puedeEditar}
           className="w-full rounded-tema border border-borde bg-fondo p-3 text-texto focus:border-titulo focus:outline-none"
           {...register('mision')}
         />
@@ -99,6 +103,7 @@ export function FormularioInformacion({ informacion, onGuardadoExitoso }: Formul
           id="vision"
           rows={5}
           placeholder="Escriba aquí la visión de la carrera..."
+          readOnly={!puedeEditar}
           className="w-full rounded-tema border border-borde bg-fondo p-3 text-texto focus:border-titulo focus:outline-none"
           {...register('vision')}
         />
@@ -113,6 +118,7 @@ export function FormularioInformacion({ informacion, onGuardadoExitoso }: Formul
           id="perfil_profesional"
           rows={6}
           placeholder="Escriba aquí el perfil profesional del graduado..."
+          readOnly={!puedeEditar}
           className="w-full rounded-tema border border-borde bg-fondo p-3 text-texto focus:border-titulo focus:outline-none"
           {...register('perfil_profesional')}
         />
@@ -129,17 +135,24 @@ export function FormularioInformacion({ informacion, onGuardadoExitoso }: Formul
           id="Campo Ocupacional"
           rows={6}
           placeholder="Escriba aquí el campo ocupacional de la carrera..."
+          readOnly={!puedeEditar}
           className="w-full rounded-tema border border-borde bg-fondo p-3 text-texto focus:border-titulo focus:outline-none"
           {...register('objetivos')}
         />
         {errors.objetivos && <p className="text-sm font-semibold text-acento">{errors.objetivos.message}</p>}
       </div>
 
-      <div className="flex items-center justify-end gap-4 pt-4 border-t border-borde">
-        <Boton type="submit" disabled={mutacion.isPending || !isDirty} variante="primario">
-          {mutacion.isPending ? 'Guardando...' : 'Guardar información académica'}
-        </Boton>
-      </div>
+      {puedeEditar ? (
+        <div className="flex items-center justify-end gap-4 pt-4 border-t border-borde">
+          <Boton type="submit" disabled={mutacion.isPending || !isDirty} variante="primario">
+            {mutacion.isPending ? 'Guardando...' : 'Guardar información académica'}
+          </Boton>
+        </div>
+      ) : (
+        <p className="border-t border-borde pt-4 text-sm text-texto-suave">
+          Solo lectura: su cuenta no tiene permiso para editar la información académica.
+        </p>
+      )}
     </form>
   )
 }

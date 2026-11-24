@@ -55,7 +55,7 @@ export function Busqueda() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-6xl">
       <TituloPagina titulo="Buscar en el portal" subtitulo="Noticias, eventos, galería, documentos, materias, investigación, revista INNOVAR, autoridades y docentes." />
 
       <form onSubmit={enviar} role="search" className="flex flex-col gap-3 sm:flex-row">

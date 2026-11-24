@@ -2,13 +2,14 @@ import type { ReactNode } from 'react'
 import { NOMBRE_RED } from '@/compartido/configuracion/tipos'
 import { enlaceTelefono, enlaceWhatsapp, formatoWhatsapp, useConfiguracion } from '@/compartido/configuracion/useConfiguracion'
 import { IconoCorreo, IconoExterno, IconoHorario, IconoMensaje, IconoTelefono, IconoUbicacion } from '@/compartido/ui/Iconos'
+import { IconoRed } from '@/compartido/ui/IconoRed'
 
 const ENLACE = 'font-semibold text-titulo underline-offset-4 hover:text-acento hover:underline'
 
 function Dato({ icono, titulo, children }: { icono: ReactNode; titulo: string; children: ReactNode }) {
   return (
     <div className="flex gap-4">
-      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-tema bg-chip text-sobre-chip" aria-hidden="true">
+      <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center text-acento [&>svg]:h-full [&>svg]:w-full" aria-hidden="true">
         {icono}
       </span>
       <div className="min-w-0">
@@ -83,8 +84,9 @@ export function DatosDeContacto() {
                   href={url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex rounded-full border border-borde px-4 py-1.5 text-sm font-semibold text-titulo transition-colors hover:border-primario hover:text-acento"
+                  className="inline-flex items-center gap-2 rounded-full border border-borde px-4 py-1.5 text-sm font-semibold text-titulo transition-colors hover:border-primario hover:text-acento"
                 >
+                  <IconoRed red={red} />
                   {NOMBRE_RED[red]}
                 </a>
               </li>

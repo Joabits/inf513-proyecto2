@@ -66,7 +66,7 @@ class MenuSeeder extends Seeder
                 ['Noticias', '/gestion/noticias', 'noticias'],
                 ['Eventos académicos', '/gestion/eventos', 'eventos'],
                 ['Galería multimedia', '/gestion/galeria', 'galeria'],
-                ['Mensajes de contacto', '/gestion/mensajes', 'mensajes'],
+                ['Mensajes de contacto', '/gestion/mensajes', 'contacto'],
             ]],
             ['Administración', [
                 ['Estadísticas', '/gestion/estadisticas', 'estadisticas'],

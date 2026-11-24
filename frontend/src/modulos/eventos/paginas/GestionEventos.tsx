@@ -1,5 +1,9 @@
 import { useState } from 'react'
+import { usePermiso } from '@/compartido/sesion/usePermiso'
 import { Boton } from '@/compartido/ui/Boton'
+import { BotonConfirmar } from '@/compartido/ui/BotonConfirmar'
+import { TituloPagina } from '@/compartido/ui/TituloPagina'
+import { CABECERA_TABLA } from '@/compartido/ui/tabla'
 import { useActualizarEvento, useCrearEvento, useEliminarEvento, useEventos } from '../hooks/useEventos'
 import { FormularioEvento } from '../componentes/FormularioEvento'
 import type { Evento } from '../tipos'
@@ -10,6 +14,10 @@ export function GestionEventos() {
   const crearMutation = useCrearEvento()
   const actualizarMutation = useActualizarEvento()
   const eliminarMutation = useEliminarEvento()
+  const puedeCrear = usePermiso('eventos.crear')
+  const puedeEditar = usePermiso('eventos.editar')
+  const puedeEliminar = usePermiso('eventos.eliminar')
+  const conAcciones = puedeEditar || puedeEliminar
 
   const [eventoSeleccionado, setEventoSeleccionado] = useState<Evento | null>(null)
   const [modalAbierto, setModalAbierto] = useState(false)
@@ -43,25 +51,21 @@ export function GestionEventos() {
     cerrarModal()
   }
 
-  const handleEliminar = async (id: number) => {
-    if (window.confirm('¿Está seguro de eliminar este evento académico?')) {
-      await eliminarMutation.mutateAsync(id)
-    }
-  }
-
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-titulo">Gestión de Eventos Académicos</h1>
-          <p className="text-sm text-texto">Crea, edita y administra los eventos que se muestran en el portal.</p>
-        </div>
-        <Boton onClick={abrirNuevo}>Nuevo Evento</Boton>
+      {/* Mismo encabezado que las demás secciones del panel. mb-0: el título ya trae su margen (anula el space-y) */}
+      <div className="mb-0 flex flex-wrap items-start justify-between gap-x-6">
+        <TituloPagina titulo="Gestión de Eventos Académicos" subtitulo="Cree, edite y administre los eventos que se muestran en el portal." />
+        {puedeCrear && (
+          <Boton onClick={abrirNuevo} className="mb-6">
+            Nuevo Evento
+          </Boton>
+        )}
       </div>
 
       {modalAbierto && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-tema border border-borde bg-fondo p-6 shadow-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-marino-oscuro/70 p-4">
+          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-tema border border-borde bg-fondo p-6 sombra-elevada">
             <h2 className="mb-4 text-xl font-bold text-titulo">
               {eventoSeleccionado ? 'Editar Evento Académico' : 'Nuevo Evento Académico'}
             </h2>
@@ -78,23 +82,23 @@ export function GestionEventos() {
       {isLoading ? (
         <div className="py-12 text-center text-texto">Cargando eventos...</div>
       ) : isError ? (
-        <div className="rounded-tema border border-borde bg-fondo p-6 text-center text-red-500">
+        <div role="alert" className="rounded-tema border border-primario/30 bg-primario/10 p-3 text-center text-sm font-semibold text-acento">
           Ocurrió un error al cargar los eventos.
         </div>
       ) : !eventos || eventos.length === 0 ? (
         <div className="rounded-tema border border-borde bg-fondo p-12 text-center text-texto">
-          No hay eventos registrados. Presiona "Nuevo Evento" para crear el primero.
+          No hay eventos registrados.{puedeCrear && ' Presiona "Nuevo Evento" para crear el primero.'}
         </div>
       ) : (
         <div className="overflow-x-auto rounded-tema border border-borde bg-fondo">
           <table className="w-full text-left text-sm text-texto">
-            <thead className="border-b border-borde bg-marino-oscuro text-xs uppercase text-sobre-primario">
+            <thead className={CABECERA_TABLA}>
               <tr>
                 <th className="px-4 py-3">Título</th>
                 <th className="px-4 py-3">Lugar</th>
                 <th className="px-4 py-3">Fechas</th>
                 <th className="px-4 py-3">Estado</th>
-                <th className="px-4 py-3 text-right">Acciones</th>
+                {conAcciones && <th className="px-4 py-3 text-right">Acciones</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-borde">
@@ -109,26 +113,33 @@ export function GestionEventos() {
                   <td className="px-4 py-3">
                     <span
                       className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${
-                        evento.publicado ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                        evento.publicado ? 'bg-chip text-sobre-chip' : 'border border-borde text-texto-suave'
                       }`}
                     >
                       {evento.publicado ? 'Publicado' : 'Borrador'}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-right">
-                    <div className="flex justify-end gap-2">
-                      <Boton variante="borde" className="text-xs px-2 py-1" onClick={() => abrirEditar(evento)}>
-                        Editar
-                      </Boton>
-                      <Boton
-                        variante="borde"
-                        className="text-xs px-2 py-1 text-red-600 hover:text-red-700"
-                        onClick={() => handleEliminar(evento.id)}
-                      >
-                        Eliminar
-                      </Boton>
-                    </div>
-                  </td>
+                  {conAcciones && (
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex justify-end gap-2">
+                        {puedeEditar && (
+                          <Boton variante="borde" className="text-sm" onClick={() => abrirEditar(evento)}>
+                            Editar
+                          </Boton>
+                        )}
+                        {puedeEliminar && (
+                          <BotonConfirmar
+                            pregunta="¿Eliminar este evento académico?"
+                            confirmar="Sí, eliminar"
+                            ocupado={eliminarMutation.isPending && eliminarMutation.variables === evento.id}
+                            alConfirmar={() => eliminarMutation.mutate(evento.id)}
+                          >
+                            Eliminar
+                          </BotonConfirmar>
+                        )}
+                      </div>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>

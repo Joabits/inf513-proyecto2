@@ -23,7 +23,7 @@ export function GestionDocentes() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div>
       <TituloPagina titulo="Autoridades y docentes" subtitulo="Las personas que aparecen en la página Autoridades y docentes del portal." />
 
       {isPending && <EstadoCarga />}

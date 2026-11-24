@@ -24,7 +24,7 @@ export function GestionInicio() {
   const activa = SECCIONES.some((s) => s.id === pedida) ? pedida! : SECCIONES[0].id
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div>
       <div className="flex flex-wrap items-start justify-between gap-x-6">
         <TituloPagina titulo="Página de inicio" subtitulo="Contenido que ven los visitantes en la portada del portal." />
         <Link

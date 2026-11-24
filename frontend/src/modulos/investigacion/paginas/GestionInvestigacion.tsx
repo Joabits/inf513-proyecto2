@@ -134,7 +134,7 @@ export function GestionInvestigacion() {
   const activa = SECCIONES.some((s) => s.id === pedida) ? pedida! : SECCIONES[0].id
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div>
       <TituloPagina titulo="Investigación" subtitulo="Proyectos, líneas de investigación, semilleros y Proyectos de Investigación en Aula (PIA)." />
 
       {isPending && <EstadoCarga />}

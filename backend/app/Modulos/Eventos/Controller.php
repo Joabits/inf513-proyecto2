@@ -2,6 +2,7 @@
 
 namespace App\Modulos\Eventos;
 
+use App\Compartido\Servicios\Bitacora;
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request as HttpRequest;
@@ -11,7 +12,7 @@ use Illuminate\Http\Response;
 
 class Controller extends BaseController
 {
-    public function __construct(private Service $servicio) {}
+    public function __construct(private Service $servicio, private Bitacora $bitacora) {}
 
     /**
      * Quien gestiona eventos puede pedir también los ocultos (el panel envía solo_publicados=0). Lo demás, incluida
@@ -48,20 +49,25 @@ class Controller extends BaseController
     public function store(Request $request): JsonResponse
     {
         $evento = $this->servicio->crear($request->validated(), $request->user()->id);
+        $this->bitacora->accion($request->user(), 'crear', "Evento #{$evento->id}", $evento->titulo);
 
         return (new Resource($evento))->response()->setStatusCode(201);
     }
 
     public function update(Request $request, int $id): Resource
     {
+        $antes = Model::findOrFail($id)->getAttributes();
         $evento = $this->servicio->actualizar($id, $request->validated());
+        $this->bitacora->accion($request->user(), 'editar', "Evento #{$id}", $evento->titulo, Bitacora::comparar($antes, $evento));
 
         return new Resource($evento);
     }
 
-    public function destroy(int $id): Response
+    public function destroy(int $id, HttpRequest $request): Response
     {
+        $titulo = Model::findOrFail($id)->titulo;
         $this->servicio->eliminar($id);
+        $this->bitacora->accion($request->user(), 'eliminar', "Evento #{$id}", $titulo);
 
         return response()->noContent();
     }

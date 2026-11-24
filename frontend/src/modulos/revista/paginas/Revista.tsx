@@ -43,7 +43,7 @@ export function Revista() {
   const { revista, ediciones } = data
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div className="mx-auto max-w-6xl">
       <TituloPagina titulo="Revista INNOVAR" subtitulo="Revista Académica Institucional de la Carrera de Administración de Empresas." />
 
       {revista && (

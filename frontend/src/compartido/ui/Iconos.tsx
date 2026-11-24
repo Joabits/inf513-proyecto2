@@ -64,6 +64,7 @@ import {
   UserX,
   X,
 } from 'lucide-react'
+import { Building2, ClipboardCheck, ClipboardList, Coins, Cpu, Factory, HeartHandshake, Pause, Play } from 'lucide-react'
 import type { LucideIcon, LucideProps } from 'lucide-react'
 
 /** Íconos de Lucide: toda la aplicación los importa desde aquí. Heredan el color del texto. */
@@ -141,3 +142,14 @@ export const IconoDeslizar = icono(MoveHorizontal)
 export const IconoAlerta = icono(TriangleAlert)
 export const IconoContraerMenu = icono(PanelLeftClose)
 export const IconoExpandirMenu = icono(PanelLeftOpen)
+
+// Temas (áreas ocupacionales, líneas de investigación, servicios): ver iconoPorTema.ts
+export const IconoFinanzas = icono(Coins)
+export const IconoProduccion = icono(Factory)
+export const IconoDigital = icono(Cpu)
+export const IconoComunidad = icono(HeartHandshake)
+export const IconoOrganizacion = icono(Building2)
+export const IconoPlan = icono(ClipboardList)
+export const IconoDiagnostico = icono(ClipboardCheck)
+export const IconoReproducir = icono(Play)
+export const IconoPausa = icono(Pause)

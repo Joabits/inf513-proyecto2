@@ -94,7 +94,7 @@ export function MallaCurricular() {
     : []
 
   return (
-    <div>
+    <div className="mx-auto max-w-6xl">
       <TituloPagina
         titulo="Malla curricular"
         subtitulo="Elija una materia para ver qué necesita aprobar antes y qué materias habilita."
@@ -102,13 +102,19 @@ export function MallaCurricular() {
 
       {plan && (
         <section aria-label="Datos del plan de estudios" className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-          <dl className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <dl className="grid grid-cols-2 gap-2 min-[360px]:gap-3 sm:grid-cols-3">
             {datos.map(([etiqueta, valor, icono]) => (
-              <div key={etiqueta} className="flex items-center gap-3 rounded-tema border border-borde-tarjeta bg-tarjeta p-4 sombra-suave">
+              // En el celular, letra y relleno menores para que «Semestralizado» entre en dos columnas aun en 320 px
+              <div
+                key={etiqueta}
+                className="flex items-center gap-3 rounded-tema border border-borde-tarjeta bg-tarjeta p-2.5 sombra-suave min-[360px]:p-3 sm:p-4"
+              >
                 <ChipIcono icono={icono} tamano="sm" className="hidden sm:grid" />
                 <div className="min-w-0">
                   <dt className="text-sm text-texto-suave">{etiqueta}</dt>
-                  <dd className="text-lg font-bold leading-snug text-titulo">{valor}</dd>
+                  <dd className="hyphens-auto text-sm font-bold leading-snug text-titulo [overflow-wrap:anywhere] min-[360px]:text-base sm:text-lg">
+                    {valor}
+                  </dd>
                 </div>
               </div>
             ))}

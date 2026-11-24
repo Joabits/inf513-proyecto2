@@ -35,7 +35,7 @@ export function GestionDocumentos() {
   }, [documentos, busqueda, categoria])
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div>
       <div className="flex flex-wrap items-start justify-between gap-x-6">
         <TituloPagina titulo="Documentos" subtitulo="Reglamentos, formularios y demás archivos que la comunidad universitaria puede descargar." />
         {puedeCrear && !subiendo && (

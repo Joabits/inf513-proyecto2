@@ -85,7 +85,7 @@ export function ConsultarBitacora() {
   const meta = data?.meta
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div>
       <div className="flex flex-wrap items-start justify-between gap-x-6">
         <TituloPagina titulo="Bitácora" subtitulo="Registro de la actividad en el portal. Nadie puede modificarlo ni borrarlo." />
         {puedeExportar && (

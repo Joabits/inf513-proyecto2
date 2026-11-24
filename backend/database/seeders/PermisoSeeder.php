@@ -20,7 +20,6 @@ class PermisoSeeder extends Seeder
         'inicio' => ['Página de inicio', ['ver', 'editar']],
         'institucional' => ['Información institucional', ['ver', 'editar']],
         'docentes' => ['Autoridades y docentes', self::CRUD],
-        'info_academica' => ['Información académica', self::CRUD],
         'informacion_academica' => ['Información académica', ['ver', 'editar']],
         'documentos' => ['Documentos', self::CRUD],
         'investigacion' => ['Investigación', self::CRUD],
@@ -31,8 +30,7 @@ class PermisoSeeder extends Seeder
         'noticias' => ['Noticias', self::CRUD],
         'eventos' => ['Eventos académicos', self::CRUD],
         'galeria' => ['Galería multimedia', self::CRUD],
-        'mensajes' => ['Mensajes de contacto', ['ver', 'editar', 'eliminar']],
-        'contacto' => ['Atención de mensajes de contacto', ['ver', 'editar']],
+        'contacto' => ['Mensajes de contacto', ['ver', 'editar', 'eliminar']],
         'usuarios' => ['Usuarios', self::CRUD],
         'graduados' => ['Graduados', ['ver', 'crear', 'editar', 'eliminar', 'exportar']],
         'bitacora' => ['Bitácora', ['ver', 'exportar']],
@@ -45,11 +43,11 @@ class PermisoSeeder extends Seeder
     private const MATRIZ = [
         Rol::DIRECTOR => ['*'],
         Rol::EDITOR_INSTITUCIONAL => [
-            'inicio', 'institucional', 'docentes', 'info_academica', 'informacion_academica', 'documentos',
+            'inicio', 'institucional', 'docentes', 'informacion_academica', 'documentos',
             'investigacion', 'revista', 'vinculacion', 'empresa_junior', 'solicitudes_innova',
             'graduados',
         ],
-        Rol::EDITOR_COMUNICACION => ['noticias', 'eventos', 'galeria', 'mensajes', 'contacto'],
+        Rol::EDITOR_COMUNICACION => ['noticias', 'eventos', 'galeria', 'contacto'],
         Rol::USUARIO => ['mi_graduado'],
     ];
 

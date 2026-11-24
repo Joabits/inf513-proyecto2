@@ -6,6 +6,7 @@ import { CLASE_ENTRADA } from '@/compartido/ui/Campo'
 import { EstadoCarga, MensajeError } from '@/compartido/ui/EstadoCarga'
 import { IconoAgregar, IconoBuscar, IconoDocumento, IconoEditar, IconoEliminar } from '@/compartido/ui/Iconos'
 import { TituloPagina } from '@/compartido/ui/TituloPagina'
+import { CABECERA_TABLA } from '@/compartido/ui/tabla'
 import { exportarGraduados } from '../api/graduados'
 import { FormularioGraduado } from '../componentes/FormularioGraduado'
 import { useEliminarGraduado, useGraduados } from '../hooks/useGraduados'
@@ -23,6 +24,7 @@ export function GestionGraduados() {
   const puedeCrear = usePermiso('graduados.crear')
   const puedeEditar = usePermiso('graduados.editar')
   const puedeEliminar = usePermiso('graduados.eliminar')
+  const puedeExportar = usePermiso('graduados.exportar')
 
   const [busqueda, setBusqueda] = useState('')
   const [modalAbierto, setModalAbierto] = useState(false)
@@ -57,20 +59,24 @@ export function GestionGraduados() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div>
       <div className="flex flex-wrap items-start justify-between gap-x-6">
         <TituloPagina
           titulo="Gestión de Graduados"
           subtitulo="Registro y actualización de datos académicos de los graduados de la carrera."
         />
         <div className="mb-6 flex flex-wrap items-center gap-3">
-          <a
-            href={exportarGraduados()}
-            download
-            className="inline-flex items-center gap-2 rounded-tema border border-borde-tarjeta bg-superficie px-4 py-2 text-sm font-semibold text-titulo hover:bg-superficie/80 transition-colors"
-          >
-            <IconoDocumento width={18} height={18} /> Exportar a Excel/CSV
-          </a>
+          {puedeExportar && (
+            <a
+              href={exportarGraduados(busqueda)}
+              download
+              title={busqueda.trim() ? 'Exporta solo los graduados que coinciden con la búsqueda' : 'Exporta todos los graduados'}
+              className="inline-flex items-center gap-2 rounded-tema border border-borde-tarjeta bg-superficie px-4 py-2 text-sm font-semibold text-titulo hover:bg-superficie/80 transition-colors"
+            >
+              <IconoDocumento width={18} height={18} aria-hidden="true" />
+              {busqueda.trim() ? 'Exportar lo buscado (CSV)' : 'Exportar a Excel/CSV'}
+            </a>
+          )}
           {puedeCrear && (
             <Boton type="button" onClick={abrirCrear} className="inline-flex items-center gap-2">
               <IconoAgregar width={18} height={18} /> Registrar graduado
@@ -113,8 +119,8 @@ export function GestionGraduados() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
-                <thead className="border-b border-borde-tarjeta bg-superficie text-xs uppercase tracking-wider text-titulo">
+              <table className="tabla-adaptable w-full text-left text-sm">
+                <thead className={CABECERA_TABLA}>
                   <tr>
                     <th scope="col" className="px-5 py-3">Nombre completo</th>
                     <th scope="col" className="px-5 py-3">CI</th>
@@ -134,11 +140,11 @@ export function GestionGraduados() {
                           </div>
                         )}
                       </td>
-                      <td className="whitespace-nowrap px-5 py-4 text-texto">{g.ci}</td>
-                      <td className="whitespace-nowrap px-5 py-4 text-texto">
+                      <td data-titulo="CI" className="whitespace-nowrap px-5 py-4 text-texto">{g.ci}</td>
+                      <td data-titulo="Gestión" className="whitespace-nowrap px-5 py-4 text-texto">
                         {g.gestion_ingreso} — {g.gestion_egreso}
                       </td>
-                      <td className="px-5 py-4 text-texto">
+                      <td data-titulo="Modalidad" className="px-5 py-4 text-texto">
                         <span className="inline-flex rounded-full border border-borde px-2.5 py-0.5 text-xs font-semibold text-titulo">
                           {g.modalidad}
                         </span>

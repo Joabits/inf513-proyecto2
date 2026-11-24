@@ -43,7 +43,26 @@ class VinculacionTest extends TestCase
         $respuesta->assertOk()
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.titulo', 'Convenio con Google')
-            ->assertJsonPath('data.0.publicado', true);
+            ->assertJsonMissingPath('data.0.autor');
+    }
+
+    public function test_la_pagina_publica_no_muestra_borradores_aunque_haya_sesion(): void
+    {
+        $editor = $this->editor();
+        Vinculacion::create(['titulo' => 'Publicado', 'descripcion' => 'Texto', 'publicado' => true, 'user_id' => $editor->id]);
+        Vinculacion::create(['titulo' => 'Borrador', 'descripcion' => 'Texto', 'publicado' => false, 'user_id' => $editor->id]);
+
+        // La página pública: aun con sesión del personal, solo lo publicado
+        $this->actingAs($editor)->getJson('/api/vinculaciones')
+            ->assertOk()->assertJsonCount(1, 'data')->assertJsonPath('data.0.titulo', 'Publicado');
+
+        // El panel pide todas
+        $this->actingAs($editor)->getJson('/api/vinculaciones?todas=1')
+            ->assertOk()->assertJsonCount(2, 'data');
+
+        // Un visitante no puede pedir los borradores
+        auth()->forgetGuards();
+        $this->getJson('/api/vinculaciones?todas=1')->assertOk()->assertJsonCount(1, 'data');
     }
 
     public function test_visitante_no_ve_borradores(): void

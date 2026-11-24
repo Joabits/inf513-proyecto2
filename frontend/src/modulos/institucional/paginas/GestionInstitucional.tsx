@@ -22,7 +22,7 @@ export function GestionInstitucional() {
   const activa = SECCIONES.some((s) => s.id === pedida) ? pedida! : SECCIONES[0].id
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div>
       <div className="flex flex-wrap items-start justify-between gap-x-6">
         <TituloPagina titulo="Información institucional" subtitulo="Textos de la página «La Carrera»: presentación, misión, visión, historia y perfil profesional." />
         <Link

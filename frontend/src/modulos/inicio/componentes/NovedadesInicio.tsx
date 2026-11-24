@@ -76,7 +76,7 @@ function Noticias({ noticias }: { noticias: NoticiaPortada[] }) {
     <section aria-labelledby="titulo-noticias">
       <Encabezado id="titulo-noticias" etiqueta="Novedades" titulo="Noticias" destino="/noticias" textoVisible="Ver todas" textoOculto="las noticias" />
 
-      <div className={`grid gap-5 ${demas.length > 0 ? 'xl:grid-cols-2' : ''}`}>
+      <div className={`grid grid-cols-1 gap-5 ${demas.length > 0 ? 'xl:grid-cols-2' : ''}`}>
         {/* La más reciente, grande. Al lado de las demás solo desde 1280 px: con menos ancho, las secundarias cortarían sus títulos */}
         <Link
           to={destacada.ruta}
@@ -178,7 +178,8 @@ export function NovedadesInicio({ noticias, eventos }: { noticias: NoticiaPortad
   const ambas = noticias.length > 0 && eventos.length > 0
 
   return (
-    <div className={`mt-14 grid gap-12 md:mt-20 ${ambas ? 'lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:gap-10' : ''}`}>
+    // grid-cols-1 = minmax(0, 1fr): sin esto, en el celular la columna crecía hasta 690 px y la noticia se cortaba
+    <div className={`mt-14 grid grid-cols-1 gap-12 md:mt-20 ${ambas ? 'lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:gap-10' : ''}`}>
       {noticias.length > 0 && <Noticias noticias={noticias} />}
       {eventos.length > 0 && <Eventos eventos={eventos} />}
     </div>

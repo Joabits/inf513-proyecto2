@@ -24,7 +24,7 @@ export function GestionConfiguracion() {
   const activa = SECCIONES.some((s) => s.id === pedida) ? pedida! : SECCIONES[0].id
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div>
       <div className="flex flex-wrap items-start justify-between gap-x-6">
         <TituloPagina titulo="Datos de contacto y enlaces" subtitulo="Se muestran en el pie de todas las páginas y en la página de contacto." />
         <Link

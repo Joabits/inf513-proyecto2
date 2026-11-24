@@ -14,7 +14,7 @@ export function PanelGestion() {
   const grupos = menu?.gestion ?? []
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div>
       <TituloPagina titulo={`Hola, ${usuario?.nombre ?? ''}`} subtitulo={usuario?.rol?.nombre} />
 
       {grupos.length === 0 && <p className="text-texto-suave">Su rol todavía no tiene opciones de gestión.</p>}

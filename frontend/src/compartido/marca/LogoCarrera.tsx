@@ -18,13 +18,19 @@ export function LogoCarrera({ className = '' }: { className?: string }) {
 
 /**
  * Logo + nombre de la Carrera: cabecera y pie del portal, panel de gestión, ingreso y página de error.
- * El nombre va en dos líneas para que ocupe poco ancho y el menú siga entrando en la fila.
+ * El nombre va en dos líneas para que ocupe poco ancho y el menú siga entrando en la fila. En el celular va un
+ * poco más chico: en 320 px el logo, el nombre y los tres botones de la cabecera tienen que entrar en una fila.
  */
-export function MarcaCarrera({ className = '' }: { className?: string }) {
+export function MarcaCarrera({ className = '', soloLogoEnAngosto = false }: { className?: string; soloLogoEnAngosto?: boolean }) {
   return (
-    <span className={`flex items-center gap-2.5 lg:gap-3 ${className}`}>
-      <LogoCarrera className="h-12 lg:h-14" />
-      <span className="font-titulos text-[0.9375rem] font-extrabold leading-[1.15] text-titulo lg:text-base">
+    <span className={`flex items-center gap-2 sm:gap-2.5 lg:gap-3 ${className}`}>
+      <LogoCarrera className="h-10 sm:h-12 lg:h-14" />
+      {/* soloLogoEnAngosto: en celulares de menos de 360 px queda solo el círculo (la barra del panel lleva más botones) */}
+      <span
+        className={`font-titulos text-[0.8125rem] font-extrabold leading-[1.15] text-titulo min-[360px]:text-sm sm:text-[0.9375rem] lg:text-base ${
+          soloLogoEnAngosto ? 'max-[359px]:hidden' : ''
+        }`}
+      >
         Administración
         <br />
         de Empresas

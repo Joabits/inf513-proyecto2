@@ -25,6 +25,7 @@ import { rutasEventos, rutasGestionEventos } from '@/modulos/eventos'
 import { rutasGestionUsuarios, rutasPerfil } from '@/modulos/usuarios'
 import { rutasGestionRevista, rutasRevista } from '@/modulos/revista'
 import { rutasGestionBitacora } from '@/modulos/bitacora'
+import { rutasGestionEstadisticas } from '@/modulos/estadisticas'
 import { rutasGestionVinculacion, rutasVinculacion } from '@/modulos/vinculacion'
 
 /*
@@ -79,6 +80,7 @@ export const router = createBrowserRouter(
         ...rutasGestionInvestigacion,
         ...rutasGestionRevista,
         ...rutasGestionBitacora,
+        ...rutasGestionEstadisticas,
         ...rutasGestionEventos,
         ...rutasGestionGaleria,
         ...rutasGestionVinculacion,

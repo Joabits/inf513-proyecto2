@@ -49,6 +49,15 @@ class BitacoraService
         'configuracion' => 'Datos de contacto y enlaces',
         'innova' => 'Empresa Junior INNOVA',
         'perfil' => 'Mi perfil',
+        'noticias' => 'Noticias',
+        'eventos' => 'Eventos académicos',
+        'galeria' => 'Galería multimedia',
+        'vinculaciones' => 'Convenios y vinculación',
+        'informacion-academica' => 'Información académica',
+        'gestion/graduados' => 'Graduados',
+        'mi-cuenta/graduado' => 'Mis datos de graduado',
+        'contacto/mensajes' => 'Mensajes de contacto',
+        'mensajes' => 'Mensajes de contacto',
     ];
 
     /** Resultado de un acceso según su código HTTP (se guarda en el detalle como «HTTP 403»). */

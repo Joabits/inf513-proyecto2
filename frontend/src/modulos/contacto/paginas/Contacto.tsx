@@ -1,6 +1,7 @@
 import { TituloPagina } from '@/compartido/ui/TituloPagina'
 import { DatosDeContacto } from '../componentes/DatosDeContacto'
 import { FormMensaje } from '../componentes/FormMensaje'
+import { MapaUbicacion } from '../componentes/MapaUbicacion'
 
 /** CU-08 Enviar mensaje de contacto. */
 export function Contacto() {
@@ -14,6 +15,7 @@ export function Contacto() {
         <DatosDeContacto />
         <FormMensaje />
       </div>
+      <MapaUbicacion />
     </div>
   )
 }

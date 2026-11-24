@@ -23,6 +23,7 @@ class Model extends EloquentModel
         'modalidad',
         'titulo_tema',
         'user_id',
+        'cuenta_id',
     ];
 
     public function autor(): BelongsTo

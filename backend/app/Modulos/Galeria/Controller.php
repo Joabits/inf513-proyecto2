@@ -2,6 +2,7 @@
 
 namespace App\Modulos\Galeria;
 
+use App\Compartido\Servicios\Bitacora;
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request as HttpRequest;
@@ -10,7 +11,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class Controller extends BaseController
 {
-    public function __construct(private Service $servicio) {}
+    public function __construct(private Service $servicio, private Bitacora $bitacora) {}
 
     public function index(HttpRequest $request): AnonymousResourceCollection
     {
@@ -40,6 +41,7 @@ class Controller extends BaseController
     {
         $datos = $request->validated();
         $galeria = $this->servicio->crear($datos, $request->user()->id);
+        $this->bitacora->accion($request->user(), 'crear', "Galería #{$galeria->id}", $galeria->titulo);
 
         return (new Resource($galeria))
             ->response()
@@ -49,14 +51,18 @@ class Controller extends BaseController
     public function update(Request $request, int $id): Resource
     {
         $datos = $request->validated();
+        $antes = Model::findOrFail($id)->getAttributes();
         $galeria = $this->servicio->actualizar($id, $datos);
+        $this->bitacora->accion($request->user(), 'editar', "Galería #{$id}", $galeria->titulo, Bitacora::comparar($antes, $galeria));
 
         return new Resource($galeria);
     }
 
-    public function destroy(int $id): JsonResponse
+    public function destroy(int $id, HttpRequest $request): JsonResponse
     {
+        $titulo = Model::findOrFail($id)->titulo;
         $this->servicio->eliminar($id);
+        $this->bitacora->accion($request->user(), 'eliminar', "Galería #{$id}", $titulo);
 
         return response()->json([
             'mensaje' => 'Elemento de la galería eliminado correctamente.',

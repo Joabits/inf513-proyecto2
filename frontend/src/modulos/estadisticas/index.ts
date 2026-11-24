@@ -1,0 +1,1 @@
+export { rutasGestionEstadisticas } from './rutas'

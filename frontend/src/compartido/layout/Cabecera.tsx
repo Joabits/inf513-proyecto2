@@ -64,7 +64,7 @@ export function Cabecera() {
 
   return (
     <header className="sticky top-0 z-40 bg-fondo">
-      <div ref={fila} className="contenedor flex h-16 items-center gap-4 lg:h-18">
+      <div ref={fila} className="contenedor flex h-16 items-center gap-2 sm:gap-4 lg:h-18">
         <Link ref={logo} to="/" className="shrink-0" aria-label="Inicio: Carrera de Administración de Empresas">
           <MarcaCarrera />
         </Link>
@@ -79,7 +79,7 @@ export function Cabecera() {
           <MenuEscritorio ref={listaMenu} opciones={publico} />
         </nav>
 
-        <div ref={acciones} className={`flex shrink-0 items-center gap-1 ${menuCabe ? '' : 'ml-auto'}`}>
+        <div ref={acciones} className={`flex shrink-0 items-center gap-0.5 sm:gap-1 ${menuCabe ? '' : 'ml-auto'}`}>
           <div className="mr-1 hidden w-40 lg:block">
             <Buscador id="buscar-escritorio" placeholder="Buscar..." />
           </div>

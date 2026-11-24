@@ -1,14 +1,17 @@
 import { Link } from 'react-router'
-import { iconoDeRuta } from '@/compartido/menu/iconosRuta'
 import { Boton } from '@/compartido/ui/Boton'
-import { ChipIcono } from '@/compartido/ui/ChipIcono'
 import { MensajeError } from '@/compartido/ui/EstadoCarga'
-import { IconoExterno, IconoFlecha, IconoVerificado } from '@/compartido/ui/Iconos'
+import { IconoFlecha, IconoVerificado } from '@/compartido/ui/Iconos'
+import { AlianzasInicio } from '../componentes/AlianzasInicio'
 import { BannerInicio } from '../componentes/BannerInicio'
-import { EnlaceInicio } from '../componentes/EnlaceInicio'
+import { CarruselAccesos } from '../componentes/CarruselAccesos'
+import { CifraAnimada } from '../componentes/CifraAnimada'
 import { EsqueletoInicio } from '../componentes/EsqueletoInicio'
+import { GaleriaInicio } from '../componentes/GaleriaInicio'
+import { InvitacionInicio } from '../componentes/InvitacionInicio'
 import { MensajeDirector } from '../componentes/MensajeDirector'
 import { NovedadesInicio } from '../componentes/NovedadesInicio'
+import { VideoInicio } from '../componentes/VideoInicio'
 import { useInicio } from '../useInicio'
 
 const BOTON = 'inline-flex items-center justify-center gap-2 rounded-tema px-6 py-3 font-semibold transition-colors'
@@ -42,7 +45,7 @@ export function Inicio() {
         // sin banner, la franja sube con -mt hasta la cabecera
         <section
           aria-labelledby="titulo-portada"
-          className={`relative pb-14 md:pb-20 ${banners.length > 0 ? '' : '-mt-8 pt-10 md:-mt-12 md:pt-16'}`}
+          className={`relative pb-10 md:pb-20 ${banners.length > 0 ? '' : '-mt-8 pt-10 md:-mt-12 md:pt-16'}`}
         >
 
           <div className={`relative grid items-center gap-10 lg:gap-16 ${cifras.length > 0 ? 'lg:grid-cols-[1.25fr_1fr]' : ''}`}>
@@ -73,7 +76,9 @@ export function Inicio() {
                 {cifras.map((cifra) => (
                   <div key={cifra.etiqueta} className="flex flex-col-reverse rounded-tema border border-borde-tarjeta bg-tarjeta p-5 sombra-suave sm:p-7">
                     <dt className="mt-1 text-sm text-texto-suave">{cifra.etiqueta}</dt>
-                    <dd className="font-titulos text-3xl font-extrabold text-titulo sm:text-4xl">{cifra.valor}</dd>
+                    <dd className="font-titulos text-3xl font-extrabold tabular-nums text-titulo sm:text-4xl">
+                      <CifraAnimada valor={cifra.valor} />
+                    </dd>
                     <span aria-hidden="true" className="mb-4 block h-1 w-8 rounded-full bg-primario" />
                   </div>
                 ))}
@@ -87,34 +92,23 @@ export function Inicio() {
 
       {portada && <MensajeDirector portada={portada} />}
 
+      <VideoInicio />
+
       {accesos.length > 0 && (
-        <section aria-labelledby="explora" className="mt-14 md:mt-20">
+        <section aria-labelledby="explora" className="mt-12 md:mt-20">
           <p className="text-sm font-bold uppercase tracking-widest text-acento">Accesos rápidos</p>
           <h2 id="explora" className="mt-2 text-3xl text-titulo">
             Explora la Carrera
           </h2>
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {accesos.map((acceso) => {
-              const externo = !acceso.ruta.startsWith('/')
-              const Icono = (externo ? IconoExterno : iconoDeRuta(acceso.ruta)) ?? IconoFlecha
-              return (
-                <EnlaceInicio
-                  key={acceso.titulo}
-                  destino={acceso.ruta}
-                  className="group flex flex-col rounded-tema border border-borde-tarjeta bg-tarjeta p-6 sombra-suave transition hover:-translate-y-1 hover:border-primario hover:sombra-elevada motion-reduce:hover:translate-y-0"
-                >
-                  <ChipIcono icono={Icono} className="transition-colors group-hover:bg-primario" />
-                  <h3 className="mt-5 text-lg text-titulo group-hover:text-acento">{acceso.titulo}</h3>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-texto-suave">{acceso.descripcion}</p>
-                  <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-acento">
-                    Ver más <IconoFlecha width={16} height={16} aria-hidden="true" className="transition-transform group-hover:translate-x-1" />
-                  </span>
-                </EnlaceInicio>
-              )
-            })}
-          </div>
+          <CarruselAccesos accesos={accesos} />
         </section>
       )}
+
+      <GaleriaInicio fotos={secciones?.galeria ?? []} />
+
+      <AlianzasInicio alianzas={secciones?.alianzas ?? []} />
+
+      <InvitacionInicio />
     </>
   )
 }

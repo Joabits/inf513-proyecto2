@@ -79,8 +79,8 @@ export function PlantillaGestion() {
           <IconoMenu />
         </button>
         {/* Celular y tablet: el logo va en la barra (el menú es desplegable) */}
-        <Link to="/gestion" className="lg:hidden" aria-label="Ir al panel de gestión">
-          <MarcaCarrera />
+        <Link to="/gestion" className="min-w-0 lg:hidden" aria-label="Ir al panel de gestión">
+          <MarcaCarrera soloLogoEnAngosto />
         </Link>
         {/* PC: logo y botón del menú, con el ancho del menú completo. No se mueven al contraer el menú. */}
         <div className="hidden w-72 shrink-0 lg:block">
@@ -122,10 +122,14 @@ export function PlantillaGestion() {
         </aside>
 
         <div className="flex min-w-0 flex-1 flex-col">
-          <main id="contenido" className="flex-1 px-4 py-8 md:py-10 lg:px-8">
-            <ContextoPlantilla.Provider value="gestion">
-              <Outlet />
-            </ContextoPlantilla.Provider>
+          <main id="contenido" className="flex-1 px-4 pt-6 pb-8 md:pt-8 md:pb-10 lg:px-8">
+            {/* Un solo ancho para todo el panel (el mismo de las páginas del portal): cada sección ocupa este
+                ancho completo y el título empieza siempre en el mismo lugar. Las páginas no ponen su propio max-w */}
+            <div className="mx-auto w-full max-w-6xl">
+              <ContextoPlantilla.Provider value="gestion">
+                <Outlet />
+              </ContextoPlantilla.Provider>
+            </div>
           </main>
           <PieSimple />
         </div>

@@ -2,6 +2,7 @@ import type { RouteObject } from 'react-router'
 import { RutaProtegida } from '@/compartido/sesion/RutaProtegida'
 import { GestionGraduados } from './paginas/GestionGraduados'
 import { ListaGraduados } from './paginas/ListaGraduados'
+import { MisDatosGraduado } from './paginas/MisDatosGraduado'
 
 export const rutasGraduados: RouteObject[] = [
   {
@@ -20,6 +21,15 @@ export const rutasGestionGraduados: RouteObject[] = [
     element: (
       <RutaProtegida permiso="graduados.ver">
         <GestionGraduados />
+      </RutaProtegida>
+    ),
+  },
+  // CU-10: el propio graduado, dentro del panel con su cuenta de rol Usuario
+  {
+    path: 'mi-cuenta/graduado',
+    element: (
+      <RutaProtegida permiso="mi_graduado.ver">
+        <MisDatosGraduado />
       </RutaProtegida>
     ),
   },

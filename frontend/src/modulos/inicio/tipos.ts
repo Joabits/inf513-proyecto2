@@ -46,10 +46,26 @@ export interface EventoPortada {
   ruta: string
 }
 
+/** Igual que VinculacionPortada.php: el logo de un convenio publicado */
+export interface AlianzaPortada {
+  id: number
+  titulo: string
+  imagen: string
+}
+
+/** Igual que GaleriaPortada.php: una de las últimas fotos publicadas */
+export interface FotoPortada {
+  id: number
+  titulo: string | null
+  imagen: string
+}
+
 /** Lo que aportan otros módulos a la portada (CU-01). Una sección falta si su módulo no está instalado. */
 export interface SeccionesInicio {
   noticias?: NoticiaPortada[]
   eventos?: EventoPortada[]
+  alianzas?: AlianzaPortada[]
+  galeria?: FotoPortada[]
 }
 
 export interface ContenidoInicio {

@@ -43,7 +43,7 @@ export function ListaEventos() {
   const { meses, realizados, ahora } = useMemo(() => organizar(eventos ?? [], dataUpdatedAt), [eventos, dataUpdatedAt])
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-6xl">
       <TituloPagina titulo="Eventos académicos" subtitulo="Conferencias, seminarios, talleres y actividades de la Carrera." />
 
       {isPending && <EstadoCarga />}

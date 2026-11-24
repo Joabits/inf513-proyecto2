@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Boton } from '@/compartido/ui/Boton'
 import { ChipIcono } from '@/compartido/ui/ChipIcono'
 import { EstadoCarga, MensajeError } from '@/compartido/ui/EstadoCarga'
+import { iconoPorTema } from '@/compartido/ui/iconoPorTema'
 import { IconoBandeja, IconoCorreo, IconoEnviar, IconoFlecha, IconoObjetivo, IconoVision } from '@/compartido/ui/Iconos'
 import { TituloPagina } from '@/compartido/ui/TituloPagina'
 import { FormSolicitud } from '../componentes/FormSolicitud'
@@ -82,20 +83,19 @@ export function EmpresaJunior() {
       )}
 
       {servicios.length > 0 && (
-        <section aria-labelledby="titulo-servicios" className="mt-14 md:mt-20">
+        <section aria-labelledby="titulo-servicios" className="mt-12 md:mt-20">
           <p className={ANTETITULO}>Lo que hacemos</p>
           <h2 id="titulo-servicios" className="mt-2 text-3xl text-titulo">
             Servicios
           </h2>
           <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {servicios.map((servicio, i) => (
+            {servicios.map((servicio) => (
               <li
                 key={servicio.id}
                 className="flex flex-col rounded-tema border border-borde-tarjeta bg-tarjeta p-6 sombra-suave transition hover:-translate-y-1 hover:border-primario hover:sombra-elevada motion-reduce:hover:translate-y-0"
               >
-                <span aria-hidden="true" className="grid h-11 w-11 place-items-center rounded-tema bg-chip font-titulos text-sm font-extrabold text-sobre-chip">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
+                {/* Ícono del servicio en vez de un número: los servicios no son pasos */}
+                <ChipIcono icono={iconoPorTema(servicio.nombre)} />
                 <h3 className="mt-5 text-xl text-titulo">{servicio.nombre}</h3>
                 <p className="mt-2 flex-1 text-texto-suave">{servicio.descripcion}</p>
                 {recibe && (
@@ -114,7 +114,7 @@ export function EmpresaJunior() {
         </section>
       )}
 
-      <section id="solicitud" aria-labelledby="titulo-solicitud" className="mt-14 grid scroll-mt-24 gap-8 md:mt-20 lg:grid-cols-[1fr_1.6fr] lg:gap-14">
+      <section id="solicitud" aria-labelledby="titulo-solicitud" className="mt-12 grid scroll-mt-24 gap-8 md:mt-20 lg:grid-cols-[1fr_1.6fr] lg:gap-14">
         <div>
           <p className={ANTETITULO}>Trabajemos juntos</p>
           <h2 id="titulo-solicitud" className="mt-2 text-3xl text-titulo">

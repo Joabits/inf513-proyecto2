@@ -10,7 +10,7 @@ export function GestionInformacion() {
   const { data: informacion, isPending, isError, refetch } = useInformacion()
 
   return (
-    <div className="mx-auto max-w-4xl space-y-6">
+    <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-4">
         <TituloPagina
           titulo="Gestión de Información Académica"

@@ -19,7 +19,7 @@ export function Plantilla() {
       <AvisoPanel />
       <Cabecera />
       {/* La franja del título de cada página sube con -mt-8 / -mt-12 hasta la cabecera */}
-      <main id="contenido" className="contenedor flex-1 pt-8 pb-16 md:pt-12 md:pb-20">
+      <main id="contenido" className="contenedor flex-1 pt-8 pb-12 md:pt-12 md:pb-20">
         <Outlet />
       </main>
       <Pie />

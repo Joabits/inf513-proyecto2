@@ -36,6 +36,22 @@
   --font-cuerpo: "Montserrat Variable", system-ui, sans-serif;
 }
 
+/*
+ * Títulos y cifras que se adaptan al ancho de la pantalla: en el celular bajan de tamaño sin saltos y desde
+ * ~1024 px quedan en el tamaño de siempre de Tailwind. Así un título no ocupa media pantalla del teléfono ni se
+ * parte en tres renglones, y no hay que poner sm:/md: en cada uno. Mínimo y máximo van en rem para que sigan
+ * creciendo con el tamaño de letra que elige el usuario (accesibilidad).
+ *   xl 18 → 20 px · 2xl 20 → 24 px · 3xl 24 → 30 px · 4xl 28 → 36 px · 5xl 32 → 48 px · 6xl 36 → 60 px
+ */
+@theme {
+  --text-xl: clamp(1.125rem, 1.05rem + 0.3vw, 1.25rem);
+  --text-2xl: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --text-3xl: clamp(1.5rem, 1.25rem + 1vw, 1.875rem);
+  --text-4xl: clamp(1.75rem, 1.45rem + 1.25vw, 2.25rem);
+  --text-5xl: clamp(2rem, 1.4rem + 2.5vw, 3rem);
+  --text-6xl: clamp(2.25rem, 1.35rem + 3.75vw, 3.75rem);
+}
+
 /* ---------- Modo día (por defecto): fondo blanco institucional ---------- */
 :root {
   --c-fondo: #ffffff;
@@ -222,6 +238,78 @@
 
   @media (width >= 40rem) {
     padding-inline: 1.5rem;
+  }
+}
+
+/*
+ * Tablas del panel que en celulares y tablets (< 1024 px) se leen como tarjetas: cada fila es una tarjeta y cada
+ * celda muestra el título de su columna (atributo data-titulo). Las celdas sin data-titulo (el título de la fila,
+ * la imagen, los botones) van a todo el ancho. Fuera de @layer para ganarle a las utilidades de cada celda.
+ */
+@media (width < 64rem) {
+  .tabla-adaptable,
+  .tabla-adaptable tbody,
+  .tabla-adaptable tr,
+  .tabla-adaptable td {
+    display: block;
+    width: 100%;
+  }
+  .tabla-adaptable thead {
+    display: none;
+  }
+  .tabla-adaptable tr {
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid var(--c-borde);
+  }
+  .tabla-adaptable td {
+    padding: 0.25rem 0;
+    text-align: left;
+    white-space: normal;
+  }
+  .tabla-adaptable td[data-titulo] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    text-align: right;
+  }
+  .tabla-adaptable td[data-titulo]::before {
+    content: attr(data-titulo);
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--c-texto-suave);
+    text-align: left;
+  }
+  .tabla-adaptable td:last-child:not([data-titulo]) {
+    padding-top: 0.625rem;
+    text-align: left;
+  }
+  /* Los botones de la fila (Ver, Editar, Eliminar) bajan a otro renglón si en el celular no entran */
+  .tabla-adaptable td:last-child:not([data-titulo]) > * {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+}
+
+/*
+ * Franja gris claro (#F4F5F7) de borde a borde, aunque la sección esté dentro de la columna centrada: corta el
+ * blanco de la página entre secciones. La sombra pinta el fondo hasta los costados de la ventana sin ensanchar la
+ * página (no agrega barra horizontal) y clip-path la recorta arriba y abajo. De noche es el azul de superficie.
+ */
+@utility franja-gris {
+  background-color: var(--c-superficie);
+  box-shadow: 0 0 0 100vmax var(--c-superficie);
+  clip-path: inset(0 -100vmax);
+}
+
+/* Carrusel de la portada: el punto elegido se llena mientras dura cada imagen */
+@keyframes progreso-banner {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
   }
 }
 

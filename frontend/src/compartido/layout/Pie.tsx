@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { EnlaceConfigurable } from '@/compartido/configuracion/EnlaceConfigurable'
 import { NOMBRE_RED } from '@/compartido/configuracion/tipos'
+import { IconoRed } from '@/compartido/ui/IconoRed'
 import { enlaceTelefono, enlaceWhatsapp, formatoWhatsapp, useConfiguracion } from '@/compartido/configuracion/useConfiguracion'
 import { MarcaCarrera } from '@/compartido/marca/LogoCarrera'
 import { IconoCorreo, IconoHorario, IconoMensaje, IconoSiguiente, IconoTelefono, IconoUbicacion, IconoVer } from '@/compartido/ui/Iconos'
@@ -48,7 +49,7 @@ export function Pie() {
 
   return (
     <footer className="mt-auto bg-fondo text-texto">
-      <div className="contenedor grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr] lg:gap-16">
+      <div className="contenedor grid gap-8 py-10 sm:grid-cols-2 sm:gap-10 md:py-14 lg:grid-cols-[1.4fr_1fr_1fr] lg:gap-16">
         <div className="sm:col-span-2 lg:col-span-1">
           <MarcaCarrera />
           <p className="mt-5 max-w-sm text-sm leading-relaxed text-texto-suave">
@@ -63,8 +64,9 @@ export function Pie() {
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex rounded-full border border-borde px-3 py-1 text-xs font-semibold text-titulo transition-colors hover:border-primario hover:text-acento"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-borde px-3 py-1 text-xs font-semibold text-titulo transition-colors hover:border-primario hover:text-acento"
                   >
+                    <IconoRed red={red} size={14} />
                     {NOMBRE_RED[red]}
                   </a>
                 </li>

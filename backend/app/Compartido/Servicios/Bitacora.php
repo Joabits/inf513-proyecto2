@@ -86,6 +86,24 @@ class Bitacora
         return $cambios;
     }
 
+    /**
+     * Qué cambió entre los atributos de antes (getAttributes() tomado antes de editar) y el modelo después.
+     * Sirve cuando el servicio devuelve el modelo recargado con fresh(), que ya no recuerda sus cambios.
+     */
+    public static function comparar(array $antes, Model $despues): ?array
+    {
+        $protegidos = [...self::CAMPOS_PROTEGIDOS, ...$despues->getHidden()];
+        $cambios = [];
+        foreach (Arr::except($despues->getAttributes(), $protegidos) as $campo => $valor) {
+            $anterior = $antes[$campo] ?? null;
+            if ((string) self::valor($anterior) !== (string) self::valor($valor)) {
+                $cambios[$campo] = ['antes' => self::valor($anterior), 'despues' => self::valor($valor)];
+            }
+        }
+
+        return $cambios === [] ? null : $cambios;
+    }
+
     private static function valor(mixed $valor): mixed
     {
         if ($valor === null || is_bool($valor) || is_int($valor) || is_float($valor)) {

@@ -27,16 +27,18 @@ export function TarjetaEvento({ evento, enCurso = false, realizado = false }: { 
   const fin = evento.fecha_fin_iso ? new Date(evento.fecha_fin_iso) : null
 
   return (
-    <article className="flex gap-4 rounded-tema border border-borde-tarjeta bg-tarjeta p-4 sombra-suave sm:gap-6 sm:p-5">
+    // En el celular la fecha va arriba como una etiqueta («30 NOV») y el texto usa todo el ancho de la tarjeta;
+    // desde tablet vuelve el bloque cuadrado al costado
+    <article className="flex flex-col gap-3 rounded-tema border border-borde-tarjeta bg-tarjeta p-4 sombra-suave sm:flex-row sm:gap-6 sm:p-5">
       {inicio && (
         <time
           dateTime={evento.fecha_inicio_iso}
-          className={`flex h-20 w-16 shrink-0 flex-col items-center justify-center rounded-tema sm:w-20 ${
+          className={`flex shrink-0 items-baseline gap-1.5 self-start rounded-tema px-3 py-1.5 sm:h-20 sm:w-20 sm:flex-col sm:items-center sm:justify-center sm:gap-0 sm:p-0 ${
             realizado ? 'bg-superficie text-titulo' : 'bg-primario text-sobre-primario'
           }`}
         >
-          <span className="font-titulos text-3xl font-extrabold leading-none">{DIA.format(inicio)}</span>
-          <span className="mt-1 text-xs font-semibold uppercase">{MES.format(inicio).replace('.', '')}</span>
+          <span className="font-titulos text-xl font-extrabold leading-none sm:text-3xl">{DIA.format(inicio)}</span>
+          <span className="text-xs font-semibold uppercase sm:mt-1">{MES.format(inicio).replace('.', '')}</span>
         </time>
       )}
 

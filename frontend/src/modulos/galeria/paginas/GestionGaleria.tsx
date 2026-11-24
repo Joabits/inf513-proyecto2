@@ -6,6 +6,7 @@ import { BotonConfirmar } from '@/compartido/ui/BotonConfirmar'
 import { EstadoCarga, MensajeError } from '@/compartido/ui/EstadoCarga'
 import { IconoAgregar, IconoEditar, IconoEliminar } from '@/compartido/ui/Iconos'
 import { TituloPagina } from '@/compartido/ui/TituloPagina'
+import { CABECERA_TABLA } from '@/compartido/ui/tabla'
 import { FormularioGaleria } from '../componentes/FormularioGaleria'
 import { useEliminarGaleria, useGaleria } from '../hooks/useGaleria'
 import type { Galeria } from '../tipos'
@@ -37,7 +38,7 @@ export function GestionGaleria() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div>
       <div className="flex flex-wrap items-start justify-between gap-x-6">
         <TituloPagina
           titulo="Gestión de Galería Multimedia"
@@ -79,8 +80,8 @@ export function GestionGaleria() {
 
       {!isPending && !isError && items && items.length > 0 && (
         <div className="overflow-x-auto rounded-tema border border-borde bg-fondo">
-          <table className="w-full text-left text-sm text-texto">
-            <thead className="border-b border-borde bg-marino-oscuro/5 text-xs uppercase font-semibold text-titulo">
+          <table className="tabla-adaptable w-full text-left text-sm text-texto">
+            <thead className={CABECERA_TABLA}>
               <tr>
                 <th className="px-4 py-3">Miniatura</th>
                 <th className="px-4 py-3">Título y Descripción</th>
@@ -130,7 +131,7 @@ export function GestionGaleria() {
                     </td>
 
                     {/* Estado */}
-                    <td className="px-4 py-3 text-center">
+                    <td data-titulo="Estado" className="px-4 py-3 text-center">
                       {item.publicado ? (
                         <span className="inline-block rounded-tema bg-primario/10 px-2.5 py-1 text-xs font-semibold text-primario">
                           Publicado
@@ -143,7 +144,7 @@ export function GestionGaleria() {
                     </td>
 
                     {/* Fecha */}
-                    <td className="px-4 py-3 whitespace-nowrap text-xs text-texto">
+                    <td data-titulo="Fecha" className="px-4 py-3 whitespace-nowrap text-xs text-texto">
                       {item.creado_en}
                     </td>
 
