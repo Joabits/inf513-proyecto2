@@ -8,11 +8,12 @@ use Illuminate\Support\Str;
 
 class Service
 {
-    private const CAMPOS_BUSQUEDA = ['nombre_completo', 'ci', 'correo', 'gestion_ingreso', 'gestion_egreso', 'modalidad', 'titulo_tema'];
+    /** Los mismos campos que filtra el buscador de la pantalla (frontend: graduados/paginas/GestionGraduados.tsx). */
+    private const CAMPOS_BUSQUEDA = ['nombre_completo', 'ci', 'modalidad', 'titulo_tema'];
 
     /**
-     * Graduados ordenados por nombre. Con $buscar, solo los que lo contienen en algún dato, sin distinguir
-     * mayúsculas ni tildes: la misma búsqueda que hace el panel, para que la exportación lleve lo que se ve.
+     * Graduados ordenados por nombre. Con $buscar, solo los que lo contienen en nombre, CI, modalidad o tema, sin
+     * distinguir mayúsculas ni tildes: la misma búsqueda que hace el panel, para que la exportación lleve lo que se ve.
      */
     public function listar(?string $buscar = null): Collection
     {

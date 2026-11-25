@@ -30,6 +30,8 @@ export function GestionGraduados() {
   const [modalAbierto, setModalAbierto] = useState(false)
   const [graduadoSeleccionado, setGraduadoSeleccionado] = useState<Graduado | null>(null)
 
+  // Los mismos campos que usa el servidor al exportar (Graduados\Service::CAMPOS_BUSQUEDA): así
+  // «Exportar lo buscado» lleva exactamente las filas que se ven
   const graduadosFiltrados = useMemo(() => {
     const buscado = normalizar(busqueda.trim())
     return (graduados ?? []).filter((g) => {
@@ -94,7 +96,7 @@ export function GestionGraduados() {
             type="search"
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
-            placeholder="Buscar por nombre, CI o modalidad..."
+            placeholder="Buscar por nombre, CI, modalidad o tema..."
             className={`${CLASE_ENTRADA} !mt-0 pl-10`}
           />
         </div>

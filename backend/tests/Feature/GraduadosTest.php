@@ -83,6 +83,23 @@ class GraduadosTest extends TestCase
         $this->assertStringNotContainsString('Mario Gomez', $csv);
     }
 
+    public function test_exportar_busca_en_los_mismos_datos_que_la_pantalla(): void
+    {
+        // La pantalla busca en nombre, CI, modalidad y tema; el correo y las gestiones no cuentan
+        $this->graduado(['correo' => 'lucia@ejemplo.com', 'gestion_egreso' => 'II-2019']);
+        $this->graduado(['nombre_completo' => 'Lucía Pérez', 'ci' => '7654321', 'titulo_tema' => 'Plan de negocios 2019']);
+
+        $porCorreo = $this->actingAs($this->editor())->get('/api/gestion/graduados/exportar?buscar=lucia@')->streamedContent();
+        $this->assertStringNotContainsString('Mario Gomez', $porCorreo);
+
+        $porAnio = $this->actingAs($this->editor())->get('/api/gestion/graduados/exportar?buscar=2019')->streamedContent();
+        $this->assertStringContainsString('Lucía Pérez', $porAnio);
+        $this->assertStringNotContainsString('Mario Gomez', $porAnio);
+
+        $this->actingAs($this->editor())->getJson('/api/gestion/graduados?buscar=2019')
+            ->assertOk()->assertJsonCount(1, 'data')->assertJsonPath('data.0.nombre_completo', 'Lucía Pérez');
+    }
+
     public function test_el_panel_filtra_sin_distinguir_tildes(): void
     {
         $this->graduado();
