@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router'
 import { Boton } from '@/compartido/ui/Boton'
 import { CLASE_ENTRADA } from '@/compartido/ui/Campo'
 import { EstadoCarga, MensajeError } from '@/compartido/ui/EstadoCarga'
@@ -35,6 +36,22 @@ export function ListaGraduados() {
         titulo="Directorio de Graduados"
         subtitulo="Registro y consulta académica de los profesionales titulados de la carrera."
       />
+
+      <section aria-label="Cuenta de graduado" className="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-tema bg-marino-oscuro p-5 text-sobre-primario sm:p-6">
+        <div className="flex items-center gap-4">
+          <IconoGraduacion className="h-10 w-10 shrink-0" aria-hidden="true" />
+          <div>
+            <h2 className="text-lg font-bold">¿Es graduado de la Carrera?</h2>
+            <p className="text-sm text-sobre-primario/80">Solicite su cuenta para aparecer en el directorio y mantener sus datos al día.</p>
+          </div>
+        </div>
+        <Link
+          to="/alumni/solicitar-cuenta"
+          className="rounded-tema bg-primario px-4 py-2 font-semibold text-sobre-primario transition-colors hover:bg-marino"
+        >
+          Solicitar mi cuenta
+        </Link>
+      </section>
 
       <div className="mb-8 flex flex-wrap items-center gap-4">
         <div className="relative min-w-[280px] max-w-md flex-1">

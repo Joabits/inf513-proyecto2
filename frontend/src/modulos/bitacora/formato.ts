@@ -62,6 +62,9 @@ const NOMBRES_ACCION: Record<string, string> = {
   ocultar: 'Ocultar',
   atender: 'Atender solicitudes',
   exportar: 'Exportar',
+  solicitar: 'Solicitar cuentas de graduado',
+  aprobar: 'Aprobar cuentas de graduado',
+  rechazar: 'Rechazar solicitudes de cuenta',
   cambiar_clave: 'Cambiar contraseñas',
   editar_perfil: 'Editar el perfil propio',
   crear_usuario: 'Crear cuentas',
@@ -173,6 +176,10 @@ function accionRealizada(registro: Registro) {
     return `cambió el rol de la cuenta n.º ${MODELO.exec(recurso)?.[2]}: ${detalle.replace('->', '→')}`
   }
   if (accion === 'exportar') return `exportó ${EXPORTADO[recurso] ?? recurso}${detalle ? ` (${detalle})` : ''}`
+  // CU-10 y CU-18: solicitudes de cuenta de graduados
+  if (accion === 'solicitar') return `solicitó su cuenta de graduado${detalle ? ` (${detalle})` : ''}`
+  if (accion === 'aprobar') return `aprobó la cuenta de graduado${detalle ? ` de ${detalle.replace(/^Cuenta de /, '')}` : ''}`
+  if (accion === 'rechazar') return `rechazó la solicitud de cuenta${detalle ? ` de «${detalle}»` : ''}`
 
   const verbo = VERBOS[accion] ?? accion.replaceAll('_', ' ')
   const cosa = elemento(recurso, detalle)

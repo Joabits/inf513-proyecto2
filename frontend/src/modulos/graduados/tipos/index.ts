@@ -9,6 +9,10 @@ export interface Graduado {
   modalidad: string
   titulo_tema: string | null
   user_id: number
+  /** CU-10: la cuenta propia del graduado, si tiene */
+  cuenta?: { correo: string; activa: boolean } | null
+  /** Solicitó su cuenta desde el portal y falta aprobarla */
+  cuenta_pendiente?: boolean
   autor?: {
     id: number
     name: string

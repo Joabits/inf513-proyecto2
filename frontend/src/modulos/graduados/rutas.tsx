@@ -3,6 +3,7 @@ import { RutaProtegida } from '@/compartido/sesion/RutaProtegida'
 import { GestionGraduados } from './paginas/GestionGraduados'
 import { ListaGraduados } from './paginas/ListaGraduados'
 import { MisDatosGraduado } from './paginas/MisDatosGraduado'
+import { SolicitarCuenta } from './paginas/SolicitarCuenta'
 
 export const rutasGraduados: RouteObject[] = [
   {
@@ -12,6 +13,11 @@ export const rutasGraduados: RouteObject[] = [
   {
     path: 'alumni',
     element: <ListaGraduados />,
+  },
+  // CU-10: el graduado solicita su cuenta (la Carrera la aprueba en el panel)
+  {
+    path: 'alumni/solicitar-cuenta',
+    element: <SolicitarCuenta />,
   },
 ]
 

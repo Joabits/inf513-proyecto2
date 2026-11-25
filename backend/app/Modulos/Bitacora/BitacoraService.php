@@ -30,7 +30,7 @@ class BitacoraService
      * En «Ingresos y salidas» lo importante son los intentos fallidos de ingreso.
      */
     public const ACCIONES_IMPORTANTES = [
-        'eliminar', 'eliminar_usuario', 'desactivar_usuario', 'cambiar_rol', 'asignar_permiso', 'quitar_permiso',
+        'eliminar', 'eliminar_usuario', 'desactivar_usuario', 'cambiar_rol', 'asignar_permiso', 'quitar_permiso', 'rechazar',
     ];
 
     public const IMPORTANCIAS = ['importantes'];

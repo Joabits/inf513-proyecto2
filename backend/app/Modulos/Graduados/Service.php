@@ -2,8 +2,11 @@
 
 namespace App\Modulos\Graduados;
 
+use App\Models\Rol;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class Service
@@ -17,7 +20,7 @@ class Service
      */
     public function listar(?string $buscar = null): Collection
     {
-        $graduados = Model::with('autor')->orderBy('nombre_completo')->get();
+        $graduados = Model::with(['autor', 'cuenta'])->orderBy('nombre_completo')->get();
 
         $buscado = self::normalizar((string) $buscar);
         if ($buscado === '') {
@@ -31,6 +34,69 @@ class Service
     private static function normalizar(string $texto): string
     {
         return Str::lower(Str::ascii(trim($texto)));
+    }
+
+    /** Directorio público: sin los graduados cuya cuenta espera aprobación (sus datos todavía no se validaron). */
+    public function listarPublicos(): Collection
+    {
+        return $this->listar()->reject(fn (Model $g) => $g->cuentaPendiente())->values();
+    }
+
+    /**
+     * CU-10: el graduado solicita su cuenta desde el portal. Se crean juntas su cuenta de rol Usuario, inactiva hasta
+     * que la Carrera la apruebe, y su registro de graduado, con los datos que escribió.
+     */
+    public function solicitarCuenta(array $datos): Model
+    {
+        return DB::transaction(function () use ($datos) {
+            $cuenta = new User([
+                'name' => $datos['nombre_completo'],
+                'email' => $datos['correo'],
+                'password' => $datos['password'],
+                'rol_id' => Rol::where('slug', Rol::USUARIO)->value('id'),
+                'activo' => false,
+            ]);
+
+            // Quien crea la cuenta es el propio graduado: el trigger de auditoría lo registra como autor. Sin esto
+            // tomaría la sesión que tenga abierta ese navegador (alguien del personal) o a nadie. Solo dura la transacción.
+            if (DB::getDriverName() === 'pgsql') {
+                $cuenta->id = (int) DB::scalar("SELECT nextval(pg_get_serial_sequence('users', 'id'))");
+                DB::select("SELECT set_config('app.usuario_id', ?, true)", [(string) $cuenta->id]);
+            }
+
+            $cuenta->save();
+
+            return Model::create([
+                ...Arr::only($datos, ['nombre_completo', 'ci', 'correo', 'telefono', 'gestion_ingreso', 'gestion_egreso', 'modalidad', 'titulo_tema']),
+                'cuenta_id' => $cuenta->id,
+                'user_id' => $cuenta->id,
+            ])->setRelation('cuenta', $cuenta);
+        });
+    }
+
+    /** CU-18: la Carrera revisó los datos y activa la cuenta: desde ahora el graduado puede ingresar. */
+    public function aprobarCuenta(int $id): Model
+    {
+        $graduado = Model::with('cuenta')->findOrFail($id);
+        abort_unless($graduado->cuentaPendiente(), 422, 'Este graduado no tiene una cuenta por aprobar.');
+        $graduado->cuenta->update(['activo' => true]);
+
+        return $graduado;
+    }
+
+    /** CU-18: la solicitud no corresponde a un graduado de la Carrera: se borran el registro y la cuenta sin usar. */
+    public function rechazarSolicitud(int $id): Model
+    {
+        $graduado = Model::with('cuenta')->findOrFail($id);
+        abort_unless($graduado->cuentaPendiente(), 422, 'Este graduado no tiene una solicitud de cuenta pendiente.');
+
+        DB::transaction(function () use ($graduado) {
+            $cuenta = $graduado->cuenta;
+            $graduado->delete();
+            $cuenta->delete();
+        });
+
+        return $graduado;
     }
 
     /** CU-10: el registro del propio graduado (por su cuenta), o null si todavía no cargó sus datos. */

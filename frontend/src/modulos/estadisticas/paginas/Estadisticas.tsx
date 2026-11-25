@@ -24,6 +24,9 @@ const ACCIONES: Record<string, string> = {
   ocultar: 'Ocultamientos',
   atender: 'Mensajes atendidos',
   exportar: 'Exportaciones',
+  solicitar: 'Cuentas solicitadas',
+  aprobar: 'Cuentas aprobadas',
+  rechazar: 'Solicitudes rechazadas',
 }
 
 /** «/» → Inicio; «/malla-curricular» → Malla curricular; «/noticias/12» → Noticias 12 */

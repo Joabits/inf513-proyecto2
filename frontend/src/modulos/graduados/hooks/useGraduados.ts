@@ -1,14 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   actualizarGraduado,
+  aprobarCuentaGraduado,
   crearGraduado,
   eliminarGraduado,
   getGraduados,
   getGraduadosPublicos,
   getMiGraduado,
   guardarMiGraduado,
+  rechazarSolicitudGraduado,
+  solicitarCuenta,
 } from '../api/graduados'
 import type { GraduadoFormValores } from '../esquema/graduadoSchema'
+import type { SolicitudCuentaValores } from '../esquema/solicitudCuentaSchema'
 
 export const CLAVE_GRADUADOS = ['graduados']
 export const CLAVE_GRADUADOS_PUBLICOS = ['graduados-publicos']
@@ -60,6 +64,33 @@ export function useEliminarGraduado() {
       queryClient.invalidateQueries({ queryKey: CLAVE_GRADUADOS })
       queryClient.invalidateQueries({ queryKey: CLAVE_GRADUADOS_PUBLICOS })
     },
+  })
+}
+
+/** CU-10: solicitud de cuenta desde el portal (sin sesión). */
+export function useSolicitarCuenta() {
+  return useMutation({ mutationFn: (datos: SolicitudCuentaValores) => solicitarCuenta(datos) })
+}
+
+/** CU-18: aprobar o rechazar las cuentas que solicitaron los graduados. */
+export function useAprobarCuentaGraduado() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (id: number) => aprobarCuentaGraduado(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: CLAVE_GRADUADOS })
+      queryClient.invalidateQueries({ queryKey: CLAVE_GRADUADOS_PUBLICOS })
+    },
+  })
+}
+
+export function useRechazarSolicitudGraduado() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (id: number) => rechazarSolicitudGraduado(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: CLAVE_GRADUADOS }),
   })
 }
 

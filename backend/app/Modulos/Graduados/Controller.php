@@ -22,7 +22,42 @@ class Controller extends BaseController
     /** Directorio público (/alumni): solo datos académicos, sin CI, correo ni teléfono. */
     public function listarPublicos(): AnonymousResourceCollection
     {
-        return GraduadoPublicoResource::collection($this->servicio->listar());
+        return GraduadoPublicoResource::collection($this->servicio->listarPublicos());
+    }
+
+    /**
+     * CU-10: un graduado solicita su cuenta desde el portal (sin sesión). La cuenta queda inactiva hasta que la
+     * Carrera la apruebe en el panel (CU-18). Si llenó el campo trampa es un programa: se responde igual y no se crea nada.
+     */
+    public function solicitarCuenta(SolicitudCuentaRequest $request): JsonResponse
+    {
+        $respuesta = ['mensaje' => 'Recibimos su solicitud. La Carrera revisará sus datos y activará su cuenta; después podrá ingresar con su correo y su contraseña.'];
+        if ($request->esAutomatico()) {
+            return response()->json($respuesta, 201);
+        }
+
+        $graduado = $this->servicio->solicitarCuenta($request->safe()->except(SolicitudCuentaRequest::TRAMPA));
+        $this->bitacora->accion($graduado->cuenta, 'solicitar', "Graduado #{$graduado->id}", $graduado->nombre_completo);
+
+        return response()->json($respuesta, 201);
+    }
+
+    /** CU-18: la Carrera aprueba la cuenta que solicitó un graduado. */
+    public function aprobarCuenta(int $id, HttpRequest $request): Resource
+    {
+        $graduado = $this->servicio->aprobarCuenta($id);
+        $this->bitacora->accion($request->user(), 'aprobar', "Graduado #{$id}", "Cuenta de {$graduado->cuenta->email}");
+
+        return new Resource($graduado->load('autor'));
+    }
+
+    /** CU-18: la Carrera rechaza la solicitud: se borran el registro y la cuenta que nunca se activó. */
+    public function rechazarSolicitud(int $id, HttpRequest $request): JsonResponse
+    {
+        $graduado = $this->servicio->rechazarSolicitud($id);
+        $this->bitacora->accion($request->user(), 'rechazar', "Graduado #{$id}", $graduado->nombre_completo);
+
+        return response()->json(['mensaje' => 'Solicitud rechazada: se eliminaron el registro y la cuenta.']);
     }
 
     /**

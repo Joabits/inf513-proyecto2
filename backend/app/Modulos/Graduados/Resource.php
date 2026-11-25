@@ -25,6 +25,12 @@ class Resource extends JsonResource
                 'name' => $this->autor->name,
                 'email' => $this->autor->email,
             ] : null,
+            // CU-10: la cuenta propia del graduado, si tiene; «pendiente» = la solicitó y falta aprobarla
+            'cuenta' => $this->cuenta ? [
+                'correo' => $this->cuenta->email,
+                'activa' => (bool) $this->cuenta->activo,
+            ] : null,
+            'cuenta_pendiente' => $this->cuentaPendiente(),
             'creado' => $this->created_at?->toIso8601String(),
             'actualizado' => $this->updated_at?->toIso8601String(),
             'created_at' => $this->created_at,

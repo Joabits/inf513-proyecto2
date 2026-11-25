@@ -30,4 +30,16 @@ class Model extends EloquentModel
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    /** CU-10: la cuenta del propio graduado (rol Usuario), si tiene. */
+    public function cuenta(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'cuenta_id');
+    }
+
+    /** Solicitó su cuenta desde el portal y la Carrera todavía no la aprobó (o la cuenta está desactivada). */
+    public function cuentaPendiente(): bool
+    {
+        return $this->cuenta !== null && ! $this->cuenta->activo;
+    }
 }

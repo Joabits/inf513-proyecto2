@@ -1,6 +1,7 @@
 import { cliente, RUTA_BASE } from '@/compartido/api/cliente'
 import type { Graduado, GraduadoPublico } from '../tipos'
 import type { GraduadoFormValores } from '../esquema/graduadoSchema'
+import type { SolicitudCuentaValores } from '../esquema/solicitudCuentaSchema'
 
 export async function getGraduadosPublicos(): Promise<GraduadoPublico[]> {
   const { data } = await cliente.get<{ data: GraduadoPublico[] }>('/graduados')
@@ -41,4 +42,21 @@ export async function actualizarGraduado(id: number, datos: GraduadoFormValores)
 
 export async function eliminarGraduado(id: number): Promise<void> {
   await cliente.delete(`/gestion/graduados/${id}`)
+}
+
+/** CU-10: el graduado solicita su cuenta desde el portal (queda inactiva hasta que la Carrera la apruebe). */
+export async function solicitarCuenta(datos: SolicitudCuentaValores): Promise<{ mensaje: string }> {
+  const { data } = await cliente.post<{ mensaje: string }>('/graduados/solicitudes', datos)
+  return data
+}
+
+/** CU-18: la Carrera aprueba la cuenta que solicitó un graduado. */
+export async function aprobarCuentaGraduado(id: number): Promise<Graduado> {
+  const { data } = await cliente.patch<{ data: Graduado }>(`/gestion/graduados/${id}/cuenta`)
+  return data.data
+}
+
+/** CU-18: la Carrera rechaza la solicitud: se borran el registro y la cuenta. */
+export async function rechazarSolicitudGraduado(id: number): Promise<void> {
+  await cliente.delete(`/gestion/graduados/${id}/solicitud`)
 }

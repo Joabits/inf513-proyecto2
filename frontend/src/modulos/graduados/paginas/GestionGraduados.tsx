@@ -4,12 +4,12 @@ import { Boton } from '@/compartido/ui/Boton'
 import { BotonConfirmar } from '@/compartido/ui/BotonConfirmar'
 import { CLASE_ENTRADA } from '@/compartido/ui/Campo'
 import { EstadoCarga, MensajeError } from '@/compartido/ui/EstadoCarga'
-import { IconoAgregar, IconoBuscar, IconoDocumento, IconoEditar, IconoEliminar } from '@/compartido/ui/Iconos'
+import { IconoActivar, IconoAgregar, IconoBuscar, IconoDesactivar, IconoDocumento, IconoEditar, IconoEliminar } from '@/compartido/ui/Iconos'
 import { TituloPagina } from '@/compartido/ui/TituloPagina'
 import { CABECERA_TABLA } from '@/compartido/ui/tabla'
 import { exportarGraduados } from '../api/graduados'
 import { FormularioGraduado } from '../componentes/FormularioGraduado'
-import { useEliminarGraduado, useGraduados } from '../hooks/useGraduados'
+import { useAprobarCuentaGraduado, useEliminarGraduado, useGraduados, useRechazarSolicitudGraduado } from '../hooks/useGraduados'
 import type { Graduado } from '../tipos'
 
 const normalizar = (texto: string) =>
@@ -21,6 +21,8 @@ const normalizar = (texto: string) =>
 export function GestionGraduados() {
   const { data: graduados, isPending, isError, refetch } = useGraduados()
   const eliminar = useEliminarGraduado()
+  const aprobar = useAprobarCuentaGraduado()
+  const rechazar = useRechazarSolicitudGraduado()
   const puedeCrear = usePermiso('graduados.crear')
   const puedeEditar = usePermiso('graduados.editar')
   const puedeEliminar = usePermiso('graduados.eliminar')
@@ -113,6 +115,18 @@ export function GestionGraduados() {
         </div>
       )}
 
+      {graduados && graduados.some((g) => g.cuenta_pendiente) && (
+        <div role="status" className="mb-4 rounded-tema border border-primario/30 bg-primario/10 p-4 text-sm text-texto">
+          <strong className="text-acento">
+            {graduados.filter((g) => g.cuenta_pendiente).length === 1
+              ? '1 graduado solicitó su cuenta'
+              : `${graduados.filter((g) => g.cuenta_pendiente).length} graduados solicitaron su cuenta`}
+          </strong>{' '}
+          desde el portal. Revise sus datos y apruebe la cuenta para que puedan ingresar, o rechace la solicitud si no es
+          graduado de la Carrera.
+        </div>
+      )}
+
       {graduados && (
         <div className="overflow-hidden rounded-tema border border-borde-tarjeta bg-tarjeta sombra-suave">
           {graduadosFiltrados.length === 0 ? (
@@ -136,6 +150,14 @@ export function GestionGraduados() {
                     <tr key={g.id} className="transition-colors hover:bg-superficie/60">
                       <td className="px-5 py-4 font-semibold text-titulo">
                         <div>{g.nombre_completo}</div>
+                        {g.cuenta_pendiente && (
+                          <>
+                            <div className="mt-1 inline-flex whitespace-nowrap rounded-full bg-primario/10 px-2.5 py-0.5 text-xs font-semibold text-acento">
+                              Cuenta por aprobar
+                            </div>
+                            <div className="mt-0.5 text-xs font-normal text-texto-suave [overflow-wrap:anywhere]">{g.cuenta?.correo}</div>
+                          </>
+                        )}
                         {g.titulo_tema && (
                           <div className="mt-0.5 text-xs font-normal text-texto-suave line-clamp-1">
                             {g.titulo_tema}
@@ -153,7 +175,28 @@ export function GestionGraduados() {
                       </td>
                       <td className="whitespace-nowrap px-5 py-4 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          {puedeEditar && (
+                          {g.cuenta_pendiente && puedeEditar && (
+                            <button
+                              type="button"
+                              onClick={() => aprobar.mutate(g.id)}
+                              disabled={aprobar.isPending}
+                              title="Aprobar la cuenta: el graduado podrá ingresar"
+                              className="inline-flex items-center gap-1.5 rounded-tema bg-primario px-2.5 py-1.5 text-xs font-semibold text-sobre-primario hover:bg-marino disabled:opacity-60"
+                            >
+                              <IconoActivar width={15} height={15} /> Aprobar
+                            </button>
+                          )}
+                          {g.cuenta_pendiente && puedeEliminar && (
+                            <BotonConfirmar
+                              pregunta="¿Rechazar la solicitud? Se borran el registro y la cuenta."
+                              confirmar="Rechazar"
+                              ocupado={rechazar.isPending}
+                              alConfirmar={() => rechazar.mutate(g.id)}
+                            >
+                              <IconoDesactivar width={15} height={15} /> Rechazar
+                            </BotonConfirmar>
+                          )}
+                          {!g.cuenta_pendiente && puedeEditar && (
                             <button
                               type="button"
                               onClick={() => abrirEditar(g)}
@@ -163,7 +206,7 @@ export function GestionGraduados() {
                               <IconoEditar width={15} height={15} /> Editar
                             </button>
                           )}
-                          {puedeEliminar && (
+                          {!g.cuenta_pendiente && puedeEliminar && (
                             <BotonConfirmar
                               pregunta="¿Eliminar graduado?"
                               confirmar="Eliminar"
