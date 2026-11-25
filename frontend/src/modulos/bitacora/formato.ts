@@ -89,6 +89,12 @@ const MODELOS: Record<string, string> = {
 
 const MODELO = /^(\w+) #(\d+)$/
 
+/** Qué se exportó, según el recurso que registra cada módulo al exportar (Bitacora y Graduados). */
+const EXPORTADO: Record<string, string> = {
+  Bitácora: 'la bitácora',
+  Graduados: 'la lista de graduados',
+}
+
 /** «el proyecto "Estudio de mercado"»; sin nombre guardado, «el proyecto n.º 5». */
 function elemento(recurso: string, detalle: string | null) {
   const modelo = MODELO.exec(recurso)
@@ -160,7 +166,7 @@ function accionRealizada(registro: Registro) {
     // El trigger guarda «Rol anterior -> Rol nuevo»
     return `cambió el rol de la cuenta n.º ${MODELO.exec(recurso)?.[2]}: ${detalle.replace('->', '→')}`
   }
-  if (accion === 'exportar') return `exportó la bitácora${detalle ? ` (${detalle})` : ''}`
+  if (accion === 'exportar') return `exportó ${EXPORTADO[recurso] ?? recurso}${detalle ? ` (${detalle})` : ''}`
 
   const verbo = VERBOS[accion] ?? accion.replaceAll('_', ' ')
   const cosa = elemento(recurso, detalle)
