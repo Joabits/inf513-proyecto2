@@ -184,7 +184,7 @@ export function ConsultarBitacora() {
 
         {data &&
           (data.data.length > 0 ? (
-            <TablaRegistros registros={data.data} actualizando={isFetching} mostrarIp={filtros.grupo !== 'auditoria'} />
+            <TablaRegistros registros={data.data} actualizando={isFetching} />
           ) : (
             <p className="py-12 text-center text-texto-suave">
               {hayFiltros ? 'Ningún registro coincide con los filtros.' : 'Todavía no hay actividad registrada.'}

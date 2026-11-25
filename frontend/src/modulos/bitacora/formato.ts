@@ -14,6 +14,12 @@ const RELATIVO = new Intl.RelativeTimeFormat('es', { numeric: 'auto' })
 /** Fecha y hora completas, para el detalle y para el texto que aparece al pasar el cursor. */
 export const formatoFechaHora = (iso: string) => FECHA_HORA.format(new Date(iso))
 
+const FECHA = new Intl.DateTimeFormat('es-BO', { day: '2-digit', month: '2-digit', year: 'numeric' })
+const HORA = new Intl.DateTimeFormat('es-BO', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
+
+/** Para la columna de la tabla: la fecha «25/11/2026» y la hora «17:21:44» por separado. */
+export const fechaYHora = (iso: string) => ({ fecha: FECHA.format(new Date(iso)), hora: HORA.format(new Date(iso)) })
+
 /**
  * «hace 2 horas», «ayer»; pasada una semana, la fecha. No se actualiza sola (no hay temporizadores en el panel):
  * se recalcula cada vez que se consulta la lista.

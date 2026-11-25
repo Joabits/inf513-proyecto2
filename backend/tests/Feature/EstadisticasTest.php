@@ -63,6 +63,36 @@ class EstadisticasTest extends TestCase
             ->assertJsonPath('contenido.usuarios_activos', 1);
     }
 
+    public function test_visitas_por_hora_personal_mas_activo_y_dispositivos(): void
+    {
+        $director = $this->cuenta(Rol::DIRECTOR);
+        $editora = User::factory()->create(['name' => 'Ana Editora', 'rol_id' => Rol::where('slug', Rol::EDITOR_COMUNICACION)->value('id')]);
+        $hoy = now()->startOfDay();
+        DB::table('visitas')->insert([
+            ['pagina' => '/', 'created_at' => $hoy->copy()->setTime(10, 15)],
+            ['pagina' => '/', 'created_at' => $hoy->copy()->setTime(10, 45)],
+            ['pagina' => '/noticias', 'created_at' => $hoy->copy()->setTime(21, 5)],
+        ]);
+        $chrome = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36';
+        $iphone = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.1 Mobile/15E148 Safari/604.1';
+        foreach ([
+            ['accion', 'crear', $editora], ['accion', 'editar', $editora], ['accion', 'eliminar', $director],
+            ['ingreso_ok', null, $editora, $chrome], ['ingreso_ok', null, $director, $chrome], ['ingreso_ok', null, $editora, $iphone],
+        ] as $f) {
+            DB::table('bitacora')->insert(['tipo' => $f[0], 'accion' => $f[1], 'user_id' => $f[2]->id, 'usuario' => $f[2]->email,
+                'navegador' => $f[3] ?? null, 'created_at' => now()]);
+        }
+
+        $r = $this->actingAs($director)->getJson('/api/gestion/estadisticas?dias=7')->assertOk();
+
+        $r->assertJsonCount(24, 'visitas.por_hora')
+            ->assertJsonPath('visitas.por_hora.10', ['hora' => 10, 'total' => 2])
+            ->assertJsonPath('visitas.por_hora.21', ['hora' => 21, 'total' => 1])
+            ->assertJsonPath('personal.0', ['nombre' => 'Ana Editora', 'correo' => $editora->email, 'total' => 2])
+            ->assertJsonPath('dispositivos.0', ['dispositivo' => 'Chrome en Windows', 'total' => 2])
+            ->assertJsonPath('dispositivos.1', ['dispositivo' => 'Safari en iOS', 'total' => 1]);
+    }
+
     public function test_el_periodo_solo_admite_7_30_o_90_dias(): void
     {
         $this->actingAs($this->cuenta(Rol::DIRECTOR))->getJson('/api/gestion/estadisticas?dias=12')

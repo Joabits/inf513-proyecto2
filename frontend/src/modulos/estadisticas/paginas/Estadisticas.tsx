@@ -20,6 +20,8 @@ const ACCIONES: Record<string, string> = {
   crear: 'Creaciones',
   editar: 'Ediciones',
   eliminar: 'Eliminaciones',
+  publicar: 'Publicaciones',
+  ocultar: 'Ocultamientos',
   atender: 'Mensajes atendidos',
   exportar: 'Exportaciones',
 }
@@ -139,6 +141,53 @@ function VisitasPorDia({ datos }: { datos: Datos['visitas']['por_dia'] }) {
   )
 }
 
+/** Visitas por hora del día: muestra a qué hora consulta la gente el portal (24 columnas, de 0 a 23 h). */
+function VisitasPorHora({ datos }: { datos: Datos['visitas']['por_hora'] }) {
+  const [elegida, setElegida] = useState<number | null>(null)
+  const maximo = Math.max(1, ...datos.map((d) => d.total))
+  const pico = datos.reduce((a, b) => (b.total > a.total ? b : a), datos[0])
+  const actual = elegida !== null ? datos[elegida] : null
+  const hora = (h: number) => `${String(h).padStart(2, '0')}:00`
+
+  return (
+    <section aria-label="Visitas por hora del día" className={TARJETA}>
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h2 className="text-lg text-titulo">Visitas por hora del día</h2>
+        <p className="text-sm text-texto-suave" aria-live="polite">
+          {actual
+            ? `${hora(actual.hora)} a ${hora((actual.hora + 1) % 24)}: ${NUMERO.format(actual.total)} visitas`
+            : pico.total > 0
+              ? `Más visitas a las ${hora(pico.hora)}`
+              : 'Todavía no hay visitas en este periodo'}
+        </p>
+      </div>
+      <div className="mt-5 flex h-40 items-end gap-1 border-b border-borde" onMouseLeave={() => setElegida(null)}>
+        {datos.map((d, i) => (
+          <button
+            key={d.hora}
+            type="button"
+            aria-label={`${hora(d.hora)}: ${d.total} visitas`}
+            onMouseEnter={() => setElegida(i)}
+            onFocus={() => setElegida(i)}
+            onBlur={() => setElegida(null)}
+            className="flex h-full flex-1 items-end focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
+            <span
+              className={`block w-full rounded-t-sm transition-opacity ${d.total === 0 ? 'bg-borde' : d.hora === pico.hora ? 'bg-primario' : 'bg-titulo'} ${elegida !== null && elegida !== i ? 'opacity-40' : ''}`}
+              style={{ height: d.total === 0 ? '2px' : `${Math.max(4, (d.total / maximo) * 100)}%` }}
+            />
+          </button>
+        ))}
+      </div>
+      <div className="mt-2 flex justify-between text-xs text-texto-suave">
+        {[0, 6, 12, 18, 23].map((h) => (
+          <span key={h}>{hora(h)}</span>
+        ))}
+      </div>
+    </section>
+  )
+}
+
 function Rejilla({ children }: { children: ReactNode }) {
   return <dl className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">{children}</dl>
 }
@@ -189,6 +238,17 @@ export function Estadisticas() {
           <VisitasPorDia datos={data.visitas.por_dia} />
 
           <div className="grid gap-6 lg:grid-cols-3">
+            <div className="lg:col-span-2">
+              <VisitasPorHora datos={data.visitas.por_hora} />
+            </div>
+            <Ranking
+              titulo="Dispositivos del personal"
+              filas={data.dispositivos.map((d) => ({ nombre: d.dispositivo, total: d.total }))}
+              vacio="Nadie ingresó al panel en este periodo."
+            />
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-2">
             <Ranking
               titulo="Páginas más visitadas"
               filas={data.visitas.paginas.map((p) => ({ nombre: nombrePagina(p.pagina), total: p.total }))}
@@ -198,6 +258,11 @@ export function Estadisticas() {
               titulo="Secciones más usadas"
               filas={data.secciones.map((s) => ({ nombre: s.seccion, total: s.total }))}
               vacio="Todavía no hay accesos registrados en este periodo."
+            />
+            <Ranking
+              titulo="Personal más activo"
+              filas={data.personal.map((p) => ({ nombre: p.nombre, total: p.total }))}
+              vacio="Nadie hizo cambios en este periodo."
             />
             <Ranking
               titulo="Cambios del personal"
