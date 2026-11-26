@@ -88,12 +88,15 @@ class InicioTest extends TestCase
 
     public function test_el_editor_actualiza_la_portada_y_queda_en_la_bitacora(): void
     {
-        $this->actingAs($this->editor())
+        $editor = $this->editor();
+
+        $this->actingAs($editor)
             ->putJson('/api/inicio/portada', $this->portadaValida())
             ->assertOk()
             ->assertJsonPath('portada.titulo', 'Título nuevo');
 
         $this->assertSame(1, Portada::count());
+        $this->assertSame($editor->id, Portada::first()->user_id, 'La portada guarda quién la actualizó');
         $this->assertSame(1, DB::table('bitacora')->where('recurso', 'Página de inicio: presentación y mensaje')->count());
     }
 

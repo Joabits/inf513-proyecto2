@@ -121,8 +121,11 @@ class InvestigacionService
 
     public function guardarComplementos(array $contenido, array $semilleros, User $usuario): void
     {
-        DB::transaction(function () use ($contenido, $semilleros) {
-            (ContenidoInvestigacion::first() ?? new ContenidoInvestigacion)->fill($contenido)->save();
+        DB::transaction(function () use ($contenido, $semilleros, $usuario) {
+            $fila = ContenidoInvestigacion::first() ?? new ContenidoInvestigacion;
+            $fila->fill($contenido);
+            $fila->user_id = $usuario->id;
+            $fila->save();
 
             Semillero::query()->delete();
             foreach (array_values($semilleros) as $orden => $semillero) {

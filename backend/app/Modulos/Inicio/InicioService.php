@@ -45,7 +45,9 @@ class InicioService
     public function actualizarPortada(array $datos, User $usuario): void
     {
         $portada = Portada::first() ?? new Portada;
-        $portada->fill($datos)->save();
+        $portada->fill($datos);
+        $portada->user_id = $usuario->id;
+        $portada->save();
 
         $this->bitacora->accion($usuario, 'editar', 'Página de inicio: presentación y mensaje', cambios: Bitacora::diferencias($portada));
     }
@@ -105,7 +107,9 @@ class InicioService
         $portada = Portada::firstOrFail();
 
         $this->borrarFoto($portada);
-        $portada->update(['director_foto' => $foto->store('inicio/director', 'public')]);
+        $portada->director_foto = $foto->store('inicio/director', 'public');
+        $portada->user_id = $usuario->id;
+        $portada->save();
 
         $this->bitacora->accion($usuario, 'editar', 'Página de inicio: foto del Director');
     }
@@ -115,7 +119,9 @@ class InicioService
         $portada = Portada::firstOrFail();
 
         $this->borrarFoto($portada);
-        $portada->update(['director_foto' => null]);
+        $portada->director_foto = null;
+        $portada->user_id = $usuario->id;
+        $portada->save();
 
         $this->bitacora->accion($usuario, 'eliminar', 'Página de inicio: foto del Director');
     }

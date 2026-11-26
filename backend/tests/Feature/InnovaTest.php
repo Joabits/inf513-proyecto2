@@ -76,6 +76,7 @@ class InnovaTest extends TestCase
             ->assertJsonPath('contenido.recibe_solicitudes', false)
             ->assertJsonPath('contenido.mision', null);
 
+        $this->assertDatabaseHas('innova', ['user_id' => $editor->id]);
         $this->assertDatabaseHas('bitacora', ['user_id' => $editor->id, 'recurso' => 'Empresa Junior INNOVA: presentación', 'detalle' => 'Cerró la recepción de solicitudes']);
 
         // Con la recepción cerrada, la solicitud se rechaza con un mensaje claro

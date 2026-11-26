@@ -77,6 +77,7 @@ class InstitucionalTest extends TestCase
             ->assertJsonPath('contenido.acreditacion', null);
 
         $this->assertDatabaseCount('institucional', 1);
+        $this->assertDatabaseHas('institucional', ['user_id' => $editor->id]);
         $this->assertDatabaseHas('bitacora', ['user_id' => $editor->id, 'accion' => 'editar', 'recurso' => 'Información institucional: contenido']);
     }
 

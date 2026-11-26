@@ -21,7 +21,9 @@ class InstitucionalService
     public function actualizarContenido(array $datos, User $usuario): void
     {
         $contenido = Institucional::first() ?? new Institucional;
-        $contenido->fill($datos)->save();
+        $contenido->fill($datos);
+        $contenido->user_id = $usuario->id;
+        $contenido->save();
 
         $this->bitacora->accion($usuario, 'editar', 'Información institucional: contenido', cambios: Bitacora::diferencias($contenido));
     }

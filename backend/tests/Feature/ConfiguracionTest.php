@@ -76,6 +76,7 @@ class ConfiguracionTest extends TestCase
             ->assertJsonPath('contacto.horario', null);
 
         $this->assertDatabaseCount('configuracion_contacto', 1);
+        $this->assertDatabaseHas('configuracion_contacto', ['user_id' => $director->id]);
         $this->assertDatabaseHas('bitacora', ['user_id' => $director->id, 'accion' => 'editar', 'recurso' => 'Configuración: datos de contacto']);
     }
 

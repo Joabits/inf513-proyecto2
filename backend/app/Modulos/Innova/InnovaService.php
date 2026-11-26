@@ -24,7 +24,9 @@ class InnovaService
         $innova = Innova::first() ?? new Innova;
         $antes = $innova->exists ? $innova->recibe_solicitudes : null;
 
-        $innova->fill($datos)->save();
+        $innova->fill($datos);
+        $innova->user_id = $usuario->id;
+        $innova->save();
 
         $detalle = $antes !== null && $antes !== $innova->recibe_solicitudes
             ? ($innova->recibe_solicitudes ? 'Abrió la recepción de solicitudes' : 'Cerró la recepción de solicitudes')

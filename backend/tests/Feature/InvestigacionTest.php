@@ -203,6 +203,7 @@ class InvestigacionTest extends TestCase
             ->assertJsonCount(1, 'semilleros')
             ->assertJsonPath('semilleros.0.descripcion', null);
 
+        $this->assertDatabaseHas('investigacion_contenido', ['user_id' => $editor->id]);
         $this->assertDatabaseHas('bitacora', ['user_id' => $editor->id, 'recurso' => 'Investigación: semilleros y PIA']);
     }
 }

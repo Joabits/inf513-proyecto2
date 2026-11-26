@@ -21,7 +21,10 @@ class ConfiguracionService
 
     public function actualizarContacto(array $datos, User $usuario): void
     {
-        (DatosContacto::first() ?? new DatosContacto)->fill($datos)->save();
+        $contacto = DatosContacto::first() ?? new DatosContacto;
+        $contacto->fill($datos);
+        $contacto->user_id = $usuario->id;
+        $contacto->save();
 
         $this->bitacora->accion($usuario, 'editar', 'Configuración: datos de contacto');
     }
